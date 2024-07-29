@@ -1,0 +1,603 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		8F004F062C51BA4600540FDA /* RecommendationCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F004F052C51BA4600540FDA /* RecommendationCardView.swift */; };
+		8F145C4E2C51BB8D007B5591 /* AutoScrollingScrollVie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F145C4D2C51BB8D007B5591 /* AutoScrollingScrollVie.swift */; };
+		8F16D5A72C4876B900C3F429 /* FavoritesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F16D5A62C4876B900C3F429 /* FavoritesView.swift */; };
+		8F2137D12C6666E400A42845 /* URLCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F2137D02C6666E400A42845 /* URLCache.swift */; };
+		8F2137D92C6669BA00A42845 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F2137D82C6669BA00A42845 /* Category.swift */; };
+		8F2137DE2C666E1B00A42845 /* Network.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F2137DC2C666E0300A42845 /* Network.framework */; };
+		8F34AE002C6AC5780011083E /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F34ADFA2C6AC5780011083E /* Endpoint.swift */; };
+		8F34AE012C6AC5780011083E /* Requester.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F34ADFB2C6AC5780011083E /* Requester.swift */; };
+		8F34AE022C6AC5780011083E /* UserDefaultsWorker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F34ADFC2C6AC5780011083E /* UserDefaultsWorker.swift */; };
+		8F34AE032C6AC5780011083E /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F34ADFD2C6AC5780011083E /* User.swift */; };
+		8F34AE042C6AC5780011083E /* Result.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F34ADFE2C6AC5780011083E /* Result.swift */; };
+		8F34AE052C6AC5780011083E /* UtilityTypes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F34ADFF2C6AC5780011083E /* UtilityTypes.swift */; };
+		8F35BF8F2C4EA45F00A77E77 /* SearchResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F35BF8E2C4EA45F00A77E77 /* SearchResultsView.swift */; };
+		8F61CCB22C514E7D004A2DC4 /* AddressSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F61CCB12C514E7D004A2DC4 /* AddressSelectionView.swift */; };
+		8F61CCB42C51507B004A2DC4 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F61CCB32C51507B004A2DC4 /* MapView.swift */; };
+		8F61CCB62C515111004A2DC4 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F61CCB52C515111004A2DC4 /* LocationManager.swift */; };
+		8F6A23A12C396A5C005A3320 /* AlfaMarketExpressApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F6A23A02C396A5C005A3320 /* AlfaMarketExpressApp.swift */; };
+		8F6A23A32C396A5C005A3320 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F6A23A22C396A5C005A3320 /* ContentView.swift */; };
+		8F6A23A52C396A5C005A3320 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8F6A23A42C396A5C005A3320 /* Assets.xcassets */; };
+		8F6A23A82C396A5C005A3320 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8F6A23A72C396A5C005A3320 /* Preview Assets.xcassets */; };
+		8F6A23B32C3972D8005A3320 /* Product.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F6A23B22C3972D8005A3320 /* Product.swift */; };
+		8F6A23B52C397350005A3320 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F6A23B42C397350005A3320 /* NetworkManager.swift */; };
+		8F6A23B72C39736C005A3320 /* ProductViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F6A23B62C39736C005A3320 /* ProductViewModel.swift */; };
+		8F6A23B92C3973EC005A3320 /* CatalogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F6A23B82C3973EC005A3320 /* CatalogView.swift */; };
+		8F6A23BB2C39740A005A3320 /* ProductRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F6A23BA2C39740A005A3320 /* ProductRowView.swift */; };
+		8F6A23BD2C397432005A3320 /* ProductDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F6A23BC2C397432005A3320 /* ProductDetailView.swift */; };
+		8F6A23BF2C397446005A3320 /* CartView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F6A23BE2C397446005A3320 /* CartView.swift */; };
+		8F6A23C32C39746A005A3320 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F6A23C22C39746A005A3320 /* ProfileView.swift */; };
+		8F6A23C52C3975CC005A3320 /* ProductCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F6A23C42C3975CC005A3320 /* ProductCardView.swift */; };
+		8F6A23E42C39C2B8005A3320 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F6A23E32C39C2B8005A3320 /* HomeView.swift */; };
+		8F97BB142C56E4C7009C1BC7 /* ProductGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F97BB132C56E4C7009C1BC7 /* ProductGridView.swift */; };
+		8F97BB162C56F642009C1BC7 /* CategoryProductsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F97BB152C56F642009C1BC7 /* CategoryProductsView.swift */; };
+		8F97BB182C56F665009C1BC7 /* CategoryCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F97BB172C56F665009C1BC7 /* CategoryCardView.swift */; };
+		8F97BB1A2C56F6AC009C1BC7 /* CategoryGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F97BB192C56F6AC009C1BC7 /* CategoryGridView.swift */; };
+		8F97BB1F2C56FCDD009C1BC7 /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F97BB1E2C56FCDD009C1BC7 /* HeaderView.swift */; };
+		8F97BB212C56FD09009C1BC7 /* SpecialOfferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F97BB202C56FD09009C1BC7 /* SpecialOfferView.swift */; };
+		8FA6AB362C67AAE700C267FE /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FA6AB352C67AAE700C267FE /* Network.swift */; };
+		8FB684ED2C6A2E6600907474 /* MainViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FB684EC2C6A2E6600907474 /* MainViewModel.swift */; };
+		8FCB30F62C407C62006AED65 /* ProductReviewsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FCB30F52C407C62006AED65 /* ProductReviewsView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		8F004F052C51BA4600540FDA /* RecommendationCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecommendationCardView.swift; sourceTree = "<group>"; };
+		8F145C4D2C51BB8D007B5591 /* AutoScrollingScrollVie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoScrollingScrollVie.swift; sourceTree = "<group>"; };
+		8F16D5A62C4876B900C3F429 /* FavoritesView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoritesView.swift; sourceTree = "<group>"; };
+		8F2137D02C6666E400A42845 /* URLCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLCache.swift; sourceTree = "<group>"; };
+		8F2137D82C6669BA00A42845 /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
+		8F2137DA2C666DB000A42845 /* Alfa Market Express.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Alfa Market Express.entitlements"; sourceTree = "<group>"; };
+		8F2137DC2C666E0300A42845 /* Network.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Network.framework; path = System/Library/Frameworks/Network.framework; sourceTree = SDKROOT; };
+		8F34ADFA2C6AC5780011083E /* Endpoint.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Endpoint.swift; path = "Alfa Market Express/Models/Endpoint.swift"; sourceTree = SOURCE_ROOT; };
+		8F34ADFB2C6AC5780011083E /* Requester.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Requester.swift; path = "Alfa Market Express/Models/Requester.swift"; sourceTree = SOURCE_ROOT; };
+		8F34ADFC2C6AC5780011083E /* UserDefaultsWorker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserDefaultsWorker.swift; path = "Alfa Market Express/Models/UserDefaultsWorker.swift"; sourceTree = SOURCE_ROOT; };
+		8F34ADFD2C6AC5780011083E /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = User.swift; path = "Alfa Market Express/Models/User.swift"; sourceTree = SOURCE_ROOT; };
+		8F34ADFE2C6AC5780011083E /* Result.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Result.swift; path = "Alfa Market Express/Models/Result.swift"; sourceTree = SOURCE_ROOT; };
+		8F34ADFF2C6AC5780011083E /* UtilityTypes.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UtilityTypes.swift; path = "Alfa Market Express/Models/UtilityTypes.swift"; sourceTree = SOURCE_ROOT; };
+		8F35BF8E2C4EA45F00A77E77 /* SearchResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsView.swift; sourceTree = "<group>"; };
+		8F61CCB12C514E7D004A2DC4 /* AddressSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressSelectionView.swift; sourceTree = "<group>"; };
+		8F61CCB32C51507B004A2DC4 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
+		8F61CCB52C515111004A2DC4 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
+		8F6A239D2C396A5C005A3320 /* Alfa Market Express.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Alfa Market Express.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8F6A23A02C396A5C005A3320 /* AlfaMarketExpressApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlfaMarketExpressApp.swift; sourceTree = "<group>"; };
+		8F6A23A22C396A5C005A3320 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		8F6A23A42C396A5C005A3320 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		8F6A23A72C396A5C005A3320 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		8F6A23B22C3972D8005A3320 /* Product.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Product.swift; sourceTree = "<group>"; };
+		8F6A23B42C397350005A3320 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		8F6A23B62C39736C005A3320 /* ProductViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductViewModel.swift; sourceTree = "<group>"; };
+		8F6A23B82C3973EC005A3320 /* CatalogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogView.swift; sourceTree = "<group>"; };
+		8F6A23BA2C39740A005A3320 /* ProductRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductRowView.swift; sourceTree = "<group>"; };
+		8F6A23BC2C397432005A3320 /* ProductDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductDetailView.swift; sourceTree = "<group>"; };
+		8F6A23BE2C397446005A3320 /* CartView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartView.swift; sourceTree = "<group>"; };
+		8F6A23C22C39746A005A3320 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		8F6A23C42C3975CC005A3320 /* ProductCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductCardView.swift; sourceTree = "<group>"; };
+		8F6A23C82C397C59005A3320 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		8F6A23E32C39C2B8005A3320 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
+		8F97BB132C56E4C7009C1BC7 /* ProductGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductGridView.swift; sourceTree = "<group>"; };
+		8F97BB152C56F642009C1BC7 /* CategoryProductsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryProductsView.swift; sourceTree = "<group>"; };
+		8F97BB172C56F665009C1BC7 /* CategoryCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCardView.swift; sourceTree = "<group>"; };
+		8F97BB192C56F6AC009C1BC7 /* CategoryGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryGridView.swift; sourceTree = "<group>"; };
+		8F97BB1E2C56FCDD009C1BC7 /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
+		8F97BB202C56FD09009C1BC7 /* SpecialOfferView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecialOfferView.swift; sourceTree = "<group>"; };
+		8FA6AB352C67AAE700C267FE /* Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
+		8FB684EC2C6A2E6600907474 /* MainViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewModel.swift; sourceTree = "<group>"; };
+		8FCB30F52C407C62006AED65 /* ProductReviewsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductReviewsView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		8F6A239A2C396A5C005A3320 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8F2137DE2C666E1B00A42845 /* Network.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		8F2137DB2C666E0300A42845 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				8F2137DC2C666E0300A42845 /* Network.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		8F34AE062C6AC5C40011083E /* Models */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		8F6A23942C396A5C005A3320 = {
+			isa = PBXGroup;
+			children = (
+				8F6A239F2C396A5C005A3320 /* Alfa Market Express */,
+				8F6A239E2C396A5C005A3320 /* Products */,
+				8F2137DB2C666E0300A42845 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		8F6A239E2C396A5C005A3320 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				8F6A239D2C396A5C005A3320 /* Alfa Market Express.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		8F6A239F2C396A5C005A3320 /* Alfa Market Express */ = {
+			isa = PBXGroup;
+			children = (
+				8F2137DA2C666DB000A42845 /* Alfa Market Express.entitlements */,
+				8F6A23A02C396A5C005A3320 /* AlfaMarketExpressApp.swift */,
+				8F6A23C82C397C59005A3320 /* Info.plist */,
+				8F6A23AF2C397297005A3320 /* Model */,
+				8F6A23B02C39729F005A3320 /* View */,
+				8F6A23B12C3972B8005A3320 /* ViewModel */,
+				8F6A23A62C396A5C005A3320 /* Preview Content */,
+			);
+			path = "Alfa Market Express";
+			sourceTree = "<group>";
+		};
+		8F6A23A62C396A5C005A3320 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				8F6A23A72C396A5C005A3320 /* Preview Assets.xcassets */,
+				8F6A23A42C396A5C005A3320 /* Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		8F6A23AF2C397297005A3320 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				8F6A23B22C3972D8005A3320 /* Product.swift */,
+				8F6A23B42C397350005A3320 /* NetworkManager.swift */,
+				8F2137D82C6669BA00A42845 /* Category.swift */,
+				8F34AE062C6AC5C40011083E /* Models */,
+				8F34ADFA2C6AC5780011083E /* Endpoint.swift */,
+				8F34ADFB2C6AC5780011083E /* Requester.swift */,
+				8F34ADFE2C6AC5780011083E /* Result.swift */,
+				8F34ADFD2C6AC5780011083E /* User.swift */,
+				8F34ADFC2C6AC5780011083E /* UserDefaultsWorker.swift */,
+				8F34ADFF2C6AC5780011083E /* UtilityTypes.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		8F6A23B02C39729F005A3320 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				8F97BB1B2C56FC0A009C1BC7 /* Another */,
+				8F97BB0F2C569CD0009C1BC7 /* Home */,
+				8F97BB0D2C569C92009C1BC7 /* Catalog */,
+				8F97BB0E2C569CB0009C1BC7 /* Product */,
+				8F97BB102C569D30009C1BC7 /* Cart */,
+				8F97BB112C569D62009C1BC7 /* Map */,
+				8F97BB122C569D7A009C1BC7 /* Profile */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		8F6A23B12C3972B8005A3320 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				8FB684EC2C6A2E6600907474 /* MainViewModel.swift */,
+				8F6A23B62C39736C005A3320 /* ProductViewModel.swift */,
+				8FA6AB352C67AAE700C267FE /* Network.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		8F97BB0D2C569C92009C1BC7 /* Catalog */ = {
+			isa = PBXGroup;
+			children = (
+				8F6A23B82C3973EC005A3320 /* CatalogView.swift */,
+				8F97BB152C56F642009C1BC7 /* CategoryProductsView.swift */,
+				8F97BB172C56F665009C1BC7 /* CategoryCardView.swift */,
+				8F97BB192C56F6AC009C1BC7 /* CategoryGridView.swift */,
+			);
+			path = Catalog;
+			sourceTree = "<group>";
+		};
+		8F97BB0E2C569CB0009C1BC7 /* Product */ = {
+			isa = PBXGroup;
+			children = (
+				8FCB30F52C407C62006AED65 /* ProductReviewsView.swift */,
+				8F6A23BC2C397432005A3320 /* ProductDetailView.swift */,
+				8F6A23C42C3975CC005A3320 /* ProductCardView.swift */,
+				8F6A23BA2C39740A005A3320 /* ProductRowView.swift */,
+				8F97BB132C56E4C7009C1BC7 /* ProductGridView.swift */,
+			);
+			path = Product;
+			sourceTree = "<group>";
+		};
+		8F97BB0F2C569CD0009C1BC7 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				8F6A23A22C396A5C005A3320 /* ContentView.swift */,
+				8F6A23E32C39C2B8005A3320 /* HomeView.swift */,
+				8F16D5A62C4876B900C3F429 /* FavoritesView.swift */,
+				8F97BB1E2C56FCDD009C1BC7 /* HeaderView.swift */,
+				8F35BF8E2C4EA45F00A77E77 /* SearchResultsView.swift */,
+				8F004F052C51BA4600540FDA /* RecommendationCardView.swift */,
+				8F97BB202C56FD09009C1BC7 /* SpecialOfferView.swift */,
+				8F145C4D2C51BB8D007B5591 /* AutoScrollingScrollVie.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		8F97BB102C569D30009C1BC7 /* Cart */ = {
+			isa = PBXGroup;
+			children = (
+				8F61CCB12C514E7D004A2DC4 /* AddressSelectionView.swift */,
+				8F6A23BE2C397446005A3320 /* CartView.swift */,
+			);
+			path = Cart;
+			sourceTree = "<group>";
+		};
+		8F97BB112C569D62009C1BC7 /* Map */ = {
+			isa = PBXGroup;
+			children = (
+				8F61CCB52C515111004A2DC4 /* LocationManager.swift */,
+				8F61CCB32C51507B004A2DC4 /* MapView.swift */,
+			);
+			path = Map;
+			sourceTree = "<group>";
+		};
+		8F97BB122C569D7A009C1BC7 /* Profile */ = {
+			isa = PBXGroup;
+			children = (
+				8F6A23C22C39746A005A3320 /* ProfileView.swift */,
+			);
+			path = Profile;
+			sourceTree = "<group>";
+		};
+		8F97BB1B2C56FC0A009C1BC7 /* Another */ = {
+			isa = PBXGroup;
+			children = (
+				8F2137D02C6666E400A42845 /* URLCache.swift */,
+			);
+			path = Another;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		8F6A239C2C396A5C005A3320 /* Alfa Market Express */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 8F6A23AB2C396A5C005A3320 /* Build configuration list for PBXNativeTarget "Alfa Market Express" */;
+			buildPhases = (
+				8F6A23992C396A5C005A3320 /* Sources */,
+				8F6A239A2C396A5C005A3320 /* Frameworks */,
+				8F6A239B2C396A5C005A3320 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Alfa Market Express";
+			productName = WareHouse1;
+			productReference = 8F6A239D2C396A5C005A3320 /* Alfa Market Express.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		8F6A23952C396A5C005A3320 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1540;
+				LastUpgradeCheck = 1540;
+				TargetAttributes = {
+					8F6A239C2C396A5C005A3320 = {
+						CreatedOnToolsVersion = 15.4;
+					};
+				};
+			};
+			buildConfigurationList = 8F6A23982C396A5C005A3320 /* Build configuration list for PBXProject "Alfa Market Express" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 8F6A23942C396A5C005A3320;
+			productRefGroup = 8F6A239E2C396A5C005A3320 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				8F6A239C2C396A5C005A3320 /* Alfa Market Express */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		8F6A239B2C396A5C005A3320 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8F6A23A82C396A5C005A3320 /* Preview Assets.xcassets in Resources */,
+				8F6A23A52C396A5C005A3320 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		8F6A23992C396A5C005A3320 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8FB684ED2C6A2E6600907474 /* MainViewModel.swift in Sources */,
+				8F34AE022C6AC5780011083E /* UserDefaultsWorker.swift in Sources */,
+				8F145C4E2C51BB8D007B5591 /* AutoScrollingScrollVie.swift in Sources */,
+				8F6A23BF2C397446005A3320 /* CartView.swift in Sources */,
+				8F6A23E42C39C2B8005A3320 /* HomeView.swift in Sources */,
+				8FA6AB362C67AAE700C267FE /* Network.swift in Sources */,
+				8F2137D92C6669BA00A42845 /* Category.swift in Sources */,
+				8F6A23B52C397350005A3320 /* NetworkManager.swift in Sources */,
+				8F34AE002C6AC5780011083E /* Endpoint.swift in Sources */,
+				8F6A23A32C396A5C005A3320 /* ContentView.swift in Sources */,
+				8F004F062C51BA4600540FDA /* RecommendationCardView.swift in Sources */,
+				8F34AE042C6AC5780011083E /* Result.swift in Sources */,
+				8F34AE012C6AC5780011083E /* Requester.swift in Sources */,
+				8F97BB162C56F642009C1BC7 /* CategoryProductsView.swift in Sources */,
+				8F6A23BD2C397432005A3320 /* ProductDetailView.swift in Sources */,
+				8F2137D12C6666E400A42845 /* URLCache.swift in Sources */,
+				8F35BF8F2C4EA45F00A77E77 /* SearchResultsView.swift in Sources */,
+				8F61CCB22C514E7D004A2DC4 /* AddressSelectionView.swift in Sources */,
+				8F61CCB42C51507B004A2DC4 /* MapView.swift in Sources */,
+				8F16D5A72C4876B900C3F429 /* FavoritesView.swift in Sources */,
+				8FCB30F62C407C62006AED65 /* ProductReviewsView.swift in Sources */,
+				8F6A23A12C396A5C005A3320 /* AlfaMarketExpressApp.swift in Sources */,
+				8F6A23BB2C39740A005A3320 /* ProductRowView.swift in Sources */,
+				8F97BB212C56FD09009C1BC7 /* SpecialOfferView.swift in Sources */,
+				8F97BB1F2C56FCDD009C1BC7 /* HeaderView.swift in Sources */,
+				8F34AE032C6AC5780011083E /* User.swift in Sources */,
+				8F34AE052C6AC5780011083E /* UtilityTypes.swift in Sources */,
+				8F6A23C52C3975CC005A3320 /* ProductCardView.swift in Sources */,
+				8F6A23B32C3972D8005A3320 /* Product.swift in Sources */,
+				8F6A23B92C3973EC005A3320 /* CatalogView.swift in Sources */,
+				8F97BB1A2C56F6AC009C1BC7 /* CategoryGridView.swift in Sources */,
+				8F6A23C32C39746A005A3320 /* ProfileView.swift in Sources */,
+				8F61CCB62C515111004A2DC4 /* LocationManager.swift in Sources */,
+				8F97BB182C56F665009C1BC7 /* CategoryCardView.swift in Sources */,
+				8F97BB142C56E4C7009C1BC7 /* ProductGridView.swift in Sources */,
+				8F6A23B72C39736C005A3320 /* ProductViewModel.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		8F6A23A92C396A5C005A3320 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		8F6A23AA2C396A5C005A3320 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		8F6A23AC2C396A5C005A3320 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Alfa Market Express/Alfa Market Express.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Alfa Market Express/Preview Content\"";
+				DEVELOPMENT_TEAM = 3Y4SDXRXUW;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Alfa Market Express/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Alfa Market Express";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.shopping";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Мы используем вашу геопозицию для отображения текущего местоположения.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Мы используем вашу геопозицию для отображения текущего местоположения.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.AlfaMarketExpress;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		8F6A23AD2C396A5C005A3320 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = "Alfa Market Express/Alfa Market Express.entitlements";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Alfa Market Express/Preview Content\"";
+				DEVELOPMENT_TEAM = 3Y4SDXRXUW;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Alfa Market Express/Info.plist";
+				INFOPLIST_KEY_CFBundleDisplayName = "Alfa Market Express";
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.shopping";
+				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Мы используем вашу геопозицию для отображения текущего местоположения.";
+				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Мы используем вашу геопозицию для отображения текущего местоположения.";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.AlfaMarketExpress;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		8F6A23982C396A5C005A3320 /* Build configuration list for PBXProject "Alfa Market Express" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8F6A23A92C396A5C005A3320 /* Debug */,
+				8F6A23AA2C396A5C005A3320 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		8F6A23AB2C396A5C005A3320 /* Build configuration list for PBXNativeTarget "Alfa Market Express" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				8F6A23AC2C396A5C005A3320 /* Debug */,
+				8F6A23AD2C396A5C005A3320 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 8F6A23952C396A5C005A3320 /* Project object */;
+}

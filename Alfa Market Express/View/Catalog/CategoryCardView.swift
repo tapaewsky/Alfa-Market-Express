@@ -1,0 +1,43 @@
+//
+//  CategoryCardView.swift
+//  Alfa Market Express
+//
+//  Created by Said Tapaev on 29.07.2024.
+//
+
+import SwiftUI
+
+struct CategoryCardView: View {
+    let category: Category
+    private let customGreen = Color(red: 38 / 255, green: 115 / 255, blue: 21 / 255)
+    
+    
+    var body: some View {
+        VStack {
+            AsyncImage(url: URL(string: category.imageUrl)) { image in
+                image.resizable()
+            } placeholder: {
+                ProgressView()
+            }
+            .aspectRatio(contentMode: .fill)
+            .shadow(radius: 5)
+            .clipped()
+
+            Text(category.name)
+                .font(.headline)
+                
+                .lineLimit(1)
+                .minimumScaleFactor(0.5)
+                .foregroundColor(.primary)
+
+           
+
+            
+            
+        }
+        .padding()
+        .background(Color.clear)
+        .cornerRadius(10)
+        
+    }
+}
