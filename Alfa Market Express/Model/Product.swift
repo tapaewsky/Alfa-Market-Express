@@ -5,7 +5,7 @@
 //  Created by Said Tapaev on 06.07.2024.
 //
 import Foundation
-// fgdsgfdgfdgdfgdf
+// fgdsgfdgfdgdfgdfdfgdgfdgd
 struct Product: Identifiable, Decodable, Encodable {
     let id: Int
     let name: String
