@@ -8,6 +8,7 @@ import SwiftUI
 
 struct CatalogView: View {
     @ObservedObject var viewModel: ProductViewModel
+    @ObservedObject var profileViewModel: ProfileViewModel
     @State private var searchText = ""
     private let customGreen = Color(red: 38 / 255, green: 115 / 255, blue: 21 / 255)
 
@@ -16,7 +17,7 @@ struct CatalogView: View {
             
             
         
-            HeaderView(viewModel: viewModel, customGreen: customGreen)
+            HeaderView(viewModel: viewModel, profileViewModel: profileViewModel, customGreen: customGreen)
             
             
             
@@ -43,6 +44,6 @@ struct CatalogView: View {
 
 struct CatalogView_Previews: PreviewProvider {
     static var previews: some View {
-        CatalogView(viewModel: ProductViewModel())
+        CatalogView(viewModel: ProductViewModel(), profileViewModel: ProfileViewModel())
     }
 }

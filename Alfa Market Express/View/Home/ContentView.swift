@@ -9,48 +9,57 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject private var viewModel = ProductViewModel()
+    @StateObject private var profileViewModel = ProfileViewModel()
     
     var body: some View {
         TabView {
-          
-                HomeView(viewModel: viewModel)
-                    
+            // Главная страница
+            HomeView(viewModel: viewModel, profileViewModel: profileViewModel)
+                .tabItem {
+                   Image(systemName: "house")
+                }
             
-            .tabItem {
-                Label("", systemImage: "house")
-            }
-            
+            // Каталог
             NavigationView {
-                CatalogView(viewModel: viewModel)
-                   
+                CatalogView(viewModel: viewModel, profileViewModel: profileViewModel)
             }
             .tabItem {
-                Label("", systemImage: "list.dash")
+                 Image(systemName: "list.dash")
             }
             
+            // Корзина
             NavigationView {
                 CartView(viewModel: viewModel)
-                    
             }
             .tabItem {
-                Label("", systemImage: "cart")
+                 Image(systemName: "cart")
             }
             
+            // Избранное
             NavigationView {
-                ProfileView(viewModel: viewModel)
-                   
+                FavoritesView(viewModel: viewModel)
             }
             .tabItem {
-                Label("", systemImage: "person.circle")
+                 Image(systemName: "heart")
             }
+            
+            // Профиль
+            NavigationView {
+                ProfileView(viewModel: viewModel, profileViewModel: profileViewModel)
+            }
+            .tabItem {
+                 Image(systemName: "person.circle")
+            }
+            
+            
         }
-        
 //        .onAppear {
+//            
 //            viewModel.fetchProducts()
 //            viewModel.fetchCategories()
-        }
+//        }
     }
-//}
+}
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {

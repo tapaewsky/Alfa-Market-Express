@@ -29,6 +29,7 @@ class ProductViewModel: ObservableObject {
             saveCart()
         }
     }
+    @Published var selectedProducts: Set<Product> = []
     @Published var searchText: String = ""
     @Published var isLoading = false
     @Published var isError = false
@@ -49,11 +50,48 @@ class ProductViewModel: ObservableObject {
     
     var totalPrice: String {
         let total = cart.reduce(0) { partialResult, item in
-            partialResult + (Double(item.price) ?? 0)
+            partialResult + item.price
         }
         return String(format: "%.f ₽", total)
     }
     
+    // Функция для добавления продукта в выбранные
+    func selectProduct(_ product: Product) {
+        selectedProducts.insert(product)
+    }
+    
+    // Функция для удаления продукта из выбранных
+    func deselectProduct(_ product: Product) {
+        selectedProducts.remove(product)
+    }
+    
+    // Функция для переключения состояния выбора продукта
+    func toggleProductSelection(_ product: Product) {
+        if selectedProducts.contains(product) {
+            deselectProduct(product)
+        } else {
+            selectProduct(product)
+        }
+    }
+    
+    // Функция для удаления выбранных продуктов
+    func removeSelectedProducts() {
+        for product in selectedProducts {
+            removeFromFavorites(product)
+            removeFromCart(product)
+        }
+        selectedProducts.removeAll()
+    }
+    
+    // Функция для добавления выбранных продуктов в корзину
+    func addSelectedProductsToCart() {
+        for product in selectedProducts {
+            addToCart(product)
+        }
+        selectedProducts.removeAll()
+    }
+
+    // Функция для загрузки данных с сервера
     func fetchData(completion: @escaping (Bool) -> Void) {
         isLoading = true
         isError = false
@@ -80,6 +118,7 @@ class ProductViewModel: ObservableObject {
         }
     }
     
+    // Функция для загрузки продуктов с сервера
     func fetchProducts(completion: @escaping (Bool) -> Void) {
         guard let url = URL(string: "http://95.174.90.162:8000/api/products/") else {
             completion(false)
@@ -89,17 +128,19 @@ class ProductViewModel: ObservableObject {
         URLSession.shared.dataTask(with: url) { data, response, error in
             if let error = error {
                 print("Error fetching products: \(error.localizedDescription)")
-                DispatchQueue.main.async {
-                    completion(false)
-                }
+                completion(false)
                 return
             }
-            
+
             guard let data = data else {
-                DispatchQueue.main.async {
-                    completion(false)
-                }
+                print("No data received")
+                completion(false)
                 return
+            }
+
+            // Печать ответа для отладки
+            if let jsonString = String(data: data, encoding: .utf8) {
+                print("Received JSON: \(jsonString)")
             }
             
             do {
@@ -110,13 +151,12 @@ class ProductViewModel: ObservableObject {
                 }
             } catch {
                 print("Error decoding products: \(error.localizedDescription)")
-                DispatchQueue.main.async {
-                    completion(false)
-                }
+                completion(false)
             }
         }.resume()
     }
     
+    // Функция для загрузки категорий с сервера
     func fetchCategories(completion: @escaping (Bool) -> Void) {
         guard let url = URL(string: "http://95.174.90.162:8000/api/categories/") else {
             completion(false)
@@ -133,6 +173,7 @@ class ProductViewModel: ObservableObject {
             }
             
             guard let data = data else {
+                print("No data received")
                 DispatchQueue.main.async {
                     completion(false)
                 }
@@ -154,30 +195,35 @@ class ProductViewModel: ObservableObject {
         }.resume()
     }
     
+    // Сохранение продуктов
     private func saveProducts() {
         if let data = try? JSONEncoder().encode(products) {
             UserDefaults.standard.set(data, forKey: productsKey)
         }
     }
     
+    // Сохранение категорий
     private func saveCategories() {
         if let data = try? JSONEncoder().encode(categories) {
             UserDefaults.standard.set(data, forKey: categoriesKey)
         }
     }
     
+    // Сохранение избранных продуктов
     private func saveFavorites() {
         if let data = try? JSONEncoder().encode(favorites) {
             UserDefaults.standard.set(data, forKey: favoritesKey)
         }
     }
     
+    // Сохранение корзины
     private func saveCart() {
         if let data = try? JSONEncoder().encode(cart) {
             UserDefaults.standard.set(data, forKey: cartKey)
         }
     }
     
+    // Загрузка данных из UserDefaults
     private func loadCachedData() {
         if let productsData = UserDefaults.standard.data(forKey: productsKey),
            let cachedProducts = try? JSONDecoder().decode([Product].self, from: productsData) {
@@ -200,6 +246,7 @@ class ProductViewModel: ObservableObject {
         }
     }
     
+    // Фильтрация продуктов
     var filteredProducts: [Product] {
         if searchText.isEmpty {
             return products
@@ -208,37 +255,43 @@ class ProductViewModel: ObservableObject {
         }
     }
     
+    // Добавление в избранное
     func addToFavorites(_ product: Product) {
         if !favorites.contains(where: { $0.id == product.id }) {
             favorites.append(product)
         }
     }
     
+    // Удаление из избранного
     func removeFromFavorites(_ product: Product) {
         if let index = favorites.firstIndex(where: { $0.id == product.id }) {
             favorites.remove(at: index)
         }
     }
     
+    // Проверка на избранное
     func isFavorite(_ product: Product) -> Bool {
         return favorites.contains(where: { $0.id == product.id })
     }
     
+    // Удаление из корзины
     func removeFromCart(_ product: Product) {
         if let index = cart.firstIndex(where: { $0.id == product.id }) {
             cart.remove(at: index)
         }
     }
     
+    // Добавление в корзину
     func addToCart(_ product: Product) {
         cart.append(product)
     }
     
+    // Переключение избранного
     func toggleFavorite(_ product: Product) {
-        if let index = favorites.firstIndex(where: { $0.id == product.id }) {
-            favorites.remove(at: index)
+        if isFavorite(product) {
+            removeFromFavorites(product)
         } else {
-            favorites.append(product)
+            addToFavorites(product)
         }
         
         if let productIndex = products.firstIndex(where: { $0.id == product.id }) {
@@ -246,6 +299,14 @@ class ProductViewModel: ObservableObject {
         }
     }
     
+    // Обновление продукта
+    func updateProduct(_ product: Product) {
+        if let index = products.firstIndex(where: { $0.id == product.id }) {
+            products[index] = product
+        }
+    }
+    
+    // Симуляция добавления в избранное
     func simulateFavorites() {
         if !products.isEmpty {
             favorites.append(products[0])
@@ -253,8 +314,8 @@ class ProductViewModel: ObservableObject {
         }
     }
     
+    // Загрузка изображения по URL
     func loadImage(for url: String, completion: @escaping (UIImage?) -> Void) {
-        // Since we removed the image caching, we will always download the image
         guard let imageURL = URL(string: url) else {
             print("Invalid URL: \(url)")
             completion(nil)
@@ -278,7 +339,6 @@ class ProductViewModel: ObservableObject {
                 return
             }
             
-            // Return the image on the main thread
             DispatchQueue.main.async {
                 completion(image)
             }

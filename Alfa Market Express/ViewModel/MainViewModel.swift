@@ -26,6 +26,7 @@ class MainViewModel: ObservableObject {
             showAuthContainer = false
         }
     }
+    
 
     func logout() {
         UserDefaultsWorker.shared.dropTokens()

@@ -8,6 +8,7 @@ import SwiftUI
 
 struct HomeView: View {
     @ObservedObject var viewModel: ProductViewModel
+    @ObservedObject var profileViewModel: ProfileViewModel
     @StateObject private var networkMonitor = NetworkMonitor()
     @State private var searchText = ""
 
@@ -18,7 +19,7 @@ struct HomeView: View {
         NavigationView {
             VStack(spacing: 0) {
                 
-                HeaderView(viewModel: viewModel, customGreen: customGreen)
+                HeaderView(viewModel: viewModel, profileViewModel: profileViewModel, customGreen: customGreen)
                     .padding(.top, 0)
                 
                 
@@ -81,6 +82,6 @@ struct HomeView: View {
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView(viewModel: ProductViewModel())
+        HomeView(viewModel: ProductViewModel(), profileViewModel: ProfileViewModel())
     }
 }
