@@ -45,7 +45,7 @@ struct HomeView: View {
                         .padding(.top, 0)
                     }
                 }
-                
+                // йоооов
                
                 Spacer(minLength: 0)
             }
