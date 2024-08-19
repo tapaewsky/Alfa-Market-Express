@@ -49,10 +49,13 @@ class ProductViewModel: ObservableObject {
     }
     
     var totalPrice: String {
-        let total = cart.reduce(0) { partialResult, item in
-            partialResult + item.price
+        let total = cart.reduce(0.0) { partialResult, item in
+            // Преобразуем цену из строки в Double, если это возможно
+            let price = Double(item.price) ?? 0.0
+            return partialResult + price
         }
-        return String(format: "%.f ₽", total)
+        // Форматируем итоговую сумму
+        return String(format: "%.2f ₽", total)
     }
     
     // Функция для добавления продукта в выбранные
@@ -82,6 +85,8 @@ class ProductViewModel: ObservableObject {
         }
         selectedProducts.removeAll()
     }
+    
+   
     
     // Функция для добавления выбранных продуктов в корзину
     func addSelectedProductsToCart() {
@@ -313,6 +318,13 @@ class ProductViewModel: ObservableObject {
             products[0].isFavorite = true
         }
     }
+    
+    func increaseQuantity(for product: Product) {
+            if let index = cart.firstIndex(where: { $0.id == product.id }) {
+                cart[index].quantity += 1
+                updateProduct(cart[index])
+            }
+        }
     
     // Загрузка изображения по URL
     func loadImage(for url: String, completion: @escaping (UIImage?) -> Void) {

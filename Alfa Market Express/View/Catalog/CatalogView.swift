@@ -23,8 +23,18 @@ struct CatalogView: View {
             
             
             SearchBar(searchText: $searchText, customGreen: customGreen, viewModel: viewModel)
-                .padding(.vertical)
-                .padding(.horizontal)
+                .padding(.vertical, 0)
+                .padding(.horizontal, 0)
+            
+            HStack {
+                Text("Каталог")
+                    .font(.title)
+                    .fontWeight(.bold)
+                    .padding(.leading, 15)
+                
+                Spacer()
+            }
+            .padding(.top, 10)
             
             
             

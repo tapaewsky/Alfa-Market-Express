@@ -29,7 +29,7 @@ struct ContentView: View {
             
             // Корзина
             NavigationView {
-                CartView(viewModel: viewModel)
+                CartView(viewModel: viewModel, profileViewModel: profileViewModel)
             }
             .tabItem {
                  Image(systemName: "cart")
@@ -37,7 +37,7 @@ struct ContentView: View {
             
             // Избранное
             NavigationView {
-                FavoritesView(viewModel: viewModel)
+                FavoritesView(viewModel: viewModel, profileViewModel: profileViewModel)
             }
             .tabItem {
                  Image(systemName: "heart")
@@ -54,7 +54,7 @@ struct ContentView: View {
             
         }
 //        .onAppear {
-//            
+//
 //            viewModel.fetchProducts()
 //            viewModel.fetchCategories()
 //        }

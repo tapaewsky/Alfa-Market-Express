@@ -67,7 +67,7 @@ struct AddressSelectionView: View {
                 VStack {
                     Spacer()
                     Button(action: {
-                        // Логика сохранения адреса
+                       
                         print("Сохранить адрес: \(address)")
                     }) {
                         Text("Сохранить адрес")

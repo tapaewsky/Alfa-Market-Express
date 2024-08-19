@@ -55,7 +55,7 @@
 		8F61CCB12C514E7D004A2DC4 /* AddressSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressSelectionView.swift; sourceTree = "<group>"; };
 		8F61CCB32C51507B004A2DC4 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		8F61CCB52C515111004A2DC4 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
-		8F6A239D2C396A5C005A3320 /* Alfa Market Express.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Alfa Market Express.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		8F6A239D2C396A5C005A3320 /* Alfa Marker Express.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Alfa Marker Express.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		8F6A23A02C396A5C005A3320 /* AlfaMarketExpressApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlfaMarketExpressApp.swift; sourceTree = "<group>"; };
 		8F6A23A22C396A5C005A3320 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		8F6A23A42C396A5C005A3320 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -115,7 +115,7 @@
 		8F6A239E2C396A5C005A3320 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				8F6A239D2C396A5C005A3320 /* Alfa Market Express.app */,
+				8F6A239D2C396A5C005A3320 /* Alfa Marker Express.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -275,7 +275,7 @@
 			);
 			name = "Alfa Market Express";
 			productName = WareHouse1;
-			productReference = 8F6A239D2C396A5C005A3320 /* Alfa Market Express.app */;
+			productReference = 8F6A239D2C396A5C005A3320 /* Alfa Marker Express.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -498,6 +498,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Alfa Market Express/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Alfa Market Express";
+				"INFOPLIST_KEY_CFBundleDisplayName[sdk=iphoneos*]" = "Alfa Market Express";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.shopping";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Мы используем вашу геопозицию для отображения текущего местоположения.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Мы используем вашу геопозицию для отображения текущего местоположения.";
@@ -513,10 +514,14 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.AlfaMarketExpress;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Alfa Marker Express";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -534,6 +539,7 @@
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Alfa Market Express/Info.plist";
 				INFOPLIST_KEY_CFBundleDisplayName = "Alfa Market Express";
+				"INFOPLIST_KEY_CFBundleDisplayName[sdk=iphoneos*]" = "Alfa Market Express";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.shopping";
 				INFOPLIST_KEY_NSLocationAlwaysUsageDescription = "Мы используем вашу геопозицию для отображения текущего местоположения.";
 				INFOPLIST_KEY_NSLocationWhenInUseUsageDescription = "Мы используем вашу геопозицию для отображения текущего местоположения.";
@@ -549,10 +555,14 @@
 				);
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.AlfaMarketExpress;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Alfa Marker Express";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
+				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

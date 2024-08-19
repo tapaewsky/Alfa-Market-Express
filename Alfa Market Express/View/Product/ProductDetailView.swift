@@ -6,6 +6,8 @@
 //
 import SwiftUI
 
+
+
 struct ProductDetailView: View {
     @ObservedObject var viewModel: ProductViewModel
     var product: Product
@@ -18,22 +20,29 @@ struct ProductDetailView: View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 ZStack(alignment: .topLeading) {
-                    AsyncImage(url: URL(string: product.imageUrl)) { image in
-                        image
+                    if let imageUrl = product.imageUrl, let url = URL(string: imageUrl) {
+                        AsyncImage(url: url) { image in
+                            image
+                                .resizable()
+                                .aspectRatio(contentMode: .fit)
+                        } placeholder: {
+                            ProgressView()
+                        }
+                    } else {
+                        // Плейсхолдер, если URL отсутствует или невалиден
+                        Image(systemName: "photo")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                    } placeholder: {
-                        ProgressView()
                     }
-                    .frame(height: 300)
+                    
                     
                     Button(action: {
                         isFavorite.toggle()
-                                                if isFavorite {
-                                                    viewModel.addToFavorites(product)
-                                                } else {
-                                                    viewModel.removeFromFavorites(product)
-                                                }
+                        if isFavorite {
+                            viewModel.addToFavorites(product)
+                        } else {
+                            viewModel.removeFromFavorites(product)
+                        }
                     }) {
                         Image(systemName: isFavorite ? "heart.fill" : "heart")
                             .resizable()
@@ -50,7 +59,9 @@ struct ProductDetailView: View {
                 Text(product.description)
                     .padding(.horizontal)
                 
-                Text("\(product.price) ₽")
+                // Обработка возможных ошибок при преобразовании цены
+                let priceText = (Double(product.price) != nil) ? "\(product.price) ₽" : "Цена не доступна"
+                Text(priceText)
                     .font(.title)
                     .padding(.horizontal)
                 
@@ -93,7 +104,6 @@ struct ProductDetailView: View {
                             .buttonStyle(PlainButtonStyle())
                         }
                     }
-                    
                 }
                 .padding(.horizontal)
                 
@@ -106,3 +116,21 @@ struct ProductDetailView: View {
     }
 }
 
+//struct ProductDetailView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ProductDetailView(
+//            viewModel: ProductViewModel(),
+//            product: Product(
+//                id: 1,
+//                name: "Sample Product",
+//                description: "This is a sample product.",
+//                price: "100.00", 
+//                imageUrl: "http://example.com/image.png",
+//                category: 1,
+//                isFavorite: false,
+//                isInCart: false,
+//                quantity: 1
+//            )
+//        )
+//    }
+//}

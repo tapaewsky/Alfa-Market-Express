@@ -19,7 +19,7 @@ struct CategoryGridView: View {
                     NavigationLink(destination: CategoryProductsView(viewModel: viewModel, category: category)) {
                         CategoryCardView(category: category)
                         
-//                            .padding(5)
+                            .padding(5)
                         
                     }
                 }

@@ -6,36 +6,53 @@
 //
 import SwiftUI
 
-import SwiftUI
-
 struct CartView: View {
     @ObservedObject var viewModel: ProductViewModel
-    
+    @ObservedObject var profileViewModel: ProfileViewModel
+    @State private var searchText = ""
+    private let customGreen = Color(red: 38 / 255, green: 115 / 255, blue: 21 / 255)
+
     var body: some View {
         NavigationView {
-            VStack {
-                List(viewModel.cart) { product in
-                    CartItemView(product: product) {
-                        
-                        viewModel.removeFromCart(product)
+            VStack(spacing: 0) {
+                // Reusing HeaderView
+                HeaderView(viewModel: viewModel, profileViewModel: profileViewModel, customGreen: customGreen)
+                    .padding(.top, 0)
+                
+                // Reusing SearchBar
+                SearchBar(searchText: $searchText, customGreen: customGreen, viewModel: viewModel)
+                    .padding(.vertical, 0)
+                    .padding(.horizontal, 0)
+                
+                List {
+                    ForEach(viewModel.cart.filter { $0.name.contains(searchText) }) { product in
+                        ProductRowView(product: product, viewModel: viewModel, onFavoriteToggle: {
+                            
+                        })
+                            .swipeActions {
+                                Button(role: .destructive) {
+                                    viewModel.removeFromCart(product)
+                                } label: {
+                                    Label("Remove", systemImage: "trash")
+                                }
+                            }
                     }
                 }
-                .navigationTitle("Корзина")
-                
                
-                Text("Общая сумма: \(viewModel.totalPrice) ₽")
+                
+                Text("Общая сумма: \(viewModel.totalPrice)")
                     .font(.headline)
                     .padding()
                 
-               
                 Button(action: {
                     
                 }) {
-                    Text("Оплатить")
-                        .font(.title2)
+                    Text("Оформить заказ")
+                        .font(.title3)
+                        
                         .padding()
                         .frame(maxWidth: .infinity)
-                        .background(Color.blue)
+                        .background(customGreen)
                         .foregroundColor(.white)
                         .cornerRadius(10)
                 }
@@ -45,40 +62,8 @@ struct CartView: View {
     }
 }
 
-struct CartItemView: View {
-    var product: Product
-    var onRemove: () -> Void
-    
-    var body: some View {
-        HStack {
-            AsyncImage(url: URL(string: product.imageUrl)) { image in
-                image.resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 50, height: 50)
-            } placeholder: {
-                ProgressView()
-                    .frame(width: 50, height: 50)
-            }
-            Text(product.name)
-            Spacer()
-            Text("\(product.price) ₽")
-            Button(action: {
-               
-                onRemove()
-            }) {
-                Image(systemName: "trash")
-                    .foregroundColor(.red)
-            }
-        }
-        .padding()
-        .background(Color.white)
-        .cornerRadius(10)
-        .shadow(radius: 5)
-    }
-}
-
 struct CartView_Previews: PreviewProvider {
     static var previews: some View {
-        CartView(viewModel: ProductViewModel())
+        CartView(viewModel: ProductViewModel(), profileViewModel: ProfileViewModel())
     }
 }

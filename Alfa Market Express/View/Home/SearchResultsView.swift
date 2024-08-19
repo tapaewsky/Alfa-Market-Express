@@ -10,7 +10,7 @@ struct SearchBar: View {
     @Binding var searchText: String
     let customGreen: Color
     @ObservedObject var viewModel: ProductViewModel
-
+    
     var body: some View {
         VStack {
             HStack {

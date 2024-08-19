@@ -15,17 +15,15 @@ struct ProductGridView: View {
     
 
     var body: some View {
-        LazyVGrid(columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)], spacing: 10) {
-            ForEach(viewModel.products) { product in
-                NavigationLink(destination: ProductDetailView(viewModel: viewModel, product: product)) {
-                    ProductCardView(product: product, viewModel: viewModel, onFavoriteToggle: {})
-                        
+            LazyVGrid(columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)], spacing: 5) {
+                ForEach(viewModel.filteredProducts) { product in
+                    NavigationLink(destination: ProductDetailView(viewModel: viewModel, product: product)) {
+                        ProductCardView(product: product, viewModel: viewModel, onFavoriteToggle: {
+                            
+                        })
                         .padding(5)
-                        
+                    }
                 }
             }
         }
-
-       
     }
-}
