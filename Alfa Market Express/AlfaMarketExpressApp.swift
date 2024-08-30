@@ -11,7 +11,7 @@ import SwiftUI
 struct AlfaMarketExpress: App {
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            LoginView()
                 .preferredColorScheme(.light)
         }
     }

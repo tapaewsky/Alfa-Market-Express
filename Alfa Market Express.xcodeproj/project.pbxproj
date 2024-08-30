@@ -41,6 +41,8 @@
 		8FB1CC452C6E44FD002C054C /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FB1CC442C6E44FD002C054C /* UserProfile.swift */; };
 		8FB1CC472C6E45B3002C054C /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FB1CC462C6E45B3002C054C /* ProfileViewModel.swift */; };
 		8FCB30F62C407C62006AED65 /* ProductReviewsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FCB30F52C407C62006AED65 /* ProductReviewsView.swift */; };
+		8FFA9D7B2C78B07E00115DFE /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FFA9D792C78B07E00115DFE /* LoginView.swift */; };
+		8FFA9D7D2C78B0AD00115DFE /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FFA9D7C2C78B0AD00115DFE /* AuthManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -81,6 +83,8 @@
 		8FB1CC442C6E44FD002C054C /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
 		8FB1CC462C6E45B3002C054C /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		8FCB30F52C407C62006AED65 /* ProductReviewsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductReviewsView.swift; sourceTree = "<group>"; };
+		8FFA9D792C78B07E00115DFE /* LoginView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
+		8FFA9D7C2C78B0AD00115DFE /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -157,6 +161,7 @@
 		8F6A23B02C39729F005A3320 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				8FFA9D7A2C78B07E00115DFE /* Login */,
 				8FB1CC482C6E4C11002C054C /* Favorites */,
 				8F97BB0F2C569CD0009C1BC7 /* Home */,
 				8F97BB0D2C569C92009C1BC7 /* Catalog */,
@@ -175,6 +180,7 @@
 				8F6A23B62C39736C005A3320 /* ProductViewModel.swift */,
 				8FA6AB352C67AAE700C267FE /* Network.swift */,
 				8FB1CC462C6E45B3002C054C /* ProfileViewModel.swift */,
+				8FFA9D7C2C78B0AD00115DFE /* AuthManager.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -256,6 +262,14 @@
 				8F16D5A62C4876B900C3F429 /* FavoritesView.swift */,
 			);
 			path = Favorites;
+			sourceTree = "<group>";
+		};
+		8FFA9D7A2C78B07E00115DFE /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				8FFA9D792C78B07E00115DFE /* LoginView.swift */,
+			);
+			path = Login;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -347,6 +361,7 @@
 				8F16D5A72C4876B900C3F429 /* FavoritesView.swift in Sources */,
 				8FCB30F62C407C62006AED65 /* ProductReviewsView.swift in Sources */,
 				8F6A23A12C396A5C005A3320 /* AlfaMarketExpressApp.swift in Sources */,
+				8FFA9D7D2C78B0AD00115DFE /* AuthManager.swift in Sources */,
 				8F6A23BB2C39740A005A3320 /* ProductRowView.swift in Sources */,
 				8F97BB212C56FD09009C1BC7 /* SpecialOfferView.swift in Sources */,
 				8F97BB1F2C56FCDD009C1BC7 /* HeaderView.swift in Sources */,
@@ -358,6 +373,7 @@
 				8F61CCB62C515111004A2DC4 /* LocationManager.swift in Sources */,
 				8F97BB182C56F665009C1BC7 /* CategoryCardView.swift in Sources */,
 				8F97BB142C56E4C7009C1BC7 /* ProductGridView.swift in Sources */,
+				8FFA9D7B2C78B07E00115DFE /* LoginView.swift in Sources */,
 				8F6A23B72C39736C005A3320 /* ProductViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

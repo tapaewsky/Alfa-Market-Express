@@ -16,7 +16,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "8F6A239C2C396A5C005A3320"
-               BuildableName = "Alfa Market Express.app"
+               BuildableName = "Alfa Marker Express.app"
                BlueprintName = "Alfa Market Express"
                ReferencedContainer = "container:Alfa Market Express.xcodeproj">
             </BuildableReference>
@@ -31,7 +31,7 @@
       shouldAutocreateTestPlan = "YES">
    </TestAction>
    <LaunchAction
-      buildConfiguration = "Release"
+      buildConfiguration = "Debug"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
@@ -45,7 +45,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "8F6A239C2C396A5C005A3320"
-            BuildableName = "Alfa Market Express.app"
+            BuildableName = "Alfa Marker Express.app"
             BlueprintName = "Alfa Market Express"
             ReferencedContainer = "container:Alfa Market Express.xcodeproj">
          </BuildableReference>
@@ -62,7 +62,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "8F6A239C2C396A5C005A3320"
-            BuildableName = "Alfa Market Express.app"
+            BuildableName = "Alfa Marker Express.app"
             BlueprintName = "Alfa Market Express"
             ReferencedContainer = "container:Alfa Market Express.xcodeproj">
          </BuildableReference>

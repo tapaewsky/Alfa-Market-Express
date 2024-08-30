@@ -45,7 +45,7 @@ struct ContentView: View {
             
             // Профиль
             NavigationView {
-                ProfileView(viewModel: viewModel, profileViewModel: profileViewModel)
+                ProfileView(productViewModel: viewModel, viewModel: profileViewModel)
             }
             .tabItem {
                  Image(systemName: "person.circle")

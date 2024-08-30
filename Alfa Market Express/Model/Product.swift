@@ -12,7 +12,7 @@ struct Product: Identifiable, Decodable, Hashable, Encodable {
     var name: String
     var description: String
     var price: String
-    var imageUrl: String? // Сделать опциональным, чтобы учесть значение null
+    var imageUrl: String? 
     var category: Int
     var isFavorite: Bool
     var isInCart: Bool

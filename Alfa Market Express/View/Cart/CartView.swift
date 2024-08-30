@@ -15,11 +15,11 @@ struct CartView: View {
     var body: some View {
         NavigationView {
             VStack(spacing: 0) {
-                // Reusing HeaderView
+                
                 HeaderView(viewModel: viewModel, profileViewModel: profileViewModel, customGreen: customGreen)
                     .padding(.top, 0)
                 
-                // Reusing SearchBar
+             
                 SearchBar(searchText: $searchText, customGreen: customGreen, viewModel: viewModel)
                     .padding(.vertical, 0)
                     .padding(.horizontal, 0)

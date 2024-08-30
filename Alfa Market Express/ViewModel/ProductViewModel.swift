@@ -48,6 +48,9 @@ class ProductViewModel: ObservableObject {
         }
     }
     
+    
+    
+    
     var totalPrice: String {
         let total = cart.reduce(0.0) { partialResult, item in
             // Преобразуем цену из строки в Double, если это возможно

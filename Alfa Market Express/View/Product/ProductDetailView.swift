@@ -11,7 +11,7 @@ import SwiftUI
 struct ProductDetailView: View {
     @ObservedObject var viewModel: ProductViewModel
     var product: Product
-    
+  
     @State private var quantity: Int = 1
     @State private var isAddedToCart: Bool = false
     @State private var isFavorite: Bool = false
@@ -115,22 +115,27 @@ struct ProductDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
     }
 }
-
 //struct ProductDetailView_Previews: PreviewProvider {
 //    static var previews: some View {
-//        ProductDetailView(
-//            viewModel: ProductViewModel(),
-//            product: Product(
-//                id: 1,
-//                name: "Sample Product",
-//                description: "This is a sample product.",
-//                price: "100.00", 
-//                imageUrl: "http://example.com/image.png",
-//                category: 1,
-//                isFavorite: false,
-//                isInCart: false,
-//                quantity: 1
-//            )
+//        let viewModel = ProductViewModel() // Убедитесь, что ProductViewModel корректно инициализирован.
+//        
+//        // Пример Product должен соответствовать вашей модели данных.
+////        let sampleProduct = Product(
+////            id: 1,
+//            name: "Sample Product",
+//            description: "This is a sample product.",
+//            price: "100.00",
+//            imageUrl: "http://example.com/image.png",
+//            category: 1,
+//            isFavorite: false,
+//            isInCart: false,
+//            quantity: 1
 //        )
+//        
+//        ProductDetailView(
+//            viewModel: viewModel,
+//            product: sampleProduct
+//        )
+//        .environmentObject(viewModel) // Если ваш ProductViewModel используется как EnvironmentObject
 //    }
 //}
