@@ -33,6 +33,7 @@ class ProductViewModel: ObservableObject {
     @Published var searchText: String = ""
     @Published var isLoading = false
     @Published var isError = false
+    @Published var filteredFavorites: [Product] = []
 
     private let productsKey = "cachedProducts"
     private let categoriesKey = "cachedCategories"
@@ -47,15 +48,26 @@ class ProductViewModel: ObservableObject {
             }
         }
     }
+    
+    func searchFavorites(query: String) {
+            if query.isEmpty {
+                filteredFavorites = favorites
+            } else {
+                filteredFavorites = favorites.filter { $0.name.localizedCaseInsensitiveContains(query) }
+            }
+        }
+        
+        func updateSearchText(_ text: String) {
+            searchText = text
+            searchFavorites(query: text)
+        }
+    
+
     static let sampleCategories: [Category] = [
-        Category(id: 1,name: "Electronics", description: "", imageUrl: "https://example.com/electronics.jpg"),
-        Category(id: 2,name: "Fashion", description: "", imageUrl: "https://example.com/fashion.jpg"),
-        Category(id: 3,name: "Home", description: "", imageUrl: "https://example.com/home.jpg")
-        ]
-    
-    
-    
-    
+        Category(id: 1, name: "Electronics", description: "", imageUrl: "https://example.com/electronics.jpg"),
+        Category(id: 2, name: "Fashion", description: "", imageUrl: "https://example.com/fashion.jpg"),
+        Category(id: 3, name: "Home", description: "", imageUrl: "https://example.com/home.jpg")
+    ]
     
     var totalPrice: String {
         let total = cart.reduce(0.0) { partialResult, item in
@@ -94,8 +106,6 @@ class ProductViewModel: ObservableObject {
         }
         selectedProducts.removeAll()
     }
-    
-   
     
     // Функция для добавления выбранных продуктов в корзину
     func addSelectedProductsToCart() {
@@ -329,11 +339,11 @@ class ProductViewModel: ObservableObject {
     }
     
     func increaseQuantity(for product: Product) {
-            if let index = cart.firstIndex(where: { $0.id == product.id }) {
-                cart[index].quantity += 1
-                updateProduct(cart[index])
-            }
+        if let index = cart.firstIndex(where: { $0.id == product.id }) {
+            cart[index].quantity += 1
+            updateProduct(cart[index])
         }
+    }
     
     // Загрузка изображения по URL
     func loadImage(for url: String, completion: @escaping (UIImage?) -> Void) {
@@ -362,6 +372,51 @@ class ProductViewModel: ObservableObject {
             
             DispatchQueue.main.async {
                 completion(image)
+            }
+        }.resume()
+    }
+
+    // Функция поиска продуктов
+    func searchProducts(query: String, completion: @escaping (Bool) -> Void) {
+        guard !query.isEmpty else {
+            completion(false)
+            return
+        }
+        
+        let searchUrl = "http://95.174.90.162:8000/api/products/?search=\(query)"
+        guard let url = URL(string: searchUrl) else {
+            completion(false)
+            return
+        }
+        
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            if let error = error {
+                print("Error searching products: \(error.localizedDescription)")
+                DispatchQueue.main.async {
+                    completion(false)
+                }
+                return
+            }
+            
+            guard let data = data else {
+                print("No data received")
+                DispatchQueue.main.async {
+                    completion(false)
+                }
+                return
+            }
+            
+            do {
+                let products = try JSONDecoder().decode([Product].self, from: data)
+                DispatchQueue.main.async {
+                    self.products = products
+                    completion(true)
+                }
+            } catch {
+                print("Error decoding search results: \(error.localizedDescription)")
+                DispatchQueue.main.async {
+                    completion(false)
+                }
             }
         }.resume()
     }

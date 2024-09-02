@@ -8,20 +8,15 @@ import SwiftUI
 
 struct HomeView: View {
     @ObservedObject var viewModel: ProductViewModel
-
     @StateObject private var networkMonitor = NetworkMonitor()
-    @State private var searchText = ""
-
-    private let cardSize: CGFloat = 200
-    private let customGreen = Color(red: 38 / 255, green: 115 / 255, blue: 21 / 255)
+    @State private var searchText: String = ""
 
     var body: some View {
         NavigationView {
             VStack {
-                
                 Group {
                     HeaderView()
-                    SearchBar()
+                    SearchBar(searchText: $searchText, onSearch: performSearch)
                         .padding(.horizontal)
                     
                     if viewModel.isLoading {
@@ -33,7 +28,9 @@ struct HomeView: View {
                         ScrollView {
                             VStack(spacing: 0) {
                                 RecommendationCardView(categories: viewModel.categories)
-                                ProductGridView(viewModel: viewModel, onFavoriteToggle: {})
+                                ProductGridView(viewModel: viewModel, onFavoriteToggle: { product in
+                                    viewModel.toggleFavorite(product)
+                                })
                             }
                             .padding(.top, 0)
                         }
@@ -58,6 +55,7 @@ struct HomeView: View {
             }
         }
     }
+    
     private func fetchData() async {
         viewModel.isLoading = true
         await viewModel.fetchData { success in
@@ -69,7 +67,12 @@ struct HomeView: View {
             }
         }
     }
+    
+    private func performSearch() {
+        viewModel.updateSearchText(searchText)
+    }
 }
+
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
         HomeView(viewModel: ProductViewModel())

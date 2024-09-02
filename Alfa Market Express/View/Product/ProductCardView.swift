@@ -24,18 +24,18 @@ struct ProductCardView: View {
                             .aspectRatio(contentMode: .fill)
                             .cornerRadius(10)
                             .clipped()
-//                            .shadow(radius: 2)
+
                     } placeholder: {
                         ProgressView()
                     }
                 } else {
-                    // Плейсхолдер, если URL отсутствует
+                   
                     Image(systemName: "photo")
                         .resizable()
                         .aspectRatio(contentMode: .fill)
                         .cornerRadius(10)
                         .clipped()
-//                        .shadow(radius: 2)
+
                 }
 
                 Button(action: {
@@ -108,7 +108,7 @@ struct ProductCardView: View {
         .padding()
         .background(Color.white)
         .cornerRadius(10)
-//        .shadow(radius: 5)
+
     }
 }
 

@@ -14,7 +14,7 @@ struct ProductRowView: View {
 
     var body: some View {
         HStack {
-            // Обработка опционального URL
+            
             if let imageUrl = product.imageUrl, let url = URL(string: imageUrl) {
                 AsyncImage(url: url) { image in
                     image.resizable()
@@ -25,7 +25,7 @@ struct ProductRowView: View {
                     ProgressView()
                 }
             } else {
-                // Замена отсутствующего изображения на placeholder
+               
                 Image(systemName: "photo")
                     .resizable()
                     .frame(width: 50, height: 50)
@@ -49,7 +49,7 @@ struct ProductRowView: View {
                     
                     
                     
-                    // Обработка возможного преобразования строки в Double
+                  
                     if let price = Double(product.price) {
                         Text(String(format: "%.0f ₽", price))
                             .font(.subheadline)

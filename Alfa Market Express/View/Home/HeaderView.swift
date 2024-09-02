@@ -8,8 +8,6 @@
 import SwiftUI
 
 struct HeaderView: View {
-    var backgroundColor = Color.main
-
     var body: some View {
         Group {
             Image("logo_v1")
@@ -20,7 +18,7 @@ struct HeaderView: View {
         }
         .frame(height: 60)
         .frame(maxWidth: .infinity)
-        .background(backgroundColor)
+        .background(Color.main)
     }
 }
 

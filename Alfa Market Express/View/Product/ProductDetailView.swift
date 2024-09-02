@@ -29,7 +29,7 @@ struct ProductDetailView: View {
                             ProgressView()
                         }
                     } else {
-                        // Плейсхолдер, если URL отсутствует или невалиден
+                       
                         Image(systemName: "photo")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
@@ -59,7 +59,7 @@ struct ProductDetailView: View {
                 Text(product.description)
                     .padding(.horizontal)
                 
-                // Обработка возможных ошибок при преобразовании цены
+               
                 let priceText = (Double(product.price) != nil) ? "\(product.price) ₽" : "Цена не доступна"
                 Text(priceText)
                     .font(.title)
@@ -115,27 +115,3 @@ struct ProductDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
     }
 }
-//struct ProductDetailView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        let viewModel = ProductViewModel() // Убедитесь, что ProductViewModel корректно инициализирован.
-//        
-//        // Пример Product должен соответствовать вашей модели данных.
-////        let sampleProduct = Product(
-////            id: 1,
-//            name: "Sample Product",
-//            description: "This is a sample product.",
-//            price: "100.00",
-//            imageUrl: "http://example.com/image.png",
-//            category: 1,
-//            isFavorite: false,
-//            isInCart: false,
-//            quantity: 1
-//        )
-//        
-//        ProductDetailView(
-//            viewModel: viewModel,
-//            product: sampleProduct
-//        )
-//        .environmentObject(viewModel) // Если ваш ProductViewModel используется как EnvironmentObject
-//    }
-//}

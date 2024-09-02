@@ -13,31 +13,28 @@ struct CartView: View {
     private let customGreen = Color(red: 38 / 255, green: 115 / 255, blue: 21 / 255)
 
     var body: some View {
-        NavigationView {
-            VStack(spacing: 0) {
-                
+        VStack {
+            
+            Group {
                 HeaderView()
-                   
-                
-             
                 SearchBar()
-                
+                    .padding(.horizontal, 16)
                 
                 List {
                     ForEach(viewModel.cart.filter { $0.name.contains(searchText) }) { product in
                         ProductRowView(product: product, viewModel: viewModel, onFavoriteToggle: {
                             
                         })
-                            .swipeActions {
-                                Button(role: .destructive) {
-                                    viewModel.removeFromCart(product)
-                                } label: {
-                                    Label("Remove", systemImage: "trash")
-                                }
+                        .swipeActions {
+                            Button(role: .destructive) {
+                                viewModel.removeFromCart(product)
+                            } label: {
+                                Label("Remove", systemImage: "trash")
                             }
+                        }
                     }
                 }
-               
+                
                 
                 Text("Общая сумма: \(viewModel.totalPrice)")
                     .font(.headline)
@@ -48,7 +45,7 @@ struct CartView: View {
                 }) {
                     Text("Оформить заказ")
                         .font(.title3)
-                        
+                    
                         .padding()
                         .frame(maxWidth: .infinity)
                         .background(customGreen)
@@ -58,8 +55,9 @@ struct CartView: View {
                 .padding()
             }
         }
+        }
     }
-}
+
 
 struct CartView_Previews: PreviewProvider {
     static var previews: some View {

@@ -7,17 +7,8 @@
 
 import SwiftUI
 
-// ParentViewModel -> FavoritesViewModel == ObservedObject
-
-final class FavoritesViewModel: ObservableObject {
-    @Published var favoriteProducts: [Product] = []
-    @Published var searchText = ""
-    
-    
-}
-
 struct FavoritesView: View {
-    @StateObject var viewModel: ProductViewModel
+    @ObservedObject var viewModel: ProductViewModel
     @State private var searchText = ""
 
     var body: some View {
@@ -25,15 +16,16 @@ struct FavoritesView: View {
             HeaderView()
             
             Group {
-                SearchBar()
+                SearchBar(searchText: $searchText, onSearch: performSearch)
                 favoriteText
                 favoriteList
             }
             .padding(.horizontal, 16)
         }
-        
+        .onChange(of: searchText) { _ in
+            performSearch()
+        }
     }
-    
     
     private var favoriteText: some View {
         Text("Избранное")
@@ -44,16 +36,14 @@ struct FavoritesView: View {
     
     private var favoriteList: some View {
         List {
-            ForEach(viewModel.favorites) { product in
+            ForEach(viewModel.filteredFavorites) { product in
                 NavigationLink(destination: ProductDetailView(viewModel: viewModel, product: product)) {
-                    
                     HStack(spacing: 10) {
-                        AsyncImage(url: URL(string: product.imageUrl ?? "")) { image in // KingFisher SDWebImage
+                        AsyncImage(url: URL(string: product.imageUrl ?? "")) { image in
                             image.resizable()
                                 .aspectRatio(contentMode: .fill)
                                 .frame(width: 50, height: 50)
                                 .cornerRadius(8)
-                            
                         } placeholder: {
                             ProgressView()
                                 .frame(width: 50, height: 50)
@@ -74,6 +64,10 @@ struct FavoritesView: View {
             }
         }
         .listStyle(.plain)
+    }
+    
+    private func performSearch() {
+        viewModel.updateSearchText(searchText)
     }
 }
 

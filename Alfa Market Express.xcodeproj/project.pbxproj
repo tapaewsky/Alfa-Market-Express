@@ -13,7 +13,6 @@
 		8F2137D92C6669BA00A42845 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F2137D82C6669BA00A42845 /* Category.swift */; };
 		8F2137DE2C666E1B00A42845 /* Network.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F2137DC2C666E0300A42845 /* Network.framework */; };
 		8F35BF8F2C4EA45F00A77E77 /* SearchResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F35BF8E2C4EA45F00A77E77 /* SearchResultsView.swift */; };
-		8F61CCB22C514E7D004A2DC4 /* AddressSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F61CCB12C514E7D004A2DC4 /* AddressSelectionView.swift */; };
 		8F61CCB42C51507B004A2DC4 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F61CCB32C51507B004A2DC4 /* MapView.swift */; };
 		8F61CCB62C515111004A2DC4 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F61CCB52C515111004A2DC4 /* LocationManager.swift */; };
 		8F6A23A12C396A5C005A3320 /* AlfaMarketExpressApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F6A23A02C396A5C005A3320 /* AlfaMarketExpressApp.swift */; };
@@ -38,7 +37,7 @@
 		8FA6AB362C67AAE700C267FE /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FA6AB352C67AAE700C267FE /* Network.swift */; };
 		8FB1CC452C6E44FD002C054C /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FB1CC442C6E44FD002C054C /* UserProfile.swift */; };
 		8FB1CC472C6E45B3002C054C /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FB1CC462C6E45B3002C054C /* ProfileViewModel.swift */; };
-		8FCB30F62C407C62006AED65 /* ProductReviewsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FCB30F52C407C62006AED65 /* ProductReviewsView.swift */; };
+		8FC1321E2C865C3200F5C553 /* ProfileInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FC1321D2C865C3200F5C553 /* ProfileInfo.swift */; };
 		8FFA9D7B2C78B07E00115DFE /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FFA9D792C78B07E00115DFE /* LoginView.swift */; };
 		8FFA9D7D2C78B0AD00115DFE /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FFA9D7C2C78B0AD00115DFE /* AuthManager.swift */; };
 /* End PBXBuildFile section */
@@ -51,7 +50,6 @@
 		8F2137DA2C666DB000A42845 /* Alfa Market Express.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Alfa Market Express.entitlements"; sourceTree = "<group>"; };
 		8F2137DC2C666E0300A42845 /* Network.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Network.framework; path = System/Library/Frameworks/Network.framework; sourceTree = SDKROOT; };
 		8F35BF8E2C4EA45F00A77E77 /* SearchResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsView.swift; sourceTree = "<group>"; };
-		8F61CCB12C514E7D004A2DC4 /* AddressSelectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddressSelectionView.swift; sourceTree = "<group>"; };
 		8F61CCB32C51507B004A2DC4 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		8F61CCB52C515111004A2DC4 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		8F6A239D2C396A5C005A3320 /* Alfa Marker Express.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Alfa Marker Express.app"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -78,7 +76,7 @@
 		8FA6AB352C67AAE700C267FE /* Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
 		8FB1CC442C6E44FD002C054C /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
 		8FB1CC462C6E45B3002C054C /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
-		8FCB30F52C407C62006AED65 /* ProductReviewsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductReviewsView.swift; sourceTree = "<group>"; };
+		8FC1321D2C865C3200F5C553 /* ProfileInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileInfo.swift; sourceTree = "<group>"; };
 		8FFA9D792C78B07E00115DFE /* LoginView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		8FFA9D7C2C78B0AD00115DFE /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -195,7 +193,6 @@
 		8F97BB0E2C569CB0009C1BC7 /* Product */ = {
 			isa = PBXGroup;
 			children = (
-				8FCB30F52C407C62006AED65 /* ProductReviewsView.swift */,
 				8F6A23BC2C397432005A3320 /* ProductDetailView.swift */,
 				8F6A23C42C3975CC005A3320 /* ProductCardView.swift */,
 				8F6A23BA2C39740A005A3320 /* ProductRowView.swift */,
@@ -219,7 +216,6 @@
 		8F97BB102C569D30009C1BC7 /* Cart */ = {
 			isa = PBXGroup;
 			children = (
-				8F61CCB12C514E7D004A2DC4 /* AddressSelectionView.swift */,
 				8F6A23BE2C397446005A3320 /* CartView.swift */,
 			);
 			path = Cart;
@@ -238,6 +234,7 @@
 			isa = PBXGroup;
 			children = (
 				8F6A23C22C39746A005A3320 /* ProfileView.swift */,
+				8FC1321D2C865C3200F5C553 /* ProfileInfo.swift */,
 			);
 			path = Profile;
 			sourceTree = "<group>";
@@ -345,14 +342,13 @@
 				8F6A23A32C396A5C005A3320 /* ContentView.swift in Sources */,
 				8F004F062C51BA4600540FDA /* RecommendationCardView.swift in Sources */,
 				8F97BB162C56F642009C1BC7 /* CategoryProductsView.swift in Sources */,
+				8FC1321E2C865C3200F5C553 /* ProfileInfo.swift in Sources */,
 				8F6A23BD2C397432005A3320 /* ProductDetailView.swift in Sources */,
 				8F2137D12C6666E400A42845 /* URLCache.swift in Sources */,
 				8FB1CC472C6E45B3002C054C /* ProfileViewModel.swift in Sources */,
 				8F35BF8F2C4EA45F00A77E77 /* SearchResultsView.swift in Sources */,
-				8F61CCB22C514E7D004A2DC4 /* AddressSelectionView.swift in Sources */,
 				8F61CCB42C51507B004A2DC4 /* MapView.swift in Sources */,
 				8F16D5A72C4876B900C3F429 /* FavoritesView.swift in Sources */,
-				8FCB30F62C407C62006AED65 /* ProductReviewsView.swift in Sources */,
 				8F6A23A12C396A5C005A3320 /* AlfaMarketExpressApp.swift in Sources */,
 				8FFA9D7D2C78B0AD00115DFE /* AuthManager.swift in Sources */,
 				8F6A23BB2C39740A005A3320 /* ProductRowView.swift in Sources */,
