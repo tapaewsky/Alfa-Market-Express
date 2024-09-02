@@ -4,48 +4,58 @@
 //
 //  Created by Said Tapaev on 25.07.2024.
 //
-import SwiftUI
-import Combine
+//import SwiftUI
+//
+//struct AutoScrollingScrollView<Content: View>: View {
+//    let content: () -> Content
+//    let scrollDirection: Axis.Set
+//    let scrollInterval: TimeInterval
+//    let cardCount: Int
+//    @State private var offset: CGFloat = 0
+//    @State private var timer: Timer?
+//    private let animationDuration: TimeInterval = 1
+//
+//    var body: some View {
+//        GeometryReader { geometry in
+//            ScrollView(scrollDirection, showsIndicators: false) {
+//                ScrollViewReader { proxy in
+//                    LazyHStack(spacing: 0) {
+//                        ForEach(0..<cardCount, id: \.self) { _ in
+//                            content()
+//                                .frame(width: geometry.size.width)
+//                        }
+//                    }
+//                    .onChange(of: offset) { newValue in
+//                        withAnimation(.linear(duration: animationDuration)) {
+//                            proxy.scrollTo(Int(offset / geometry.size.width), anchor: .center)
+//                        }
+//                    }
+//                    .onAppear {
+//                        startAutoScrolling(geometry: geometry)
+//                    }
+//                    .onDisappear {
+//                        timer?.invalidate()
+//                    }
+//                }
+//            }
+//            .scrollTargetBehavior(.viewAligned)
+//            
+//        }
+//    }
+//    
+//    private func startAutoScrolling(geometry: GeometryProxy) {
+//        let scrollWidth = geometry.size.width
+//        let totalWidth = scrollWidth * CGFloat(cardCount)
+//        
+//        timer = Timer.scheduledTimer(withTimeInterval: scrollInterval, repeats: true) { _ in
+//            withAnimation(.linear(duration: animationDuration)) {
+//                if offset >= totalWidth - scrollWidth {
+//                    offset = 0
+//                } else {
+//                    offset += scrollWidth
+//                }
+//            }
+//        }
+//    }
+//}
 
-struct AutoScrollingScrollView<Content: View>: View {
-    let content: () -> Content
-       let scrollDirection: Axis.Set
-       let scrollInterval: TimeInterval
-       let cardCount: Int
-    @State private var offset: CGFloat = 0
-    @State private var timer: Timer?
-
-    var body: some View {
-        GeometryReader { geometry in
-            ScrollView(scrollDirection, showsIndicators: false) {
-                HStack(spacing: 0) {
-                    content()
-                        .frame(width: geometry.size.width)
-                }
-                .offset(x: offset)
-                .onAppear {
-                    startScrolling(viewWidth: geometry.size.width)
-                }
-                .onDisappear {
-                    stopScrolling()
-                }
-            }
-        }
-    }
-
-    private func startScrolling(viewWidth: CGFloat) {
-        timer = Timer.scheduledTimer(withTimeInterval: scrollInterval, repeats: true) { _ in
-            withAnimation(.easeInOut(duration: 1)) {
-                offset -= viewWidth
-                if offset < -viewWidth * CGFloat(cardCount - 1) {
-                    offset = 0
-                }
-            }
-        }
-    }
-
-    private func stopScrolling() {
-        timer?.invalidate()
-        timer = nil
-    }
-}

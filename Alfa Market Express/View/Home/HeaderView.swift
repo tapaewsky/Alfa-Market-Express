@@ -8,32 +8,24 @@
 import SwiftUI
 
 struct HeaderView: View {
-    @ObservedObject var viewModel: ProductViewModel
-    @ObservedObject var profileViewModel: ProfileViewModel
-    let customGreen: Color
+    var backgroundColor = Color.main
 
     var body: some View {
-        HStack {
+        Group {
             Image("logo_v1")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
                 .frame(height: 50)
-
-            Spacer()
-
-            
+                .padding(5)
         }
-        .padding(5)
-        .background(customGreen)
+        .frame(height: 60)
+        .frame(maxWidth: .infinity)
+        .background(backgroundColor)
     }
 }
 
 struct HeaderView_Previews: PreviewProvider {
     static var previews: some View {
-        HeaderView(
-            viewModel: ProductViewModel(),
-            profileViewModel: ProfileViewModel(),
-            customGreen: Color(red: 38 / 255, green: 115 / 255, blue: 21 / 255)
-        )
+        HeaderView()
     }
 }

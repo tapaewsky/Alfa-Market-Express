@@ -8,21 +8,32 @@
 import Foundation
 import Combine
 
+enum NetworkError: Error {
+    case invalidURL
+    case noData
+    case unableToDecode
+}
+
 class NetworkManager: ObservableObject {
-    @Published var products: [Product] = []
+    // выпилить из менеджера
+    private let decoder = JSONDecoder()
     
-    func fetchProducts(from urlString: String) {
-        guard let url = URL(string: urlString) else { return }
+    
+    func fetchProducts(
+        from urlString: String,
+        completion: @escaping (Result<[Product], NetworkError>) -> Void
+    ) {
+        guard let url = URL(string: urlString) else { return completion(.failure(.invalidURL)) }
         
-        URLSession.shared.dataTask(with: url) { data, response, error in
+        URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
+            // обработать ошибки и написать какой нибудь дженерик слой нетворкинга для переиспользования кода
             if let data = data {
-                let decoder = JSONDecoder()
-                if let products = try? decoder.decode([Product].self, from: data) {
-                    DispatchQueue.main.async {
-                        self.products = products
-                    }
+                if let products = try? self?.decoder.decode([Product].self, from: data) {
+                    completion(.success(products))
                 }
             }
         }.resume()
     }
+    
+    
 }

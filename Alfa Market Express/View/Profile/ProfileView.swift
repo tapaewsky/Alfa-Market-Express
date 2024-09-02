@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ProfileView: View {
-    @ObservedObject var productViewModel: ProductViewModel
+    
     @ObservedObject var viewModel: ProfileViewModel
     
     var body: some View {

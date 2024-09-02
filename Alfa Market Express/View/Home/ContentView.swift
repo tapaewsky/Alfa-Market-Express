@@ -8,44 +8,43 @@
 import SwiftUI
 
 struct ContentView: View {
-    @StateObject private var viewModel = ProductViewModel()
-    @StateObject private var profileViewModel = ProfileViewModel()
+    
     
     var body: some View {
         TabView {
-            // Главная страница
-            HomeView(viewModel: viewModel, profileViewModel: profileViewModel)
+           
+            HomeView(viewModel: ProductViewModel())
                 .tabItem {
                    Image(systemName: "house")
                 }
             
-            // Каталог
+          
             NavigationView {
-                CatalogView(viewModel: viewModel, profileViewModel: profileViewModel)
+                CatalogView(viewModel: ProductViewModel())
             }
             .tabItem {
                  Image(systemName: "list.dash")
             }
             
-            // Корзина
+           
             NavigationView {
-                CartView(viewModel: viewModel, profileViewModel: profileViewModel)
+                CartView(viewModel: ProductViewModel())
             }
             .tabItem {
                  Image(systemName: "cart")
             }
             
-            // Избранное
+          
             NavigationView {
-                FavoritesView(viewModel: viewModel, profileViewModel: profileViewModel)
+                FavoritesView(viewModel: ProductViewModel())
             }
             .tabItem {
                  Image(systemName: "heart")
             }
             
-            // Профиль
+      
             NavigationView {
-                ProfileView(productViewModel: viewModel, viewModel: profileViewModel)
+                ProfileView(viewModel: ProfileViewModel())
             }
             .tabItem {
                  Image(systemName: "person.circle")

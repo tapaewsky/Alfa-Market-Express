@@ -13,7 +13,7 @@ struct Category: Identifiable, Decodable, Encodable {
     let name: String
     let description: String
     let imageUrl: String
-    
+
     enum CodingKeys: String, CodingKey {
         case id
         case name

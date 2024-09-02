@@ -47,6 +47,12 @@ class ProductViewModel: ObservableObject {
             }
         }
     }
+    static let sampleCategories: [Category] = [
+        Category(id: 1,name: "Electronics", description: "", imageUrl: "https://example.com/electronics.jpg"),
+        Category(id: 2,name: "Fashion", description: "", imageUrl: "https://example.com/fashion.jpg"),
+        Category(id: 3,name: "Home", description: "", imageUrl: "https://example.com/home.jpg")
+        ]
+    
     
     
     

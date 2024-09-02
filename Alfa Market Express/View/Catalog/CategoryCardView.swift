@@ -36,7 +36,7 @@ struct CategoryCardView: View {
             
         }
         .padding()
-        .background(Color.clear)
+        .background(Color.white)
         .cornerRadius(10)
         
     }

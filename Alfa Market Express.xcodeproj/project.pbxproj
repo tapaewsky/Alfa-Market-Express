@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		8F004F062C51BA4600540FDA /* RecommendationCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F004F052C51BA4600540FDA /* RecommendationCardView.swift */; };
-		8F145C4E2C51BB8D007B5591 /* AutoScrollingScrollVie.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F145C4D2C51BB8D007B5591 /* AutoScrollingScrollVie.swift */; };
 		8F16D5A72C4876B900C3F429 /* FavoritesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F16D5A62C4876B900C3F429 /* FavoritesView.swift */; };
 		8F2137D12C6666E400A42845 /* URLCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F2137D02C6666E400A42845 /* URLCache.swift */; };
 		8F2137D92C6669BA00A42845 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F2137D82C6669BA00A42845 /* Category.swift */; };
@@ -36,7 +35,6 @@
 		8F97BB182C56F665009C1BC7 /* CategoryCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F97BB172C56F665009C1BC7 /* CategoryCardView.swift */; };
 		8F97BB1A2C56F6AC009C1BC7 /* CategoryGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F97BB192C56F6AC009C1BC7 /* CategoryGridView.swift */; };
 		8F97BB1F2C56FCDD009C1BC7 /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F97BB1E2C56FCDD009C1BC7 /* HeaderView.swift */; };
-		8F97BB212C56FD09009C1BC7 /* SpecialOfferView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F97BB202C56FD09009C1BC7 /* SpecialOfferView.swift */; };
 		8FA6AB362C67AAE700C267FE /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FA6AB352C67AAE700C267FE /* Network.swift */; };
 		8FB1CC452C6E44FD002C054C /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FB1CC442C6E44FD002C054C /* UserProfile.swift */; };
 		8FB1CC472C6E45B3002C054C /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FB1CC462C6E45B3002C054C /* ProfileViewModel.swift */; };
@@ -47,7 +45,6 @@
 
 /* Begin PBXFileReference section */
 		8F004F052C51BA4600540FDA /* RecommendationCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RecommendationCardView.swift; sourceTree = "<group>"; };
-		8F145C4D2C51BB8D007B5591 /* AutoScrollingScrollVie.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AutoScrollingScrollVie.swift; sourceTree = "<group>"; };
 		8F16D5A62C4876B900C3F429 /* FavoritesView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoritesView.swift; sourceTree = "<group>"; };
 		8F2137D02C6666E400A42845 /* URLCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLCache.swift; sourceTree = "<group>"; };
 		8F2137D82C6669BA00A42845 /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
@@ -78,7 +75,6 @@
 		8F97BB172C56F665009C1BC7 /* CategoryCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCardView.swift; sourceTree = "<group>"; };
 		8F97BB192C56F6AC009C1BC7 /* CategoryGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryGridView.swift; sourceTree = "<group>"; };
 		8F97BB1E2C56FCDD009C1BC7 /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
-		8F97BB202C56FD09009C1BC7 /* SpecialOfferView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpecialOfferView.swift; sourceTree = "<group>"; };
 		8FA6AB352C67AAE700C267FE /* Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
 		8FB1CC442C6E44FD002C054C /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
 		8FB1CC462C6E45B3002C054C /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
@@ -216,8 +212,6 @@
 				8F97BB1E2C56FCDD009C1BC7 /* HeaderView.swift */,
 				8F35BF8E2C4EA45F00A77E77 /* SearchResultsView.swift */,
 				8F004F052C51BA4600540FDA /* RecommendationCardView.swift */,
-				8F97BB202C56FD09009C1BC7 /* SpecialOfferView.swift */,
-				8F145C4D2C51BB8D007B5591 /* AutoScrollingScrollVie.swift */,
 			);
 			path = Home;
 			sourceTree = "<group>";
@@ -342,7 +336,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8F145C4E2C51BB8D007B5591 /* AutoScrollingScrollVie.swift in Sources */,
 				8F6A23BF2C397446005A3320 /* CartView.swift in Sources */,
 				8FB1CC452C6E44FD002C054C /* UserProfile.swift in Sources */,
 				8F6A23E42C39C2B8005A3320 /* HomeView.swift in Sources */,
@@ -363,7 +356,6 @@
 				8F6A23A12C396A5C005A3320 /* AlfaMarketExpressApp.swift in Sources */,
 				8FFA9D7D2C78B0AD00115DFE /* AuthManager.swift in Sources */,
 				8F6A23BB2C39740A005A3320 /* ProductRowView.swift in Sources */,
-				8F97BB212C56FD09009C1BC7 /* SpecialOfferView.swift in Sources */,
 				8F97BB1F2C56FCDD009C1BC7 /* HeaderView.swift in Sources */,
 				8F6A23C52C3975CC005A3320 /* ProductCardView.swift in Sources */,
 				8F6A23B32C3972D8005A3320 /* Product.swift in Sources */,
@@ -523,7 +515,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -564,7 +556,7 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

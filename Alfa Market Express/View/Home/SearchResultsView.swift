@@ -7,9 +7,8 @@
 import SwiftUI
 
 struct SearchBar: View {
-    @Binding var searchText: String
-    let customGreen: Color
-    @ObservedObject var viewModel: ProductViewModel
+    @State private var searchText: String = ""
+   
     
     var body: some View {
         VStack {
@@ -25,15 +24,9 @@ struct SearchBar: View {
             .cornerRadius(5)
             .overlay(
                 RoundedRectangle(cornerRadius: 5)
-                    .stroke(customGreen, lineWidth: 1)
+                    .stroke(Color.main, lineWidth: 1)
             )
-            
-            
-            
-            
-            }
-        .padding()
         }
     }
-
+}
 

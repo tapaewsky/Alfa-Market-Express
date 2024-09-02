@@ -8,31 +8,31 @@
 import SwiftUI
 
 struct RecommendationCardView: View {
-    let category: Category
-    let onCategorySelected: (Category) -> Void
-
+    let categories: [Category]
+    
     var body: some View {
-        AsyncImage(url: URL(string: category.imageUrl)) { image in
-            image
-                .resizable()
-                .frame(width: 350, height: 100)
-                .clipped()
-                .cornerRadius(8)
-        } placeholder: {
-            ProgressView()
-                .frame(width: 350, height: 100)
-                
-                .cornerRadius(8)
+        NavigationView {
+            ScrollView(.horizontal, showsIndicators: false) {
+                LazyHStack {
+                    ForEach(categories) { category in
+                        NavigationLink(destination: CategoryProductsView(viewModel: ProductViewModel(), category: category)) {
+                            AsyncImage(url: URL(string: category.imageUrl)) { image in
+                                image
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(width: 300, height: 150)
+                                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                            } placeholder: {
+                                ProgressView()
+                                    .frame(width: 300, height: 150)
+                            }
+                        }
+                    }
+                }
+                .scrollTargetLayout()
+            }
+            .scrollTargetBehavior(.viewAligned)
+            .safeAreaPadding(.horizontal, 40)
         }
-        .onTapGesture {
-            onCategorySelected(category)
-        }
-        .shadow(radius: 10)
-    }
-}
-
-struct RecommendationCardView_Previews: PreviewProvider {
-    static var previews: some View {
-        RecommendationCardView(category: Category(id: 1, name: "Sample Category", description: "", imageUrl: "https://via.placeholder.com/150")) { _ in }
     }
 }

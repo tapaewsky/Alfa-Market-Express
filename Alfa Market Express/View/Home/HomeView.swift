@@ -8,7 +8,7 @@ import SwiftUI
 
 struct HomeView: View {
     @ObservedObject var viewModel: ProductViewModel
-    @ObservedObject var profileViewModel: ProfileViewModel
+
     @StateObject private var networkMonitor = NetworkMonitor()
     @State private var searchText = ""
 
@@ -17,37 +17,29 @@ struct HomeView: View {
 
     var body: some View {
         NavigationView {
-            VStack(spacing: 0) {
+            VStack {
                 
-                HeaderView(viewModel: viewModel, profileViewModel: profileViewModel, customGreen: customGreen)
-                    .padding(.top, 0)
-                
-                
-                SearchBar(searchText: $searchText, customGreen: customGreen, viewModel: viewModel)
-                    .padding(.vertical, 0)
-                    .padding(.horizontal, 0)
-                
-                
-                
-                
-                
-                if viewModel.isLoading {
-                    ProgressView()
-                } else if viewModel.isError {
-                    Text("Не удалось загрузить данные. Пожалуйста, проверьте подключение к сети и повторите попытку.")
-                        .foregroundColor(.red)
-                } else {
-                    ScrollView {
-                        VStack(spacing: 0) {
-                            SpecialOfferSection(viewModel: viewModel, cardSize: cardSize)
-                            ProductGridView(viewModel: viewModel, onFavoriteToggle: {})
+                Group {
+                    HeaderView()
+                    SearchBar()
+                        .padding(.horizontal)
+                    
+                    if viewModel.isLoading {
+                        ProgressView()
+                    } else if viewModel.isError {
+                        Text("Не удалось загрузить данные. Пожалуйста, проверьте подключение к сети и повторите попытку.")
+                            .foregroundColor(.red)
+                    } else {
+                        ScrollView {
+                            VStack(spacing: 0) {
+                                RecommendationCardView(categories: viewModel.categories)
+                                ProductGridView(viewModel: viewModel, onFavoriteToggle: {})
+                            }
+                            .padding(.top, 0)
                         }
-                        .padding(.top, 0)
                     }
+                    Spacer(minLength: 0)
                 }
-                
-               
-                Spacer(minLength: 0)
             }
             .environmentObject(viewModel)
             .onAppear {
@@ -66,7 +58,6 @@ struct HomeView: View {
             }
         }
     }
-
     private func fetchData() async {
         viewModel.isLoading = true
         await viewModel.fetchData { success in
@@ -79,9 +70,8 @@ struct HomeView: View {
         }
     }
 }
-
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView(viewModel: ProductViewModel(), profileViewModel: ProfileViewModel())
+        HomeView(viewModel: ProductViewModel())
     }
 }
