@@ -9,16 +9,13 @@ import SwiftUI
 struct HomeView: View {
     @ObservedObject var viewModel: ProductViewModel
     @StateObject private var networkMonitor = NetworkMonitor()
-    @State private var searchText: String = ""
-
     var body: some View {
         NavigationView {
             VStack {
                 Group {
                     HeaderView()
-                    SearchBar(searchText: $searchText, onSearch: performSearch)
+                    SearchBar()
                         .padding(.horizontal)
-                    
                     if viewModel.isLoading {
                         ProgressView()
                     } else if viewModel.isError {
@@ -26,15 +23,15 @@ struct HomeView: View {
                             .foregroundColor(.red)
                     } else {
                         ScrollView {
-                            VStack(spacing: 0) {
+                            VStack {
                                 RecommendationCardView(categories: viewModel.categories)
-                                ProductGridView(viewModel: viewModel, onFavoriteToggle: { product in
-                                    viewModel.toggleFavorite(product)
-                                })
+                                ProductGridView(viewModel: viewModel, onFavoriteToggle: {})
                             }
-                            .padding(.top, 0)
+                            
                         }
                     }
+                    
+                    
                     Spacer(minLength: 0)
                 }
             }
@@ -55,7 +52,7 @@ struct HomeView: View {
             }
         }
     }
-    
+
     private func fetchData() async {
         viewModel.isLoading = true
         await viewModel.fetchData { success in
@@ -66,10 +63,6 @@ struct HomeView: View {
                 viewModel.isError = false
             }
         }
-    }
-    
-    private func performSearch() {
-        viewModel.updateSearchText(searchText)
     }
 }
 

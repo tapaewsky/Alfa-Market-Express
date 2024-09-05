@@ -10,12 +10,9 @@ struct CatalogView: View {
     @ObservedObject var viewModel: ProductViewModel
    
     @State private var searchText = ""
-    private let customGreen = Color(red: 38 / 255, green: 115 / 255, blue: 21 / 255)
-
+   
     var body: some View {
         VStack {
-            
-            
             Group {
                 HeaderView()
                 SearchBar()
@@ -35,8 +32,6 @@ struct CatalogView: View {
                         .padding()
                 }
             }
-            
-            
         }
         .environmentObject(viewModel)
     }

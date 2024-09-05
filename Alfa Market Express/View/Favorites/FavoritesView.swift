@@ -12,19 +12,17 @@ struct FavoritesView: View {
     @State private var searchText = ""
 
     var body: some View {
-        VStack(spacing: 10) {
+        VStack {
             HeaderView()
             
             Group {
-                SearchBar(searchText: $searchText, onSearch: performSearch)
+                SearchBar()
                 favoriteText
                 favoriteList
             }
             .padding(.horizontal, 16)
         }
-        .onChange(of: searchText) { _ in
-            performSearch()
-        }
+       
     }
     
     private var favoriteText: some View {

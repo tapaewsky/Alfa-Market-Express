@@ -11,7 +11,7 @@ struct RecommendationCardView: View {
     let categories: [Category]
     
     var body: some View {
-        NavigationView {
+        
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack {
                     ForEach(categories) { category in
@@ -33,6 +33,5 @@ struct RecommendationCardView: View {
             }
             .scrollTargetBehavior(.viewAligned)
             .safeAreaPadding(.horizontal, 40)
-        }
     }
 }

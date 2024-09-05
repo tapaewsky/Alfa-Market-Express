@@ -16,7 +16,7 @@ struct LoginView: View {
     @State private var navigateToContentView: Bool = false
     @State private var loginFailed: Bool = false
     private let customGreen = Color(red: 38 / 255, green: 115 / 255, blue: 21 / 255)
-
+    
     var body: some View {
         ZStack {
             LinearGradient(

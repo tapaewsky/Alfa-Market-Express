@@ -14,7 +14,6 @@ struct CartView: View {
 
     var body: some View {
         VStack {
-            
             Group {
                 HeaderView()
                 SearchBar()
