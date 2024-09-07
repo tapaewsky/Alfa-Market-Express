@@ -23,8 +23,8 @@ struct SearchBar: View {
             .background(Color(.systemGray6))
             .cornerRadius(5)
             .overlay(
-                RoundedRectangle(cornerRadius: 5)
-                    .stroke(Color.main, lineWidth: 1)
+                RoundedRectangle(cornerRadius: 25)
+                    .stroke(Color.gray, lineWidth: 1)
             )
         }
     }

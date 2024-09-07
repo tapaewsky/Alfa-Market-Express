@@ -11,9 +11,9 @@ struct RecommendationCardView: View {
     let categories: [Category]
     
     var body: some View {
-        
             ScrollView(.horizontal, showsIndicators: false) {
                 LazyHStack {
+                    
                     ForEach(categories) { category in
                         NavigationLink(destination: CategoryProductsView(viewModel: ProductViewModel(), category: category)) {
                             AsyncImage(url: URL(string: category.imageUrl)) { image in
@@ -29,6 +29,7 @@ struct RecommendationCardView: View {
                         }
                     }
                 }
+                .frame(height: 200)
                 .scrollTargetLayout()
             }
             .scrollTargetBehavior(.viewAligned)

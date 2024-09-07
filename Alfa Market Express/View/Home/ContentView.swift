@@ -20,7 +20,7 @@ struct ContentView: View {
             
           
             NavigationView {
-                CatalogView(viewModel: ProductViewModel())
+                CategoryView(viewModel: ProductViewModel())
             }
             .tabItem {
                  Image(systemName: "list.dash")

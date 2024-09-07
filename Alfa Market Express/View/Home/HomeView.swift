@@ -11,11 +11,11 @@ struct HomeView: View {
     @StateObject private var networkMonitor = NetworkMonitor()
     var body: some View {
         NavigationView {
-            VStack {
+            VStack(spacing: 0) {
                 Group {
                     HeaderView()
-                    SearchBar()
-                        .padding(.horizontal)
+                    RecommendationCardView(categories: viewModel.categories)
+                    
                     if viewModel.isLoading {
                         ProgressView()
                     } else if viewModel.isError {
@@ -24,15 +24,13 @@ struct HomeView: View {
                     } else {
                         ScrollView {
                             VStack {
-                                RecommendationCardView(categories: viewModel.categories)
+                                SearchBar()
+                                    .padding(.horizontal)
                                 ProductGridView(viewModel: viewModel, onFavoriteToggle: {})
                             }
                             
                         }
                     }
-                    
-                    
-                    Spacer(minLength: 0)
                 }
             }
             .environmentObject(viewModel)
