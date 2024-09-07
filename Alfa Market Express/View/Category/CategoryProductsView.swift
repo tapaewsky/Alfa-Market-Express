@@ -17,8 +17,14 @@ struct CategoryProductsView: View {
                 ProductRowView(product: product, viewModel: viewModel) {
                     
                 }
+               
             }
+           
         }
+      
+        
         .navigationTitle(category.name)
     }
+    
+    
 }

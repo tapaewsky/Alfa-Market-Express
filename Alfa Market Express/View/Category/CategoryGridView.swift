@@ -8,10 +8,7 @@
 import SwiftUI
 
 struct CategoryGridView: View {
-    
-    
     @ObservedObject var viewModel = ProductViewModel()
-    
     
     var body: some View {
             LazyVGrid(columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)], spacing: 5) {

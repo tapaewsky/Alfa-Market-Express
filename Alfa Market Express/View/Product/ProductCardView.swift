@@ -56,7 +56,7 @@ struct ProductCardView: View {
             Text("Цена за 1 шт")
                 .foregroundStyle(.gray)
             
-            Spacer()
+            
             
             HStack {
                 Text(String(format: "%.0f₽", Double(product.price) ?? 0))
@@ -75,6 +75,6 @@ struct ProductCardView: View {
         .padding()
         .background(Color.white)
         .cornerRadius(10)
-        .shadow(radius: 7)
+        .shadow(radius: 1)
     }
 }

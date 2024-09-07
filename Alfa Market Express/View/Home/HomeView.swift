@@ -14,7 +14,10 @@ struct HomeView: View {
             VStack(spacing: 0) {
                 Group {
                     HeaderView()
+                    ScrollView {
                     RecommendationCardView(categories: viewModel.categories)
+                    SearchBar()
+                        .padding(.horizontal)
                     
                     if viewModel.isLoading {
                         ProgressView()
@@ -22,10 +25,9 @@ struct HomeView: View {
                         Text("Не удалось загрузить данные. Пожалуйста, проверьте подключение к сети и повторите попытку.")
                             .foregroundColor(.red)
                     } else {
-                        ScrollView {
+                       
                             VStack {
-                                SearchBar()
-                                    .padding(.horizontal)
+                                CatalogGridView(viewModel: viewModel)
                                 ProductGridView(viewModel: viewModel, onFavoriteToggle: {})
                             }
                             

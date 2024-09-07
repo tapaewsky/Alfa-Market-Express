@@ -38,7 +38,8 @@
 		8FB1CC452C6E44FD002C054C /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FB1CC442C6E44FD002C054C /* UserProfile.swift */; };
 		8FB1CC472C6E45B3002C054C /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FB1CC462C6E45B3002C054C /* ProfileViewModel.swift */; };
 		8FC1321E2C865C3200F5C553 /* ProfileInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FC1321D2C865C3200F5C553 /* ProfileInfo.swift */; };
-		8FC4764F2C8C8EA200A9560C /* CatalogView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FC4764E2C8C8EA200A9560C /* CatalogView.swift */; };
+		8FC4764F2C8C8EA200A9560C /* CatalogCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FC4764E2C8C8EA200A9560C /* CatalogCardView.swift */; };
+		8FC476512C8CA4F000A9560C /* CatalogGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FC476502C8CA4F000A9560C /* CatalogGridView.swift */; };
 		8FFA9D7B2C78B07E00115DFE /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FFA9D792C78B07E00115DFE /* LoginView.swift */; };
 		8FFA9D7D2C78B0AD00115DFE /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FFA9D7C2C78B0AD00115DFE /* AuthManager.swift */; };
 /* End PBXBuildFile section */
@@ -78,7 +79,8 @@
 		8FB1CC442C6E44FD002C054C /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
 		8FB1CC462C6E45B3002C054C /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		8FC1321D2C865C3200F5C553 /* ProfileInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileInfo.swift; sourceTree = "<group>"; };
-		8FC4764E2C8C8EA200A9560C /* CatalogView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogView.swift; sourceTree = "<group>"; };
+		8FC4764E2C8C8EA200A9560C /* CatalogCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogCardView.swift; sourceTree = "<group>"; };
+		8FC476502C8CA4F000A9560C /* CatalogGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogGridView.swift; sourceTree = "<group>"; };
 		8FFA9D792C78B07E00115DFE /* LoginView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		8FFA9D7C2C78B0AD00115DFE /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -261,7 +263,8 @@
 		8FC4764D2C8C8E7A00A9560C /* Catalog */ = {
 			isa = PBXGroup;
 			children = (
-				8FC4764E2C8C8EA200A9560C /* CatalogView.swift */,
+				8FC4764E2C8C8EA200A9560C /* CatalogCardView.swift */,
+				8FC476502C8CA4F000A9560C /* CatalogGridView.swift */,
 			);
 			path = Catalog;
 			sourceTree = "<group>";
@@ -348,7 +351,7 @@
 				8FB1CC452C6E44FD002C054C /* UserProfile.swift in Sources */,
 				8F6A23E42C39C2B8005A3320 /* HomeView.swift in Sources */,
 				8FA6AB362C67AAE700C267FE /* Network.swift in Sources */,
-				8FC4764F2C8C8EA200A9560C /* CatalogView.swift in Sources */,
+				8FC4764F2C8C8EA200A9560C /* CatalogCardView.swift in Sources */,
 				8F2137D92C6669BA00A42845 /* Category.swift in Sources */,
 				8F6A23B52C397350005A3320 /* NetworkManager.swift in Sources */,
 				8F6A23A32C396A5C005A3320 /* ContentView.swift in Sources */,
@@ -360,6 +363,7 @@
 				8FB1CC472C6E45B3002C054C /* ProfileViewModel.swift in Sources */,
 				8F35BF8F2C4EA45F00A77E77 /* SearchResultsView.swift in Sources */,
 				8F61CCB42C51507B004A2DC4 /* MapView.swift in Sources */,
+				8FC476512C8CA4F000A9560C /* CatalogGridView.swift in Sources */,
 				8F16D5A72C4876B900C3F429 /* FavoritesView.swift in Sources */,
 				8F6A23A12C396A5C005A3320 /* AlfaMarketExpressApp.swift in Sources */,
 				8FFA9D7D2C78B0AD00115DFE /* AuthManager.swift in Sources */,

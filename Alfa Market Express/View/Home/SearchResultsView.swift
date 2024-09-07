@@ -17,15 +17,14 @@ struct SearchBar: View {
                     .foregroundColor(.gray)
                     .padding(10)
                 
-                TextField("Поиск", text: $searchText)
+                TextField("", text: $searchText)
                     .padding(.leading, 10)
             }
-            .background(Color(.systemGray6))
-            .cornerRadius(5)
-            .overlay(
-                RoundedRectangle(cornerRadius: 25)
-                    .stroke(Color.gray, lineWidth: 1)
-            )
+            .background(Color.white)
+            .cornerRadius(20)
+            .shadow(radius: 1)
+            
         }
+        
     }
 }

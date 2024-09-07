@@ -8,7 +8,7 @@ import SwiftUI
 
 struct CategoryView: View {
     @ObservedObject var viewModel: ProductViewModel
-   
+    @Environment(\.dismiss) var dismiss
     @State private var searchText = ""
    
     var body: some View {
@@ -33,7 +33,9 @@ struct CategoryView: View {
                 }
             }
         }
+       
         .environmentObject(viewModel)
+          
     }
 }
 

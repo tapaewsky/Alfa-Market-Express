@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CategoryCardView: View {
     let category: Category
-    private let customGreen = Color(red: 38 / 255, green: 115 / 255, blue: 21 / 255)
+  
     
     
     var body: some View {
