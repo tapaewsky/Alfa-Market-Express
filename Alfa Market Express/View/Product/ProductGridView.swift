@@ -15,7 +15,15 @@ struct ProductGridView: View {
     
 
     var body: some View {
+        HStack {
+            Text("Популярное")
+                .padding(.leading)
+                .bold()
+                .font(.title3)
+            Spacer()
+        }
             LazyVGrid(columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)], spacing: 5) {
+               
                 ForEach(viewModel.filteredProducts) { product in
                     NavigationLink(destination: ProductDetailView(viewModel: viewModel, product: product)) {
                         ProductCardView(product: product, viewModel: viewModel, onFavoriteToggle: {
@@ -25,5 +33,7 @@ struct ProductGridView: View {
                     }
                 }
             }
+            
         }
+        
     }

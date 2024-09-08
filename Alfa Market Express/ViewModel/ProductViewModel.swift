@@ -34,7 +34,9 @@ class ProductViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var isError = false
     @Published var filteredFavorites: [Product] = []
-
+  
+    @Published var searchResults = [Product]()
+    
     private let productsKey = "cachedProducts"
     private let categoriesKey = "cachedCategories"
     private let favoritesKey = "cachedFavorites"
@@ -50,19 +52,19 @@ class ProductViewModel: ObservableObject {
     }
     
     func searchFavorites(query: String) {
-            if query.isEmpty {
-                filteredFavorites = favorites
-            } else {
-                filteredFavorites = favorites.filter { $0.name.localizedCaseInsensitiveContains(query) }
-            }
+        if query.isEmpty {
+            filteredFavorites = favorites
+        } else {
+            filteredFavorites = favorites.filter { $0.name.localizedCaseInsensitiveContains(query) }
         }
-        
-        func updateSearchText(_ text: String) {
-            searchText = text
-            searchFavorites(query: text)
-        }
+    }
     
-
+    func updateSearchText(_ text: String) {
+        searchText = text
+        searchFavorites(query: text)
+    }
+    
+    
     static let sampleCategories: [Category] = [
         Category(id: 1, name: "Electronics", description: "", imageUrl: "https://example.com/electronics.jpg"),
         Category(id: 2, name: "Fashion", description: "", imageUrl: "https://example.com/fashion.jpg"),
@@ -114,7 +116,7 @@ class ProductViewModel: ObservableObject {
         }
         selectedProducts.removeAll()
     }
-
+    
     // Функция для загрузки данных с сервера
     func fetchData(completion: @escaping (Bool) -> Void) {
         isLoading = true
@@ -155,13 +157,13 @@ class ProductViewModel: ObservableObject {
                 completion(false)
                 return
             }
-
+            
             guard let data = data else {
                 print("No data received")
                 completion(false)
                 return
             }
-
+            
             // Печать ответа для отладки
             if let jsonString = String(data: data, encoding: .utf8) {
                 print("Received JSON: \(jsonString)")
@@ -379,8 +381,8 @@ class ProductViewModel: ObservableObject {
             }
         }.resume()
     }
-
-    // Функция поиска продуктов
+    
+    // Функция поиска продуктов через API
     func searchProducts(query: String, completion: @escaping (Bool) -> Void) {
         guard !query.isEmpty else {
             completion(false)
@@ -388,7 +390,7 @@ class ProductViewModel: ObservableObject {
         }
         
         let searchUrl = "http://95.174.90.162:8000/api/products/?search=\(query)"
-        guard let url = URL(string: searchUrl) else {
+        guard let url = URL(string: searchUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "") else {
             completion(false)
             return
         }
@@ -424,4 +426,4 @@ class ProductViewModel: ObservableObject {
             }
         }.resume()
     }
-}
+} 

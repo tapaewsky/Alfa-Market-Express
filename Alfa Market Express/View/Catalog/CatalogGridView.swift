@@ -10,7 +10,7 @@ struct CatalogGridView: View {
     @ObservedObject var viewModel: ProductViewModel
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) { // Убедитесь, что spacing установлен в 0
+        VStack(alignment: .leading, spacing: 0) {
            
             HStack {
                 

@@ -13,10 +13,10 @@ struct HomeView: View {
 
     var body: some View {
         NavigationView {
-            VStack(spacing: 0) {
+            VStack {
                 Group {
-                    HeaderView()
-                    ScrollView {
+                        HeaderView()
+                        ScrollView {
                         RecommendationCardView(categories: viewModel.categories)
                         SearchBar()
                             .padding(.horizontal)
@@ -33,6 +33,7 @@ struct HomeView: View {
                             }
                         }
                     }
+                    
                 }
             }
             .onAppear {
