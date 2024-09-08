@@ -6,18 +6,18 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct CatalogCardView: View {
     let category: Category
 
     var body: some View {
-        AsyncImage(url: URL(string: category.imageUrl)) { image in
-            image
-                .resizable()
-                .aspectRatio(contentMode: .fill)
-                .clipped()
-        } placeholder: {
-            ProgressView()
-        }
+        KFImage(URL(string: category.imageUrl))
+            .placeholder {
+                ProgressView()
+            }
+            .resizable()
+            .aspectRatio(contentMode: .fill)
+            .clipped()
     }
 }

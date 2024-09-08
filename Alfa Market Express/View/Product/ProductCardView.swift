@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct ProductCardView: View {
     let product: Product
@@ -17,21 +18,21 @@ struct ProductCardView: View {
             ZStack(alignment: .topTrailing) {
               
                 if let imageUrl = product.imageUrl, let url = URL(string: imageUrl) {
-                    AsyncImage(url: url) { image in
-                        image
-                            .resizable()
-                            .aspectRatio(contentMode: .fill)
-                            .cornerRadius(10)
-                            .clipped()
-                            .background(.clear)
-
-                    } placeholder: {
-                        ProgressView()
-                    }
+                    KFImage(url)
+                        .placeholder {
+                            ProgressView()
+                                .frame(width: 100, height: 100)
+                        }
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(height: 150)
+                        .cornerRadius(10)
+                        .clipped()
                 } else {
                     Image(systemName: "photo")
                         .resizable()
                         .aspectRatio(contentMode: .fill)
+                        .frame(height: 150)
                         .cornerRadius(10)
                         .clipped()
                 }
@@ -56,8 +57,6 @@ struct ProductCardView: View {
             Text("Цена за 1 шт")
                 .foregroundStyle(.gray)
             
-            
-            
             HStack {
                 Text(String(format: "%.0f₽", Double(product.price) ?? 0))
                     .font(.headline)
@@ -68,7 +67,7 @@ struct ProductCardView: View {
                 Image(systemName: "cart")
                     .padding(10)
                     .foregroundColor(.white)
-                    .background(product.isInCart ? .gray : .main)
+                    .background(product.isInCart ? Color.gray : Color.main)
                     .cornerRadius(30)
             }
         }

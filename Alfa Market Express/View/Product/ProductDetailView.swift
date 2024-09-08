@@ -5,37 +5,34 @@
 //  Created by Said Tapaev on 06.07.2024.
 //
 import SwiftUI
-
-
+import Kingfisher
 
 struct ProductDetailView: View {
     @ObservedObject var viewModel: ProductViewModel
     var product: Product
-  
+
     @State private var quantity: Int = 1
     @State private var isAddedToCart: Bool = false
     @State private var isFavorite: Bool = false
-    
+
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
                 ZStack(alignment: .topLeading) {
                     if let imageUrl = product.imageUrl, let url = URL(string: imageUrl) {
-                        AsyncImage(url: url) { image in
-                            image
-                                .resizable()
-                                .aspectRatio(contentMode: .fit)
-                        } placeholder: {
-                            ProgressView()
-                        }
+                        KFImage(url)
+                            .placeholder {
+                                ProgressView()
+                            }
+                            .resizable()
+                            .aspectRatio(contentMode: .fill)
+                            
                     } else {
-                       
                         Image(systemName: "photo")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
                     }
-                    
-                    
+
                     Button(action: {
                         isFavorite.toggle()
                         if isFavorite {
@@ -59,7 +56,6 @@ struct ProductDetailView: View {
                 Text(product.description)
                     .padding(.horizontal)
                 
-               
                 let priceText = (Double(product.price) != nil) ? "\(product.price) ₽" : "Цена не доступна"
                 Text(priceText)
                     .font(.title)
@@ -96,18 +92,21 @@ struct ProductDetailView: View {
                 .padding(.horizontal)
                 
                 Section(header: Text("Похожие продукты")) {
-                    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
-                        ForEach(viewModel.products.filter { $0.category == product.category && $0.id != product.id }, id: \.id) { relatedProduct in
-                            NavigationLink(destination: ProductDetailView(viewModel: viewModel, product: relatedProduct)) {
-                                ProductCardView(product: relatedProduct, viewModel: viewModel, onFavoriteToggle: {})
+                    LazyVGrid(columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)], spacing: 5) {
+                        ForEach(viewModel.filteredProducts) { product in
+                            NavigationLink(destination: ProductDetailView(viewModel: viewModel, product: product)) {
+                                ProductCardView(product: product, viewModel: viewModel, onFavoriteToggle: {
+                                    
+                                })
+                                .padding(5)
                             }
                             .buttonStyle(PlainButtonStyle())
                         }
                     }
                 }
-                .padding(.horizontal)
+               
                 
-                Spacer()
+             
             }
             .padding(.vertical)
         }
@@ -115,3 +114,4 @@ struct ProductDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
     }
 }
+

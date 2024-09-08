@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct ProductRowView: View {
     var product: Product
@@ -14,18 +15,19 @@ struct ProductRowView: View {
 
     var body: some View {
         HStack {
-            
             if let imageUrl = product.imageUrl, let url = URL(string: imageUrl) {
-                AsyncImage(url: url) { image in
-                    image.resizable()
-                        .frame(width: 50, height: 50)
-                        .aspectRatio(contentMode: .fill)
-                        .clipped()
-                } placeholder: {
-                    ProgressView()
-                }
+                KFImage(url)
+                    
+                    .placeholder {
+                        ProgressView()
+                    }
+                    .resizable()
+                    .frame(width: 50, height: 50)
+                    .aspectRatio(contentMode: .fill)
+                    .clipped()
+                    
+                    
             } else {
-               
                 Image(systemName: "photo")
                     .resizable()
                     .frame(width: 50, height: 50)
@@ -47,9 +49,6 @@ struct ProductRowView: View {
                             .padding(10)
                     }
                     
-                    
-                    
-                  
                     if let price = Double(product.price) {
                         Text(String(format: "%.0f ₽", price))
                             .font(.subheadline)
@@ -62,10 +61,8 @@ struct ProductRowView: View {
                 }
             }
             
-            
             Spacer()
         }
         .padding()
     }
 }
-

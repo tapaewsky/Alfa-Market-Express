@@ -297,6 +297,10 @@ class ProductViewModel: ObservableObject {
     func isFavorite(_ product: Product) -> Bool {
         return favorites.contains(where: { $0.id == product.id })
     }
+    // Проверка на корзину
+    func isCart(_ product: Product) -> Bool {
+        return cart.contains(where: { $0.id == product.id })
+    }
     
     // Удаление из корзины
     func removeFromCart(_ product: Product) {

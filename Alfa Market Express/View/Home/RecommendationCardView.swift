@@ -6,33 +6,32 @@
 //
 
 import SwiftUI
+import Kingfisher
 
 struct RecommendationCardView: View {
     let categories: [Category]
     
     var body: some View {
-            ScrollView(.horizontal, showsIndicators: false) {
-                LazyHStack {
-                    
-                    ForEach(categories) { category in
-                        NavigationLink(destination: CategoryProductsView(viewModel: ProductViewModel(), category: category)) {
-                            AsyncImage(url: URL(string: category.imageUrl)) { image in
-                                image
-                                    .resizable()
-                                    .scaledToFill()
-                                    .frame(width: 300, height: 150)
-                                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                            } placeholder: {
+        ScrollView(.horizontal, showsIndicators: false) {
+            LazyHStack {
+                ForEach(categories) { category in
+                    NavigationLink(destination: CategoryProductsView(viewModel: ProductViewModel(), category: category)) {
+                        KFImage(URL(string: category.imageUrl))
+                            .placeholder {
                                 ProgressView()
                                     .frame(width: 300, height: 150)
                             }
-                        }
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 300, height: 150)
+                            .clipShape(RoundedRectangle(cornerRadius: 10))
                     }
                 }
-                .frame(height: 200)
-                .scrollTargetLayout()
             }
-            .scrollTargetBehavior(.viewAligned)
-            .safeAreaPadding(.horizontal, 40)
+            .frame(height: 200)
+            .scrollTargetLayout()
+        }
+        .scrollTargetBehavior(.viewAligned)
+        .safeAreaPadding(.horizontal, 40)
     }
 }

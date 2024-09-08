@@ -9,42 +9,40 @@ import SwiftUI
 struct HomeView: View {
     @ObservedObject var viewModel: ProductViewModel
     @StateObject private var networkMonitor = NetworkMonitor()
+    @State private var hasLoadedData: Bool = false
+
     var body: some View {
         NavigationView {
             VStack(spacing: 0) {
                 Group {
                     HeaderView()
                     ScrollView {
-                    RecommendationCardView(categories: viewModel.categories)
-                    SearchBar()
-                        .padding(.horizontal)
-                    
-                    if viewModel.isLoading {
-                        ProgressView()
-                    } else if viewModel.isError {
-                        Text("Не удалось загрузить данные. Пожалуйста, проверьте подключение к сети и повторите попытку.")
-                            .foregroundColor(.red)
-                    } else {
-                       
+                        RecommendationCardView(categories: viewModel.categories)
+                        SearchBar()
+                            .padding(.horizontal)
+                        
+                        if viewModel.isLoading {
+                            ProgressView()
+                        } else if viewModel.isError {
+                            Text("Не удалось загрузить данные. Пожалуйста, проверьте подключение к сети и повторите попытку.")
+                                .foregroundColor(.red)
+                        } else {
                             VStack {
                                 CatalogGridView(viewModel: viewModel)
                                 ProductGridView(viewModel: viewModel, onFavoriteToggle: {})
                             }
-                            
                         }
                     }
                 }
             }
-            .environmentObject(viewModel)
             .onAppear {
-                if networkMonitor.isConnected {
-                    Task {
-                        await fetchData()
-                    }
+               
+                if !hasLoadedData {
+                    loadData()
                 }
             }
             .onChange(of: networkMonitor.isConnected) { isConnected in
-                if isConnected {
+                if isConnected && !hasLoadedData {
                     Task {
                         await fetchData()
                     }
@@ -53,10 +51,22 @@ struct HomeView: View {
         }
     }
 
+    private func loadData() {
+        if networkMonitor.isConnected {
+            Task {
+                await fetchData()
+            }
+        } else {
+           
+            viewModel.isError = true
+        }
+    }
+
     private func fetchData() async {
         viewModel.isLoading = true
         await viewModel.fetchData { success in
             viewModel.isLoading = false
+            hasLoadedData = true
             if !success {
                 viewModel.isError = true
             } else {
