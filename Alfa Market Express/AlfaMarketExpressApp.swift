@@ -9,11 +9,25 @@ import SwiftUI
 
 @main
 struct AlfaMarketExpress: App {
+   
+    @StateObject private var authManager = AuthManager.shared
+    
     var body: some Scene {
         WindowGroup {
-            LoginView()
-                .preferredColorScheme(.light)
+            Group {
+                if authManager.isCheckingAuth {
+                    ProgressView()
+                } else if authManager.isAuthenticated {
+                    ContentView()
+                        .preferredColorScheme(.light)
+                } else {
+                    LoginView()
+                        .preferredColorScheme(.light)
+                }
+            }
+            .onAppear {
+                authManager.checkAuthentication()
+            }
         }
     }
 }
-

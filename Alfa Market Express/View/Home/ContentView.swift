@@ -12,12 +12,11 @@ struct ContentView: View {
     
     var body: some View {
         TabView {
-           
             HomeView(viewModel: ProductViewModel())
                 .tabItem {
                    Image(systemName: "house")
                 }
-            
+    
           
             NavigationView {
                 CategoryView(viewModel: ProductViewModel())
@@ -51,13 +50,8 @@ struct ContentView: View {
             }
             
             
+            
         }
-        
-//        .onAppear {
-//
-//            viewModel.fetchProducts()
-//            viewModel.fetchCategories()
-//        }
     }
 }
 

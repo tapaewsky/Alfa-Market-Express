@@ -16,7 +16,7 @@ struct LoginView: View {
     @State private var navigateToContentView: Bool = false
     @State private var loginFailed: Bool = false
     private let customGreen = Color(red: 38 / 255, green: 115 / 255, blue: 21 / 255)
-    
+
     var body: some View {
         ZStack {
             LinearGradient(
@@ -33,8 +33,6 @@ struct LoginView: View {
                     .font(.system(size: 36, weight: .bold, design: .rounded))
                     .foregroundColor(.white)
                     .padding(.bottom, 10)
-
-                
 
                 VStack(spacing: 20) {
                     TextField("Имя пользователя", text: $username)
@@ -75,7 +73,7 @@ struct LoginView: View {
 
                     Button(action: {
                         guard !isLoggingIn else {
-                            print("Запрос уже выполняется, кнопка нажата повторно") 
+                            print("Запрос уже выполняется, кнопка нажата повторно")
                             return
                         }
                         

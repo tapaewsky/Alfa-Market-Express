@@ -4,35 +4,46 @@
 //
 //  Created by Said Tapaev on 23.08.2024.
 //
-
 import Foundation
+import SwiftUI
 
-class AuthManager {
+class AuthManager: ObservableObject {
     static let shared = AuthManager()
     
+    @Published var isAuthenticated: Bool = false
+    @Published var isCheckingAuth: Bool = true // Для отображения индикатора загрузки
+
     private let accessTokenKey = "accessToken"
     private let refreshTokenKey = "refreshToken"
     
     var accessToken: String? {
-        get {
-            UserDefaults.standard.string(forKey: accessTokenKey)
-        }
-        set {
-            UserDefaults.standard.setValue(newValue, forKey: accessTokenKey)
-        }
+        UserDefaults.standard.string(forKey: accessTokenKey)
     }
     
     var refreshToken: String? {
-        get {
-            UserDefaults.standard.string(forKey: refreshTokenKey)
-        }
-        set {
-            UserDefaults.standard.setValue(newValue, forKey: refreshTokenKey)
+        UserDefaults.standard.string(forKey: refreshTokenKey)
+    }
+    
+    func checkAuthentication() {
+        DispatchQueue.global().async {
+            if self.accessToken != nil {
+                DispatchQueue.main.async {
+                    self.isAuthenticated = true
+                    self.isCheckingAuth = false
+                }
+            } else {
+                self.refreshAccessToken { success in
+                    DispatchQueue.main.async {
+                        self.isAuthenticated = success
+                        self.isCheckingAuth = false
+                    }
+                }
+            }
         }
     }
     
     func refreshAccessToken(completion: @escaping (Bool) -> Void) {
-        guard let refreshToken = refreshToken else {
+        guard let refreshToken = self.refreshToken else {
             completion(false)
             return
         }
@@ -54,7 +65,7 @@ class AuthManager {
             do {
                 if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
                    let newAccessToken = json["access"] as? String {
-                    self.accessToken = newAccessToken
+                    UserDefaults.standard.set(newAccessToken, forKey: self.accessTokenKey)
                     completion(true)
                 } else {
                     completion(false)
@@ -63,5 +74,17 @@ class AuthManager {
                 completion(false)
             }
         }.resume()
+    }
+    
+    // Метод для установки токенов
+    func setTokens(accessToken: String, refreshToken: String) {
+        UserDefaults.standard.set(accessToken, forKey: accessTokenKey)
+        UserDefaults.standard.set(refreshToken, forKey: refreshTokenKey)
+    }
+    
+    // Метод для удаления токенов
+    func clearTokens() {
+        UserDefaults.standard.removeObject(forKey: accessTokenKey)
+        UserDefaults.standard.removeObject(forKey: refreshTokenKey)
     }
 }

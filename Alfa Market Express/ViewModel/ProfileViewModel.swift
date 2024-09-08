@@ -6,7 +6,6 @@
 //
 
 import SwiftUI
-import Combine
 
 class ProfileViewModel: ObservableObject {
     @Published var userProfile: UserProfile
@@ -28,7 +27,6 @@ class ProfileViewModel: ObservableObject {
             remainingDebt: "",
             favoriteProducts: []
         )
-        
         
         if AuthManager.shared.accessToken != nil {
             loadUserProfile()
@@ -139,8 +137,7 @@ class ProfileViewModel: ObservableObject {
                 
                 if let accessToken = responseDict["access"], let refreshToken = responseDict["refresh"] {
                     print("Токены получены: \(accessToken)")
-                    AuthManager.shared.accessToken = accessToken
-                    AuthManager.shared.refreshToken = refreshToken
+                    AuthManager.shared.setTokens(accessToken: accessToken, refreshToken: refreshToken)
                     DispatchQueue.main.async {
                         completion(true)
                     }
