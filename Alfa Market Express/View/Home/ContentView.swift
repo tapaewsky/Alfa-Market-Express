@@ -12,14 +12,14 @@ struct ContentView: View {
     
     var body: some View {
         TabView {
-            HomeView(viewModel: ProductViewModel())
+            HomeView()
                 .tabItem {
                    Image(systemName: "house")
                 }
     
           
             NavigationView {
-                CategoryView(viewModel: ProductViewModel())
+                CategoryView(viewModel: CategoryViewModel())
             }
             .tabItem {
                  Image(systemName: "list.dash")
@@ -27,7 +27,7 @@ struct ContentView: View {
             
            
             NavigationView {
-                CartView(viewModel: ProductViewModel())
+                CartView(viewModel: ProductViewModel(), сartViewModel: CartViewModel(), favoritesViewModel: FavoritesViewModel())
             }
             .tabItem {
                  Image(systemName: "cart")
@@ -35,7 +35,7 @@ struct ContentView: View {
             
           
             NavigationView {
-                FavoritesView(viewModel: ProductViewModel())
+                FavoritesView(viewModel: ProductViewModel(), cartViewModel: CartViewModel(), favoritesViewModel: FavoritesViewModel())
             }
             .tabItem {
                  Image(systemName: "heart")

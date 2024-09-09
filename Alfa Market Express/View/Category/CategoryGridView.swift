@@ -8,24 +8,16 @@
 import SwiftUI
 
 struct CategoryGridView: View {
-    @ObservedObject var viewModel = ProductViewModel()
+    @ObservedObject var viewModel: CategoryViewModel
     
     var body: some View {
-            LazyVGrid(columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)], spacing: 5) {
-                ForEach(viewModel.categories) { category in
-                    NavigationLink(destination: CategoryProductsView(viewModel: viewModel, category: category)) {
-                        CategoryCardView(category: category)
-                        
-                            .padding(5)
-                        
-                    }
+        LazyVGrid(columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)], spacing: 5) {
+            ForEach(viewModel.categories) { category in
+                NavigationLink(destination: CategoryProductsView(viewModel: ProductViewModel(), cartViewModel: CartViewModel(), favoritesViewModel: FavoritesViewModel(), category: category)) {
+                    CategoryCardView(category: category)
+                        .padding(5)
                 }
             }
-            
         }
     }
-    
-
-    
-
-
+}

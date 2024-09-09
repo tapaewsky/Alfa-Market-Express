@@ -7,7 +7,8 @@
 import SwiftUI
 
 struct CatalogGridView: View {
-    @ObservedObject var viewModel: ProductViewModel
+    @ObservedObject var viewModel: MainViewModel
+   
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -20,7 +21,7 @@ struct CatalogGridView: View {
                 
                 Spacer()
                 
-                NavigationLink(destination: CategoryView(viewModel: viewModel)) {
+                NavigationLink(destination: CategoryView(viewModel: viewModel.categoryViewModel)) {
                     Text("Посмотреть все")
                         .font(.footnote)
                         .foregroundColor(.gray)
@@ -34,8 +35,8 @@ struct CatalogGridView: View {
 
                 ScrollView(.horizontal, showsIndicators: false) {
                     LazyHGrid(rows: [GridItem(.fixed(cardWidth))], spacing: 15) {
-                        ForEach(viewModel.categories.prefix(4)) { category in
-                            NavigationLink(destination: CategoryProductsView(viewModel: viewModel, category: category)) {
+                        ForEach(viewModel.categoryViewModel.categories.prefix(4)) { category in
+                            NavigationLink(destination: CategoryProductsView(viewModel: viewModel.productViewModel,cartViewModel: viewModel.cartViewModel,favoritesViewModel: viewModel.favoritesViewModel, category: category)) {
                                 VStack {
                                     Text(category.name)
                                         .font(.caption)

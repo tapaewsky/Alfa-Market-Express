@@ -9,6 +9,8 @@ import Kingfisher
 
 struct ProductDetailView: View {
     @ObservedObject var viewModel: ProductViewModel
+    @ObservedObject var cartViewModel: CartViewModel
+    @ObservedObject var favoritesViewModel: FavoritesViewModel
     var product: Product
 
     @State private var quantity: Int = 1
@@ -26,20 +28,18 @@ struct ProductDetailView: View {
                             }
                             .resizable()
                             .aspectRatio(contentMode: .fill)
-                            
+                            .frame(maxWidth: .infinity, maxHeight: 300)
+                            .clipped()
                     } else {
                         Image(systemName: "photo")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
+                            .frame(maxWidth: .infinity, maxHeight: 300)
+                            .background(Color.gray.opacity(0.2))
                     }
 
                     Button(action: {
-                        isFavorite.toggle()
-                        if isFavorite {
-                            viewModel.addToFavorites(product)
-                        } else {
-                            viewModel.removeFromFavorites(product)
-                        }
+                        toggleFavorite()
                     }) {
                         Image(systemName: isFavorite ? "heart.fill" : "heart")
                             .resizable()
@@ -74,12 +74,7 @@ struct ProductDetailView: View {
                 }
                 
                 Button(action: {
-                    if isAddedToCart {
-                        viewModel.removeFromCart(product)
-                    } else {
-                        viewModel.addToCart(product)
-                    }
-                    isAddedToCart.toggle()
+                    toggleCart()
                 }) {
                     Text(isAddedToCart ? "Удалить из корзины" : "Добавить в корзину")
                         .fontWeight(.bold)
@@ -94,9 +89,9 @@ struct ProductDetailView: View {
                 Section(header: Text("Похожие продукты")) {
                     LazyVGrid(columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)], spacing: 5) {
                         ForEach(viewModel.filteredProducts) { product in
-                            NavigationLink(destination: ProductDetailView(viewModel: viewModel, product: product)) {
+                            NavigationLink(destination: ProductDetailView(viewModel: viewModel, cartViewModel: cartViewModel, favoritesViewModel: favoritesViewModel, product: product)) {
                                 ProductCardView(product: product, viewModel: viewModel, onFavoriteToggle: {
-                                    
+                                    // Ваш код для обработки переключения избранного
                                 })
                                 .padding(5)
                             }
@@ -104,14 +99,32 @@ struct ProductDetailView: View {
                         }
                     }
                 }
-               
-                
-             
             }
             .padding(.vertical)
         }
         .navigationTitle("Информация о продукте")
         .navigationBarTitleDisplayMode(.inline)
+        .onAppear {
+            isFavorite = favoritesViewModel.isFavorite(product)
+            isAddedToCart = cartViewModel.isInCart(product)
+        }
+    }
+    
+    private func toggleFavorite() {
+        isFavorite.toggle()
+        if isFavorite {
+            favoritesViewModel.addToFavorites(product)
+        } else {
+            favoritesViewModel.removeFromFavorites(product)
+        }
+    }
+    
+    private func toggleCart() {
+        if isAddedToCart {
+            cartViewModel.removeFromCart(product)
+        } else {
+            cartViewModel.addToCart(product)
+        }
+        isAddedToCart.toggle()
     }
 }
-

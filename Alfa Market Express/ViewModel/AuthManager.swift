@@ -11,7 +11,7 @@ class AuthManager: ObservableObject {
     static let shared = AuthManager()
     
     @Published var isAuthenticated: Bool = false
-    @Published var isCheckingAuth: Bool = true // Для отображения индикатора загрузки
+    @Published var isCheckingAuth: Bool = true
 
     private let accessTokenKey = "accessToken"
     private let refreshTokenKey = "refreshToken"

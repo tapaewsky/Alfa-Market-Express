@@ -7,10 +7,8 @@
 import SwiftUI
 
 struct CategoryView: View {
-    @ObservedObject var viewModel: ProductViewModel
-    @Environment(\.dismiss) var dismiss
-    @State private var searchText = ""
-   
+    @ObservedObject var viewModel: CategoryViewModel
+    
     var body: some View {
         VStack {
             Group {
@@ -33,14 +31,11 @@ struct CategoryView: View {
                 }
             }
         }
-       
-        .environmentObject(viewModel)
-          
     }
 }
 
 struct CategoryView_Previews: PreviewProvider {
     static var previews: some View {
-        CategoryView(viewModel: ProductViewModel())
+        CategoryView(viewModel: CategoryViewModel())
     }
 }
