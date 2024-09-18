@@ -9,15 +9,19 @@ import SwiftUI
 
 struct CategoryGridView: View {
     @ObservedObject var viewModel: CategoryViewModel
-    
+    let productViewModel = ProductViewModel()
+    let cartViewModel = CartViewModel()
+    let favoritesViewModel = FavoritesViewModel()
     var body: some View {
-        LazyVGrid(columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)], spacing: 5) {
+        LazyVGrid(columns: [GridItem(.flexible(), spacing: 40), GridItem(.flexible(), spacing: 10)], spacing: 5) {
             ForEach(viewModel.categories) { category in
-                NavigationLink(destination: CategoryProductsView(viewModel: ProductViewModel(), cartViewModel: CartViewModel(), favoritesViewModel: FavoritesViewModel(), category: category)) {
+                NavigationLink(destination: CategoryProductsView(viewModel: productViewModel, cartViewModel: cartViewModel, favoritesViewModel: favoritesViewModel, category: category)) {
                     CategoryCardView(category: category)
                         .padding(5)
                 }
             }
+            
         }
+       
     }
 }

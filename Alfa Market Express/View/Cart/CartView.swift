@@ -7,58 +7,82 @@
 import SwiftUI
 
 struct CartView: View {
-    @ObservedObject var viewModel: ProductViewModel
-    @ObservedObject var сartViewModel: CartViewModel
+    @ObservedObject var viewModel: CartViewModel
     @ObservedObject var favoritesViewModel: FavoritesViewModel
-    @State private var searchText = ""
-    
+    @State private var selectAll: Bool = false
+
     var body: some View {
         VStack {
-            Group {
-//                HeaderView()
-//                SearchBar()
-//                    .padding(.horizontal, 16)
-                
-//                List {
-//                    ForEach(сartViewModel.cart.filter { $0.name.contains(searchText) }) { product in
-//                        ProductRowView(product: product, viewModel: viewModel, onFavoriteToggle: {
-//                        })
-//                        .swipeActions {
-//                            Button(role: .destructive) {
-//                                сartViewModel.removeFromCart(product)
-//                            } label: {
-//                                Label("Remove", systemImage: "trash")
-//                            }
-//                        }
-//                    }
-//                }
-//                
-                
-                Text("Общая сумма: \(сartViewModel.totalPrice, specifier: "%.2f") ₽")
+            HStack {
+                Text("\(viewModel.cart.count) Товаров")
                     .font(.headline)
-                    .padding()
+                    .foregroundColor(.gray)
+                
+                Spacer()
+                
+                Text("Корзина")
+                    .font(.headline)
+                
+                Spacer()
                 
                 Button(action: {
+                    selectAll.toggle()
+                    viewModel.selectAllProducts(selectAll)
+                }) {
+                    Text(selectAll ? "Снять выбор" : "Выбрать все")
+                        .font(.headline)
+                        .foregroundColor(.colorGreen)
+                }
+            }
+            .padding(.horizontal)
+
+            List {
+                ForEach(viewModel.cart) { product in
+                    let cartProduct = CartProduct(
+                        id: product.id,
+                        product: product,
+                        quantity: product.quantity,
+                        getTotalPrice: (Double(product.price) ?? 0) * Double(product.quantity)
+                    )
                     
+                    let isSelected = Binding<Bool>(
+                        get: {
+                            viewModel.selectedProducts[product.id] ?? false
+                        },
+                        set: { newValue in
+                            viewModel.selectedProducts[product.id] = newValue
+                            viewModel.updateSelectedTotalPrice()
+                        }
+                    )
+
+                    CartItemView(
+                        cartProduct: cartProduct,
+                        viewModel: viewModel,
+                        favoritesViewModel: favoritesViewModel,
+                        isSelected: isSelected
+                    )
+                }
+            }
+
+            HStack {
+                Text("\(Int(viewModel.selectedTotalPrice)) ₽")
+                    .font(.callout)
+                    .bold()
+                
+                Spacer()
+                
+                Button(action: {
+                    // Оформить заказ
                 }) {
                     Text("Оформить заказ")
-                        .font(.title3)
-                    
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(.main)
+                        .font(.callout)
+                        .padding(10)
+                        .background(Color.colorGreen)
                         .foregroundColor(.white)
-                        .cornerRadius(10)
+                        .cornerRadius(17)
                 }
-                .padding()
             }
+            .padding()
         }
-        }
-    }
-
-
-struct CartView_Previews: PreviewProvider {
-    static var previews: some View {
-        CartView(viewModel: ProductViewModel(), сartViewModel: CartViewModel(), favoritesViewModel: FavoritesViewModel())
     }
 }

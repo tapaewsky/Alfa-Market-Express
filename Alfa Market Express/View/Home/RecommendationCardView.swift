@@ -9,14 +9,15 @@ import SwiftUI
 import Kingfisher
 
 struct RecommendationCardView: View {
+    @ObservedObject var viewModel: MainViewModel
     let categories: [Category]
     
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             LazyHStack {
                 ForEach(categories) { category in
-                    NavigationLink(destination: CategoryProductsView(viewModel: ProductViewModel(), cartViewModel: CartViewModel(), favoritesViewModel: FavoritesViewModel(), category: category)) {
-                        KFImage(URL(string: category.imageUrl))
+                    NavigationLink(destination: CategoryProductsView(viewModel: viewModel.productViewModel,cartViewModel: viewModel.cartViewModel,favoritesViewModel: viewModel.favoritesViewModel, category: category)) {
+                        KFImage(URL(string: category.imageUrl ?? "https://example.com/placeholder.png"))
                             .placeholder {
                                 ProgressView()
                                     .frame(width: 300, height: 150)
@@ -28,6 +29,7 @@ struct RecommendationCardView: View {
                     }
                 }
             }
+            .background(.clear)
             .frame(height: 200)
             .scrollTargetLayout()
         }

@@ -9,14 +9,14 @@ import SwiftUI
 
 struct ProfileView: View {
     
-    @State var viewModel: ProfileViewModel
+    @ObservedObject var viewModel: MainViewModel
     
     
     var body: some View {
         VStack {
             
             Group {
-                HeaderView()
+//                HeaderView()
                 ProfileInfo(viewModel: ProfileViewModel())
             }
         }
@@ -25,6 +25,6 @@ struct ProfileView: View {
 
 struct ProfileView_Previews: PreviewProvider {
     static var previews: some View {
-        ProfileView(viewModel: ProfileViewModel())
+        ProfileView(viewModel: MainViewModel())
     }
 }

@@ -4,53 +4,55 @@
 //
 //  Created by Said Tapaev on 06.07.2024.
 //
-
 import SwiftUI
 
 struct ContentView: View {
-    
-    
     var body: some View {
         TabView {
-            HomeView()
+            HomeView(viewModel: MainViewModel())
                 .tabItem {
-                   Image(systemName: "house")
+                    Image(systemName: "house")
+                    
                 }
-    
-          
+            
             NavigationView {
                 CategoryView(viewModel: CategoryViewModel())
             }
             .tabItem {
-                 Image(systemName: "list.dash")
+                Image(systemName: "list.dash")
+                
             }
             
-           
             NavigationView {
-                CartView(viewModel: ProductViewModel(), сartViewModel: CartViewModel(), favoritesViewModel: FavoritesViewModel())
+                CartView(
+                    viewModel: CartViewModel(),
+                    favoritesViewModel: FavoritesViewModel()
+                )
             }
             .tabItem {
-                 Image(systemName: "cart")
+                Image(systemName: "cart")
+                
             }
             
-          
             NavigationView {
-                FavoritesView(viewModel: ProductViewModel(), cartViewModel: CartViewModel(), favoritesViewModel: FavoritesViewModel())
+                FavoritesView(
+                    viewModel: ProductViewModel(),
+                    cartViewModel: CartViewModel(),
+                    favoritesViewModel: FavoritesViewModel()
+                )
             }
             .tabItem {
-                 Image(systemName: "heart")
+                Image(systemName: "heart")
+                
             }
             
-      
             NavigationView {
-                ProfileView(viewModel: ProfileViewModel())
+                ProfileView(viewModel: MainViewModel())
             }
             .tabItem {
-                 Image(systemName: "person.circle")
+                Image(systemName: "person.circle")
+                
             }
-            
-            
-            
         }
     }
 }

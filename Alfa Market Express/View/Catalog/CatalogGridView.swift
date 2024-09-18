@@ -8,7 +8,8 @@ import SwiftUI
 
 struct CatalogGridView: View {
     @ObservedObject var viewModel: MainViewModel
-   
+    
+
 
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {

@@ -10,11 +10,45 @@ import Foundation
 
 class CategoryViewModel: ObservableObject {
     @Published var categories: [Category] = []
+    @Published var isLoading = false
+    @Published var isError = false
 
     private let categoriesKey = "cachedCategories"
 
     init() {
-        loadCategories() 
+        loadCachedData()
+        fetchData { success in
+            if !success {
+                self.loadCachedData()
+            }
+        }
+    }
+
+    func fetchData(completion: @escaping (Bool) -> Void) {
+        isLoading = true
+        isError = false
+        
+        let dispatchGroup = DispatchGroup()
+        var success = true
+        
+        dispatchGroup.enter()
+        fetchCategories { fetchCategoriesSuccess in
+            success = success && fetchCategoriesSuccess
+            dispatchGroup.leave()
+        }
+        
+        dispatchGroup.notify(queue: .main) {
+            self.isLoading = false
+            self.isError = !success
+            completion(success)
+        }
+    }
+
+    private func loadCachedData() {
+        if let categoriesData = UserDefaults.standard.data(forKey: categoriesKey),
+           let cachedCategories = try? JSONDecoder().decode([Category].self, from: categoriesData) {
+            categories = cachedCategories
+        }
     }
 
     func fetchCategories(completion: @escaping (Bool) -> Void) {
@@ -44,7 +78,7 @@ class CategoryViewModel: ObservableObject {
                 let categories = try JSONDecoder().decode([Category].self, from: data)
                 DispatchQueue.main.async {
                     self.categories = categories
-                    self.saveCategories() // Сохранение категорий после успешного получения данных
+                    self.saveCategories()
                     completion(true)
                 }
             } catch {
@@ -59,13 +93,6 @@ class CategoryViewModel: ObservableObject {
     private func saveCategories() {
         if let data = try? JSONEncoder().encode(categories) {
             UserDefaults.standard.set(data, forKey: categoriesKey)
-        }
-    }
-
-    private func loadCategories() {
-        if let data = UserDefaults.standard.data(forKey: categoriesKey),
-           let savedCategories = try? JSONDecoder().decode([Category].self, from: data) {
-            self.categories = savedCategories
         }
     }
 }

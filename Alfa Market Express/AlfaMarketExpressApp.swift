@@ -9,9 +9,8 @@ import SwiftUI
 
 @main
 struct AlfaMarketExpress: App {
-   
     @StateObject private var authManager = AuthManager.shared
-    
+    @StateObject private var mainViewModel = MainViewModel()
     var body: some Scene {
         WindowGroup {
             Group {
@@ -20,6 +19,7 @@ struct AlfaMarketExpress: App {
                 } else if authManager.isAuthenticated {
                     ContentView()
                         .preferredColorScheme(.light)
+                        .environmentObject(mainViewModel) 
                 } else {
                     LoginView()
                         .preferredColorScheme(.light)

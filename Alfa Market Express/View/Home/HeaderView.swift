@@ -7,23 +7,29 @@
 
 import SwiftUI
 
-struct HeaderView: View {
+struct HeaderView<Content: View>: View {
+    let content: Content
+
+    init(@ViewBuilder content: () -> Content) {
+        self.content = content()
+    }
+
     var body: some View {
         Group {
-            Image("logo_v1")
-                .resizable()
-                .aspectRatio(contentMode: .fit)
-                .frame(height: 50)
-                .padding(5)
+            HStack {
+                content
+                    .frame(maxWidth: .infinity, alignment: .center)    
+            }
         }
         .frame(height: 60)
         .frame(maxWidth: .infinity)
-        .background(Color.main)
+        .background(Color.colorGreen)
     }
 }
 
 struct HeaderView_Previews: PreviewProvider {
     static var previews: some View {
-        HeaderView()
+        HeaderView {
+        }
     }
 }

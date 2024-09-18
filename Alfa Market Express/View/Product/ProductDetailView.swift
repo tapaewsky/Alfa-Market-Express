@@ -12,10 +12,9 @@ struct ProductDetailView: View {
     @ObservedObject var cartViewModel: CartViewModel
     @ObservedObject var favoritesViewModel: FavoritesViewModel
     var product: Product
-
     @State private var quantity: Int = 1
-    @State private var isAddedToCart: Bool = false
     @State private var isFavorite: Bool = false
+    @State private var isAddedToCart: Bool = false
 
     var body: some View {
         ScrollView {
@@ -37,21 +36,25 @@ struct ProductDetailView: View {
                             .frame(maxWidth: .infinity, maxHeight: 300)
                             .background(Color.gray.opacity(0.2))
                     }
-
+                                     
+                }
+                HStack {
+                Text(product.name)
+                    .font(.title)
+                    .padding(.horizontal)
+                    
+                Spacer()
+                    
                     Button(action: {
                         toggleFavorite()
                     }) {
                         Image(systemName: isFavorite ? "heart.fill" : "heart")
                             .resizable()
                             .frame(width: 24, height: 24)
-                            .foregroundColor(isFavorite ? .red : .white)
+                            .foregroundColor(isFavorite ? .colorRed : .colorGray)
                             .padding()
                     }
                 }
-                
-                Text(product.name)
-                    .font(.title)
-                    .padding(.horizontal)
                 
                 Text(product.description)
                     .padding(.horizontal)
@@ -60,6 +63,7 @@ struct ProductDetailView: View {
                 Text(priceText)
                     .font(.title)
                     .padding(.horizontal)
+                    .foregroundColor(.colorRed)
                 
                 HStack {
                     Text("Количество:")
@@ -74,13 +78,15 @@ struct ProductDetailView: View {
                 }
                 
                 Button(action: {
-                    toggleCart()
+                    Task {
+                        await toggleCart()
+                    }
                 }) {
                     Text(isAddedToCart ? "Удалить из корзины" : "Добавить в корзину")
                         .fontWeight(.bold)
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity, minHeight: 50)
-                        .background(isAddedToCart ? Color.red : Color.green)
+                        .background(isAddedToCart ? Color.colorRed : Color.colorGreen)
                         .cornerRadius(10)
                         .shadow(radius: 5)
                 }
@@ -91,7 +97,6 @@ struct ProductDetailView: View {
                         ForEach(viewModel.filteredProducts) { product in
                             NavigationLink(destination: ProductDetailView(viewModel: viewModel, cartViewModel: cartViewModel, favoritesViewModel: favoritesViewModel, product: product)) {
                                 ProductCardView(product: product, viewModel: viewModel, onFavoriteToggle: {
-                                    // Ваш код для обработки переключения избранного
                                 })
                                 .padding(5)
                             }
@@ -99,8 +104,10 @@ struct ProductDetailView: View {
                         }
                     }
                 }
+               
             }
             .padding(.vertical)
+            
         }
         .navigationTitle("Информация о продукте")
         .navigationBarTitleDisplayMode(.inline)
@@ -119,11 +126,11 @@ struct ProductDetailView: View {
         }
     }
     
-    private func toggleCart() {
+    private func toggleCart() async {
         if isAddedToCart {
-            cartViewModel.removeFromCart(product)
+            await cartViewModel.removeFromCart(product)
         } else {
-            cartViewModel.addToCart(product)
+            await cartViewModel.addToCart(product, quantity: quantity)
         }
         isAddedToCart.toggle()
     }

@@ -42,7 +42,6 @@ class ProfileViewModel: ObservableObject {
     func loadUserProfile() {
         fetchUserProfile { [weak self] success in
             if !success {
-                // Если профиль не был загружен, пробуем обновить токен и перезагрузить
                 AuthManager.shared.refreshAccessToken { [weak self] refreshed in
                     if refreshed {
                         self?.fetchUserProfile(completion: { _ in })
@@ -141,7 +140,7 @@ class ProfileViewModel: ObservableObject {
                     DispatchQueue.main.async {
                         completion(true)
                     }
-                    return  // Успешное завершение
+                    return  
                 } else {
                     print("Неверный формат ответа: \(responseDict)")
                 }

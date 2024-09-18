@@ -16,36 +16,38 @@ struct ProductCardView: View {
     var body: some View {
         VStack(alignment: .leading) {
             ZStack(alignment: .topTrailing) {
-              
+                
                 if let imageUrl = product.imageUrl, let url = URL(string: imageUrl) {
                     KFImage(url)
                         .placeholder {
                             ProgressView()
-                                .frame(width: 100, height: 100)
+                                .frame(width: 150, height: 100)
                         }
                         .resizable()
                         .aspectRatio(contentMode: .fill)
-                        .frame(height: 150)
+                        .frame(width: 150,height: 150)
                         .cornerRadius(10)
                         .clipped()
                 } else {
                     Image(systemName: "photo")
                         .resizable()
                         .aspectRatio(contentMode: .fill)
-                        .frame(height: 150)
+                        .frame(width: 150, height: 150)
                         .cornerRadius(10)
                         .clipped()
                 }
-
+                
                 Button(action: {
                     onFavoriteToggle()
                 }) {
                     Image(systemName: product.isFavorite ? "heart.fill" : "heart")
-                        .foregroundColor(product.isFavorite ? .red : .gray)
-                        .padding(10)
+                        .foregroundColor(product.isFavorite ? .colorRed : .colorGreen)
+                        .padding(5)
+                        .background(.colorGray)
+                        .cornerRadius(10)
                 }
             }
-
+            
             Text(product.name)
                 .font(.subheadline)
                 .lineLimit(1)
@@ -67,7 +69,7 @@ struct ProductCardView: View {
                 Image(systemName: "cart")
                     .padding(10)
                     .foregroundColor(.white)
-                    .background(product.isInCart ? Color.gray : Color.main)
+                    .background(product.isInCart ? Color.gray : Color.colorGreen)
                     .cornerRadius(30)
             }
         }

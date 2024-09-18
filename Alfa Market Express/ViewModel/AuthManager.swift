@@ -76,13 +76,13 @@ class AuthManager: ObservableObject {
         }.resume()
     }
     
-    // Метод для установки токенов
+  
     func setTokens(accessToken: String, refreshToken: String) {
         UserDefaults.standard.set(accessToken, forKey: accessTokenKey)
         UserDefaults.standard.set(refreshToken, forKey: refreshTokenKey)
     }
     
-    // Метод для удаления токенов
+  
     func clearTokens() {
         UserDefaults.standard.removeObject(forKey: accessTokenKey)
         UserDefaults.standard.removeObject(forKey: refreshTokenKey)

@@ -15,14 +15,16 @@ struct SearchBar: View {
             HStack {
                 Image(systemName: "magnifyingglass")
                     .foregroundColor(.gray)
-                    .padding(10)
+                    .padding(11)
                 
                 TextField("", text: $searchText)
-                    .padding(.leading, 10)
+                    
+                   
             }
             .background(Color.white)
             .cornerRadius(20)
-            .shadow(radius: 1)
+
+            
             
         }
         

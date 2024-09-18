@@ -12,17 +12,7 @@ class MainViewModel: ObservableObject {
     @Published var productViewModel = ProductViewModel()
     @Published var cartViewModel = CartViewModel()
     @Published var favoritesViewModel = FavoritesViewModel()
-    
-    init() {
-        // Инициализация и загрузка данных
-        loadInitialData()
-    }
-    
-    private func loadInitialData() {
-        Task {
-            await productViewModel.fetchData { success in
-                // обработка успеха или ошибки
-            }
-        }
-    }
+
 }
+    
+   

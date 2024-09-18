@@ -11,24 +11,15 @@ struct CategoryView: View {
     
     var body: some View {
         VStack {
-            Group {
-                HeaderView()
+           
+            HeaderView {
                 SearchBar()
                     .padding(.horizontal)
-                
-                HStack {
-                    Text("Каталог")
-                        .font(.title)
-                        .fontWeight(.bold)
-                        .padding(.leading, 15)
-                    Spacer()
-                }
-                .padding(.top, 10)
-                
-                ScrollView {
-                    CategoryGridView(viewModel: viewModel)
-                        .padding()
-                }
+                    
+            }
+            ScrollView {
+                CategoryGridView(viewModel: viewModel)
+                    .padding()
             }
         }
     }

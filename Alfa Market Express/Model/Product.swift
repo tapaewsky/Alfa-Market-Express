@@ -23,25 +23,20 @@ struct Product: Identifiable, Decodable, Hashable, Encodable {
         case name
         case description
         case price
-        case image // Это соответствует ключу в JSON
+        case imageUrl = "image"
         case category
         case isFavorite
         case isInCart
         case quantity
     }
     
-    
-
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(Int.self, forKey: .id)
         name = try container.decode(String.self, forKey: .name)
         description = try container.decode(String.self, forKey: .description)
         price = try container.decode(String.self, forKey: .price)
-        
-        // Обработка значения `image` может быть `null`
-        imageUrl = try container.decodeIfPresent(String.self, forKey: .image)
-        
+        imageUrl = try container.decodeIfPresent(String.self, forKey: .imageUrl)
         category = try container.decode(Int.self, forKey: .category)
         isFavorite = try container.decodeIfPresent(Bool.self, forKey: .isFavorite) ?? false
         isInCart = try container.decodeIfPresent(Bool.self, forKey: .isInCart) ?? false
@@ -54,7 +49,7 @@ struct Product: Identifiable, Decodable, Hashable, Encodable {
         try container.encode(name, forKey: .name)
         try container.encode(description, forKey: .description)
         try container.encode(price, forKey: .price)
-        try container.encode(imageUrl, forKey: .image) // Кодирование опционального поля
+        try container.encode(imageUrl, forKey: .imageUrl)
         try container.encode(category, forKey: .category)
         try container.encode(isFavorite, forKey: .isFavorite)
         try container.encode(isInCart, forKey: .isInCart)

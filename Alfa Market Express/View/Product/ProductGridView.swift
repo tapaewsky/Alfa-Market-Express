@@ -31,6 +31,7 @@ struct ProductGridView: View {
                     }
                 }
             }
+            
         }
     }
 }

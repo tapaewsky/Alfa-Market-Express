@@ -16,8 +16,6 @@ struct FavoritesView: View {
     
     var body: some View {
         VStack {
-            HeaderView()
-            
             Group {
                 favoriteText
                 favoriteList

@@ -7,17 +7,16 @@
 import SwiftUI
 
 struct HomeView: View {
-    @StateObject private var viewModel = MainViewModel()
+    @ObservedObject var viewModel: MainViewModel
     @StateObject private var networkMonitor = NetworkMonitor()
-    @State private var hasLoadedData: Bool = false
-
+    
     var body: some View {
         NavigationView {
             VStack {
                 Group {
-                    HeaderView()
+//                    HeaderView()
                     ScrollView {
-                        RecommendationCardView(categories: viewModel.categoryViewModel.categories)
+                        RecommendationCardView(viewModel: MainViewModel(), categories: viewModel.categoryViewModel.categories)
                         SearchBar()
                             .padding(.horizontal)
                         
@@ -25,7 +24,7 @@ struct HomeView: View {
                             ProgressView()
                         } else if viewModel.productViewModel.isError {
                             Text("Не удалось загрузить данные. Пожалуйста, проверьте подключение к сети и повторите попытку.")
-                                .foregroundColor(.red)
+                                .foregroundColor(.colorRed)
                         } else {
                             VStack {
                                 CatalogGridView(viewModel: viewModel)
@@ -42,13 +41,16 @@ struct HomeView: View {
                     }
                 }
             }
+            
             .onAppear {
-                if !hasLoadedData {
-                    loadData()
+                if networkMonitor.isConnected {
+                    Task {
+                        await fetchData()
+                    }
                 }
             }
             .onChange(of: networkMonitor.isConnected) { isConnected in
-                if isConnected && !hasLoadedData {
+                if isConnected {
                     Task {
                         await fetchData()
                     }
@@ -56,33 +58,21 @@ struct HomeView: View {
             }
         }
     }
-
-    private func loadData() {
-        if networkMonitor.isConnected {
-            print("Network is connected, loading data...")
-            Task {
-                await fetchData()
-            }
-        } else {
-            viewModel.productViewModel.isError = true
-        }
-    }
-
+    
     private func fetchData() async {
         viewModel.productViewModel.isLoading = true
-        let success = await withCheckedContinuation { continuation in
-            viewModel.productViewModel.fetchData { success in
-                continuation.resume(returning: success)
+        await viewModel.productViewModel.fetchData { success in
+            viewModel.productViewModel.isLoading = false
+            if !success {
+                viewModel.productViewModel.isError = true
+            } else {
+                viewModel.productViewModel.isError = false
             }
         }
-        viewModel.productViewModel.isLoading = false
-        hasLoadedData = true
-        viewModel.productViewModel.isError = !success
     }
 }
-
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView()
+        HomeView(viewModel: MainViewModel())
     }
 }

@@ -37,7 +37,7 @@ struct ProfileInfo: View {
                         Text(viewModel.isEditing ? "Сохранить" : "Редактировать")
                             .fontWeight(.semibold)
                             .padding(8)
-                            .background(Color.main)
+                            .background(Color.colorGreen)
                             .foregroundColor(.white)
                             .cornerRadius(8)
                     }

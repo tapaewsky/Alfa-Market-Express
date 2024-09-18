@@ -16,23 +16,33 @@ class ProductViewModel: ObservableObject {
     private let productsKey = "cachedProducts"
 
     init() {
-        // Загрузка сохранённых продуктов, если они есть
-        loadProducts()
-    }
-
+           loadProducts()
+           fetchData { success in
+               if !success {
+                   self.loadProducts()
+               }
+           }
+       }
     func fetchData(completion: @escaping (Bool) -> Void) {
-        isLoading = true
-        isError = false
-        
-        // Вызываем метод загрузки продуктов
-        fetchProducts { fetchProductsSuccess in
-            DispatchQueue.main.async {
+            isLoading = true
+            isError = false
+            
+            let dispatchGroup = DispatchGroup()
+            var success = true
+            
+            dispatchGroup.enter()
+            fetchProducts { fetchProductsSuccess in
+                success = success && fetchProductsSuccess
+                dispatchGroup.leave()
+            }
+            
+            dispatchGroup.notify(queue: .main) {
                 self.isLoading = false
-                self.isError = !fetchProductsSuccess
-                completion(fetchProductsSuccess)
+                self.isError = !success
+                completion(success)
             }
         }
-    }
+        
 
     func fetchProducts(completion: @escaping (Bool) -> Void) {
         guard let url = URL(string: "http://95.174.90.162:8000/api/products/") else {
@@ -139,4 +149,16 @@ class ProductViewModel: ObservableObject {
             return products.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
         }
     }
-}
+
+    func toggleFavorite(_ product: Product) {
+      
+    }
+    
+    private func loadCachedData() {
+            if let productsData = UserDefaults.standard.data(forKey: productsKey),
+               let cachedProducts = try? JSONDecoder().decode([Product].self, from: productsData) {
+                products = cachedProducts
+            }
+           
+        }
+    }

@@ -12,7 +12,7 @@ struct CatalogCardView: View {
     let category: Category
 
     var body: some View {
-        KFImage(URL(string: category.imageUrl))
+        KFImage(URL(string: category.imageUrl ?? "https://example.com/placeholder.png"))
             .placeholder {
                 ProgressView()
             }

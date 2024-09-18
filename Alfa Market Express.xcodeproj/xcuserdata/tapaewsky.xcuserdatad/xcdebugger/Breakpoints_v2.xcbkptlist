@@ -8,7 +8,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "A47CCEBE-955C-4DC6-9B38-2F160BF21484"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "../../../../../../../../var/folders/tp/974mhhf969g1z4pld7pvcpmr0000gn/T/xcode/scm/Alfa Market Express/5ad6f6c940d9ba4eeff2e5c8b1f9ca3ea500585e/Alfa Market Express/Model/Product.swift"
