@@ -54,7 +54,7 @@ class ProfileViewModel: ObservableObject {
     }
     
     private func fetchUserProfile(completion: @escaping (Bool) -> Void) {
-        guard let url = URL(string: "http://95.174.90.162:8000/api/me/"),
+        guard let url = URL(string: "http://95.174.90.162:60/api/me/"),
               let token = AuthManager.shared.accessToken else {
             print("Неверный URL или нет токена доступа")
             completion(false)
@@ -93,7 +93,7 @@ class ProfileViewModel: ObservableObject {
     func authenticateUser(username: String, password: String, completion: @escaping (Bool) -> Void) {
         print("Начата попытка аутентификации с именем пользователя: \(username)")
         
-        guard let url = URL(string: "http://95.174.90.162:8000/api/token/") else {
+        guard let url = URL(string: "http://95.174.90.162:60/api/token/") else {
             print("Неверный URL")
             completion(false)
             return

@@ -4,19 +4,17 @@
 //
 //  Created by Said Tapaev on 06.07.2024.
 //
-
 import SwiftUI
 import Kingfisher
 
 struct ProductCardView: View {
     let product: Product
-    @ObservedObject var viewModel: ProductViewModel
+    @ObservedObject var viewModel: MainViewModel
     var onFavoriteToggle: () -> Void
     
     var body: some View {
         VStack(alignment: .leading) {
             ZStack(alignment: .topTrailing) {
-                
                 if let imageUrl = product.imageUrl, let url = URL(string: imageUrl) {
                     KFImage(url)
                         .placeholder {
@@ -25,14 +23,14 @@ struct ProductCardView: View {
                         }
                         .resizable()
                         .aspectRatio(contentMode: .fill)
-                        .frame(width: 150,height: 150)
+//                        .frame(width: 150, height: 150)
                         .cornerRadius(10)
                         .clipped()
                 } else {
                     Image(systemName: "photo")
                         .resizable()
                         .aspectRatio(contentMode: .fill)
-                        .frame(width: 150, height: 150)
+//                        .frame(width: 150, height: 150)
                         .cornerRadius(10)
                         .clipped()
                 }
@@ -41,9 +39,9 @@ struct ProductCardView: View {
                     onFavoriteToggle()
                 }) {
                     Image(systemName: product.isFavorite ? "heart.fill" : "heart")
-                        .foregroundColor(product.isFavorite ? .colorRed : .colorGreen)
+                        .foregroundColor(product.isFavorite ? .red : .gray)
                         .padding(5)
-                        .background(.colorGray)
+                        .background(Color.gray.opacity(0.7))
                         .cornerRadius(10)
                 }
             }
@@ -76,6 +74,7 @@ struct ProductCardView: View {
         .padding()
         .background(Color.white)
         .cornerRadius(10)
-        .shadow(radius: 1)
+        .shadow(radius: 2)
+        
     }
 }

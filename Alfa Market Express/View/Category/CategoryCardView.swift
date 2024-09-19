@@ -11,43 +11,44 @@ struct CategoryCardView: View {
     let category: Category
     
     var body: some View {
-        VStack() {
+        VStack {
             Text(category.name)
-                .font(.headline)
+                .font(.subheadline)
+                .fontWeight(.bold)
                 .lineLimit(1)
                 .minimumScaleFactor(0.5)
                 .foregroundColor(.primary)
-                .padding(.trailing, 50)
+                .frame(maxWidth: .infinity, alignment: .leading)
+                .padding([.leading, .trailing, .top], 10)
             
             Spacer()
             
-            ZStack() {
+            ZStack(alignment: .topTrailing) {
                 if let imageUrl = category.imageUrl, let url = URL(string: imageUrl) {
                     KFImage(url)
                         .placeholder {
                             ProgressView()
-                                .frame(width: 100,height: 100)
+                                .frame(width: 150, height: 150)
                         }
                         .resizable()
-                        .scaledToFit() 
-                        .frame(width: 150,height: 90)
+                        .scaledToFit()
                         .cornerRadius(10)
-                        .aspectRatio(contentMode: .fill)
                         .clipped()
+                        .aspectRatio(1, contentMode: .fit)
                 } else {
                     Image(systemName: "photo")
                         .resizable()
                         .scaledToFit()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(height: 150)
                         .cornerRadius(10)
                         .clipped()
+                        .aspectRatio(1, contentMode: .fit)
                 }
             }
-          
         }
-        .padding()
-        .background(Color.colorGray)
-        .cornerRadius(15)
+            .padding()
+            .background(Color.colorGray)
+            .cornerRadius(15)
+            .aspectRatio(1, contentMode: .fit) 
+        
     }
 }

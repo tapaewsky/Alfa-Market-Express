@@ -4,24 +4,26 @@
 //
 //  Created by Said Tapaev on 29.07.2024.
 //
-
 import SwiftUI
 
 struct CategoryGridView: View {
-    @ObservedObject var viewModel: CategoryViewModel
-    let productViewModel = ProductViewModel()
-    let cartViewModel = CartViewModel()
-    let favoritesViewModel = FavoritesViewModel()
+    @ObservedObject var viewModel: MainViewModel
+    
     var body: some View {
-        LazyVGrid(columns: [GridItem(.flexible(), spacing: 40), GridItem(.flexible(), spacing: 10)], spacing: 5) {
-            ForEach(viewModel.categories) { category in
-                NavigationLink(destination: CategoryProductsView(viewModel: productViewModel, cartViewModel: cartViewModel, favoritesViewModel: favoritesViewModel, category: category)) {
+        let columns = [
+            GridItem(.adaptive(minimum: 150), spacing: 15) // Адаптивное размещение карточек с минимальным размером 150
+        ]
+        
+        LazyVGrid(columns: columns, spacing: 15) {
+            ForEach(viewModel.categoryViewModel.categories) { category in
+                NavigationLink(destination: CategoryProductsView(
+                    viewModel: viewModel,
+                    category: category
+                )) {
                     CategoryCardView(category: category)
-                        .padding(5)
                 }
             }
-            
         }
-       
+        .padding(.horizontal, 10)
     }
 }

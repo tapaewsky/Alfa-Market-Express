@@ -23,7 +23,7 @@ struct SearchBar: View {
             }
             .background(Color.white)
             .cornerRadius(20)
-
+            .shadow(radius: 1)
             
             
         }

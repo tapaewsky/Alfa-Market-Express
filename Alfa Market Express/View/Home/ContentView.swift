@@ -16,7 +16,7 @@ struct ContentView: View {
                 }
             
             NavigationView {
-                CategoryView(viewModel: CategoryViewModel())
+                CategoryView(viewModel: MainViewModel())
             }
             .tabItem {
                 Image(systemName: "list.dash")
@@ -24,9 +24,7 @@ struct ContentView: View {
             }
             
             NavigationView {
-                CartView(
-                    viewModel: CartViewModel(),
-                    favoritesViewModel: FavoritesViewModel()
+                CartView(viewModel: MainViewModel()
                 )
             }
             .tabItem {
@@ -35,10 +33,7 @@ struct ContentView: View {
             }
             
             NavigationView {
-                FavoritesView(
-                    viewModel: ProductViewModel(),
-                    cartViewModel: CartViewModel(),
-                    favoritesViewModel: FavoritesViewModel()
+                FavoritesView(viewModel: MainViewModel()
                 )
             }
             .tabItem {

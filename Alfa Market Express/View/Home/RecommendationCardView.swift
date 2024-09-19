@@ -16,7 +16,7 @@ struct RecommendationCardView: View {
         ScrollView(.horizontal, showsIndicators: false) {
             LazyHStack {
                 ForEach(categories) { category in
-                    NavigationLink(destination: CategoryProductsView(viewModel: viewModel.productViewModel,cartViewModel: viewModel.cartViewModel,favoritesViewModel: viewModel.favoritesViewModel, category: category)) {
+                    NavigationLink(destination: CategoryProductsView(viewModel: viewModel, category: category)) {
                         KFImage(URL(string: category.imageUrl ?? "https://example.com/placeholder.png"))
                             .placeholder {
                                 ProgressView()

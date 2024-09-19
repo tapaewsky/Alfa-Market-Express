@@ -1,9 +1,11 @@
 //
-//  CartItemView.swift
+//  CartItemView 3.swift
 //  Alfa Market Express
 //
-//  Created by Said Tapaev on 12.09.2024.
+//  Created by Said Tapaev on 18.09.2024.
 //
+
+
 import SwiftUI
 import Kingfisher
 
@@ -115,13 +117,12 @@ struct CartItemView: View {
                     
                     Button(action: {
                         isFavorite.toggle()
-                        Task {
-                            if isFavorite {
-                               await viewModel.addToCart(cartProduct.product, quantity: quantity)
-                            } else {
-                               await viewModel.removeFromCart(cartProduct.product)
-                            }
-                        }}) {
+                        if isFavorite {
+                            viewModel.addToFavorites(cartProduct.product)
+                        } else {
+                            viewModel.removeFromFavorites(cartProduct.product)
+                        }
+                    }) {
                         Image(systemName: isFavorite ? "heart.fill" : "heart")
                             .foregroundColor(isFavorite ? .colorRed : .colorGreen)
                     }
@@ -135,7 +136,7 @@ struct CartItemView: View {
         .padding(.horizontal)
         .onAppear {
             calculateTotalPrice()
-           
+            isFavorite = viewModel.isFavorite(cartProduct.product)
         }
     }
     

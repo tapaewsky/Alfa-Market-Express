@@ -48,7 +48,7 @@ class AuthManager: ObservableObject {
             return
         }
         
-        let url = URL(string: "http://95.174.90.162:8000/api/token/refresh/")!
+        let url = URL(string: "http://95.174.90.162:60/api/token/refresh/")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")

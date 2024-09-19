@@ -4,16 +4,13 @@
 //
 //  Created by Said Tapaev on 06.07.2024.
 //
-
 import SwiftUI
 import Kingfisher
 
 struct FavoritesView: View {
-    @ObservedObject var viewModel: ProductViewModel
-    @ObservedObject var cartViewModel: CartViewModel
-    @ObservedObject var favoritesViewModel: FavoritesViewModel
+    @ObservedObject var viewModel: MainViewModel
     @State private var searchText = ""
-    
+
     var body: some View {
         VStack {
             Group {
@@ -21,9 +18,6 @@ struct FavoritesView: View {
                 favoriteList
             }
             .padding(.horizontal, 16)
-        }
-        .onChange(of: searchText) { _ in
-            
         }
     }
     
@@ -35,11 +29,10 @@ struct FavoritesView: View {
     }
     
     private var favoriteList: some View {
-        
-        List(favoritesViewModel.favorites.filter { product in
+        List(viewModel.favoritesViewModel.favorites.filter { product in
             searchText.isEmpty || product.name.lowercased().contains(searchText.lowercased())
         }) { product in
-            NavigationLink(destination: ProductDetailView(viewModel: viewModel, cartViewModel: cartViewModel, favoritesViewModel: favoritesViewModel, product: product)) {
+            NavigationLink(destination: ProductDetailView(viewModel: viewModel, product: product)) {
                 HStack(spacing: 10) {
                     KFImage(URL(string: product.imageUrl ?? ""))
                         .placeholder {
@@ -70,6 +63,6 @@ struct FavoritesView: View {
 
 struct FavoritesView_Previews: PreviewProvider {
     static var previews: some View {
-        FavoritesView(viewModel: ProductViewModel(), cartViewModel: CartViewModel(), favoritesViewModel: FavoritesViewModel())
+        FavoritesView(viewModel: MainViewModel())
     }
 }

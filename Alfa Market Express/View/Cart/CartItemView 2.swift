@@ -1,22 +1,21 @@
 //
-//  CartItemView.swift
+//  CartItemView 2.swift
 //  Alfa Market Express
 //
-//  Created by Said Tapaev on 12.09.2024.
+//  Created by Said Tapaev on 18.09.2024.
 //
-import SwiftUI
-import Kingfisher
+
 
 struct CartItemView: View {
     let cartProduct: CartProduct
-    @ObservedObject var viewModel: CartViewModel
+    @ObservedObject var viewModel: MainViewModel
     @Binding var isSelected: Bool
     
     @State private var quantity: Int
     @State private var totalPriceForProduct: Double
     @State private var isFavorite: Bool = false
 
-    init(cartProduct: CartProduct, viewModel: CartViewModel, isSelected: Binding<Bool>) {
+    init(cartProduct: CartProduct, viewModel: MainViewModel, isSelected: Binding<Bool>) {
         self.cartProduct = cartProduct
         self._quantity = State(initialValue: cartProduct.quantity)
         self._totalPriceForProduct = State(initialValue: cartProduct.getTotalPrice)
@@ -28,7 +27,7 @@ struct CartItemView: View {
         HStack {
             Button(action: {
                 isSelected.toggle()
-                viewModel.toggleProductSelection(cartProduct.product)
+                viewModel.cartViewModel.toggleProductSelection(cartProduct.product)
             }) {
                 Image(systemName: isSelected ? "checkmark.square" : "square")
                     .foregroundColor(isSelected ? .colorGreen : .gray)
@@ -61,7 +60,13 @@ struct CartItemView: View {
                     Button(action: {
                         if quantity > 1 {
                             Task {
-                                await viewModel.updateProductQuantity(cartProduct.product, newQuantity: quantity - 1)
+                                do {
+                                    try await viewModel.cartViewModel.updateProductQuantity(cartProduct.product, newQuantity: quantity - 1)
+                                    quantity -= 1
+                                    calculateTotalPrice()
+                                } catch {
+                                    print("Ошибка при обновлении количества товара")
+                                }
                             }
                         }
                     }) {
@@ -76,7 +81,13 @@ struct CartItemView: View {
                     
                     Button(action: {
                         Task {
-                            await viewModel.updateProductQuantity(cartProduct.product, newQuantity: quantity + 1)
+                            do {
+                                try await viewModel.cartViewModel.updateProductQuantity(cartProduct.product, newQuantity: quantity + 1)
+                                quantity += 1
+                                calculateTotalPrice()
+                            } catch {
+                                print("Ошибка при обновлении количества товара")
+                            }
                         }
                     }) {
                         Image(systemName: "plus.circle.fill")
@@ -104,7 +115,11 @@ struct CartItemView: View {
                 HStack {
                     Button(action: {
                         Task {
-                            await viewModel.removeFromCart(cartProduct.product)
+                            do {
+                                try await viewModel.cartViewModel.removeFromCart(cartProduct.product)
+                            } catch {
+                                print("Ошибка при удалении товара из корзины")
+                            }
                         }
                     }) {
                         Image(systemName: "trash")
@@ -115,13 +130,12 @@ struct CartItemView: View {
                     
                     Button(action: {
                         isFavorite.toggle()
-                        Task {
-                            if isFavorite {
-                               await viewModel.addToCart(cartProduct.product, quantity: quantity)
-                            } else {
-                               await viewModel.removeFromCart(cartProduct.product)
-                            }
-                        }}) {
+                        if isFavorite {
+                            viewModel.favoritesViewModel.addToFavorites(cartProduct.product)
+                        } else {
+                            viewModel.favoritesViewModel.removeFromFavorites(cartProduct.product)
+                        }
+                    }) {
                         Image(systemName: isFavorite ? "heart.fill" : "heart")
                             .foregroundColor(isFavorite ? .colorRed : .colorGreen)
                     }
@@ -135,7 +149,7 @@ struct CartItemView: View {
         .padding(.horizontal)
         .onAppear {
             calculateTotalPrice()
-           
+            isFavorite = viewModel.favoritesViewModel.isFavorite(cartProduct.product)
         }
     }
     

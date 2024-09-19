@@ -52,7 +52,7 @@ class CategoryViewModel: ObservableObject {
     }
 
     func fetchCategories(completion: @escaping (Bool) -> Void) {
-        guard let url = URL(string: "http://95.174.90.162:8000/api/categories/") else {
+        guard let url = URL(string: "http://95.174.90.162:60/api/categories/") else {
             completion(false)
             return
         }

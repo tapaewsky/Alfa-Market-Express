@@ -8,9 +8,7 @@ import SwiftUI
 import Kingfisher
 
 struct ProductDetailView: View {
-    @ObservedObject var viewModel: ProductViewModel
-    @ObservedObject var cartViewModel: CartViewModel
-    @ObservedObject var favoritesViewModel: FavoritesViewModel
+    @ObservedObject var viewModel: MainViewModel
     var product: Product
     @State private var quantity: Int = 1
     @State private var isFavorite: Bool = false
@@ -36,15 +34,16 @@ struct ProductDetailView: View {
                             .frame(maxWidth: .infinity, maxHeight: 300)
                             .background(Color.gray.opacity(0.2))
                     }
-                                     
                 }
+
+                
                 HStack {
-                Text(product.name)
-                    .font(.title)
-                    .padding(.horizontal)
-                    
-                Spacer()
-                    
+                    Text(product.name)
+                        .font(.title)
+                        .padding(.horizontal)
+
+                    Spacer()
+
                     Button(action: {
                         toggleFavorite()
                     }) {
@@ -55,28 +54,29 @@ struct ProductDetailView: View {
                             .padding()
                     }
                 }
-                
+
                 Text(product.description)
                     .padding(.horizontal)
-                
+
                 let priceText = (Double(product.price) != nil) ? "\(product.price) ₽" : "Цена не доступна"
                 Text(priceText)
                     .font(.title)
                     .padding(.horizontal)
                     .foregroundColor(.colorRed)
-                
+
                 HStack {
                     Text("Количество:")
                         .font(.title3)
                         .padding(.horizontal)
-                    
+
                     Stepper(value: $quantity, in: 1...1000) {
                         Text("\(quantity)")
                             .font(.title3)
                     }
                     .padding(.horizontal)
                 }
-                
+
+               
                 Button(action: {
                     Task {
                         await toggleCart()
@@ -91,46 +91,52 @@ struct ProductDetailView: View {
                         .shadow(radius: 5)
                 }
                 .padding(.horizontal)
+
                 
-                Section(header: Text("Похожие продукты")) {
-                    LazyVGrid(columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)], spacing: 5) {
-                        ForEach(viewModel.filteredProducts) { product in
-                            NavigationLink(destination: ProductDetailView(viewModel: viewModel, cartViewModel: cartViewModel, favoritesViewModel: favoritesViewModel, product: product)) {
-                                ProductCardView(product: product, viewModel: viewModel, onFavoriteToggle: {
-                                })
-                                .padding(5)
-                            }
-                            .buttonStyle(PlainButtonStyle())
+                Text("Похожие продукты")
+                    .padding(.horizontal)
+
+                LazyVGrid(columns: [GridItem(.flexible(), spacing: 1), GridItem(.flexible(), spacing: 10)], spacing: 5) {
+                    ForEach(viewModel.productViewModel.filteredProducts) { product in
+                        NavigationLink(destination: ProductDetailView(viewModel: viewModel, product: product)) {
+                            ProductCardView(product: product, viewModel: viewModel, onFavoriteToggle: {
+                                Task {
+                                    await viewModel.favoritesViewModel.toggleFavorite(for: product)
+                                }
+                           
+
+                            })
+                            .padding(5)
                         }
+                        .buttonStyle(PlainButtonStyle())
                     }
                 }
-               
+                .padding(.horizontal,10)
             }
             .padding(.vertical)
-            
         }
         .navigationTitle("Информация о продукте")
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
-            isFavorite = favoritesViewModel.isFavorite(product)
-            isAddedToCart = cartViewModel.isInCart(product)
+            isFavorite = viewModel.favoritesViewModel.isFavorite(product)
+            isAddedToCart = viewModel.cartViewModel.isInCart(product)
         }
     }
-    
+
     private func toggleFavorite() {
         isFavorite.toggle()
         if isFavorite {
-            favoritesViewModel.addToFavorites(product)
+           viewModel.favoritesViewModel.addToFavorites(product)
         } else {
-            favoritesViewModel.removeFromFavorites(product)
+            viewModel.favoritesViewModel.removeFromFavorites(product)
         }
     }
-    
+
     private func toggleCart() async {
         if isAddedToCart {
-            await cartViewModel.removeFromCart(product)
+            await viewModel.cartViewModel.removeFromCart(product)
         } else {
-            await cartViewModel.addToCart(product, quantity: quantity)
+            await viewModel.cartViewModel.addToCart(product, quantity: quantity)
         }
         isAddedToCart.toggle()
     }

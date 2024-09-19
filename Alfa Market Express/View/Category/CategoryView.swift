@@ -7,15 +7,13 @@
 import SwiftUI
 
 struct CategoryView: View {
-    @ObservedObject var viewModel: CategoryViewModel
+    @ObservedObject var viewModel: MainViewModel
     
     var body: some View {
         VStack {
-           
             HeaderView {
                 SearchBar()
                     .padding(.horizontal)
-                    
             }
             ScrollView {
                 CategoryGridView(viewModel: viewModel)
@@ -27,6 +25,6 @@ struct CategoryView: View {
 
 struct CategoryView_Previews: PreviewProvider {
     static var previews: some View {
-        CategoryView(viewModel: CategoryViewModel())
+        CategoryView(viewModel: MainViewModel())
     }
 }

@@ -12,6 +12,11 @@ struct CatalogCardView: View {
     let category: Category
 
     var body: some View {
+        HStack {
+            Text(category.name)
+                .font(.caption)
+                .foregroundStyle(.black)
+        }
         KFImage(URL(string: category.imageUrl ?? "https://example.com/placeholder.png"))
             .placeholder {
                 ProgressView()
@@ -19,5 +24,6 @@ struct CatalogCardView: View {
             .resizable()
             .aspectRatio(contentMode: .fill)
             .clipped()
+            .frame(width: 50, height: 50)
     }
 }

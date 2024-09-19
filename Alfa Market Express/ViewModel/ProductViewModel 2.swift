@@ -1,9 +1,11 @@
 //
-//  ProductViewModel.swift
-//  WareHouse1
+//  ProductViewModel 2.swift
+//  Alfa Market Express
 //
-//  Created by Said Tapaev on 06.07.2024.
+//  Created by Said Tapaev on 18.09.2024.
 //
+
+
 import Combine
 import Foundation
 import SwiftUI
@@ -53,7 +55,7 @@ class ProductViewModel: ObservableObject {
     }
     
     func fetchProducts(completion: @escaping (Bool) -> Void) {
-        guard let url = URL(string: "http://95.174.90.162:60/api/products/") else {
+        guard let url = URL(string: "http://95.174.90.162:8000/api/products/") else {
             print("Invalid URL")
             completion(false)
             return
@@ -98,7 +100,7 @@ class ProductViewModel: ObservableObject {
             return
         }
 
-        let searchUrl = "http://95.174.90.162:60/api/products/?search=\(query)"
+        let searchUrl = "http://95.174.90.162:8000/api/products/?search=\(query)"
         guard let url = URL(string: searchUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "") else {
             completion(false)
             return
