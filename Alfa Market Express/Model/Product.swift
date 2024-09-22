@@ -5,14 +5,12 @@
 //  Created by Said Tapaev on 06.07.2024.
 //
 
-import Foundation
-
 struct Product: Identifiable, Decodable, Hashable, Encodable {
     var id: Int
     var name: String
     var description: String
     var price: String
-    var imageUrl: String? 
+    var imageUrl: String?
     var category: Int
     var isFavorite: Bool
     var isInCart: Bool
@@ -29,7 +27,7 @@ struct Product: Identifiable, Decodable, Hashable, Encodable {
         case isInCart
         case quantity
     }
-    
+
     init(from decoder: Decoder) throws {
         let container = try decoder.container(keyedBy: CodingKeys.self)
         id = try container.decode(Int.self, forKey: .id)
@@ -37,7 +35,7 @@ struct Product: Identifiable, Decodable, Hashable, Encodable {
         description = try container.decode(String.self, forKey: .description)
         price = try container.decode(String.self, forKey: .price)
         imageUrl = try container.decodeIfPresent(String.self, forKey: .imageUrl)
-        category = try container.decode(Int.self, forKey: .category)
+        category = try container.decodeIfPresent(Int.self, forKey: .category) ?? 0 // Установите значение по умолчанию
         isFavorite = try container.decodeIfPresent(Bool.self, forKey: .isFavorite) ?? false
         isInCart = try container.decodeIfPresent(Bool.self, forKey: .isInCart) ?? false
         quantity = try container.decodeIfPresent(Int.self, forKey: .quantity) ?? 1
@@ -51,7 +49,7 @@ struct Product: Identifiable, Decodable, Hashable, Encodable {
         try container.encode(price, forKey: .price)
         try container.encode(imageUrl, forKey: .imageUrl)
         try container.encode(category, forKey: .category)
-        try container.encode(isFavorite, forKey: .isFavorite)
+        try container.encode(isFavorite, forKey: .isFavorite) 
         try container.encode(isInCart, forKey: .isInCart)
         try container.encode(quantity, forKey: .quantity)
     }

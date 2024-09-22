@@ -6,58 +6,52 @@
 //
 import SwiftUI
 import Kingfisher
+import Combine
 
 struct FavoritesView: View {
     @ObservedObject var viewModel: MainViewModel
     @State private var searchText = ""
+    @State private var isFetching = false
 
     var body: some View {
         VStack {
-            Group {
-                favoriteText
-                favoriteList
+            HeaderView {
+                SearchBar()
+                    .padding(.horizontal)
             }
-            .padding(.horizontal, 16)
-        }
-    }
-    
-    private var favoriteText: some View {
-        Text("Избранное")
-            .font(.title)
-            .fontWeight(.bold)
-            .frame(maxWidth: .infinity, alignment: .leading)
-    }
-    
-    private var favoriteList: some View {
-        List(viewModel.favoritesViewModel.favorites.filter { product in
-            searchText.isEmpty || product.name.lowercased().contains(searchText.lowercased())
-        }) { product in
-            NavigationLink(destination: ProductDetailView(viewModel: viewModel, product: product)) {
-                HStack(spacing: 10) {
-                    KFImage(URL(string: product.imageUrl ?? ""))
-                        .placeholder {
-                            ProgressView()
-                                .frame(width: 50, height: 50)
+            ScrollView {
+                if viewModel.favoritesViewModel.favorites.isEmpty && !isFetching {
+                    Text("Нет избранных товаров")
+                        .padding()
+                        .foregroundColor(.gray)
+                } else {
+                    ForEach(viewModel.favoritesViewModel.favorites.filter { searchText.isEmpty ? true : $0.name.contains(searchText) }, id: \.id) { product in
+                        NavigationLink(destination: ProductDetailView(viewModel: viewModel, product: product)) {
+                            FavoritesCardView(product: product, viewModel: viewModel)
+                                .padding(.vertical, 6)
+                                .padding(.horizontal, 8)
                         }
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(width: 50, height: 50)
-                        .cornerRadius(8)
-                    
-                    VStack(alignment: .leading, spacing: 4) {
-                        Text(product.name)
-                            .font(.headline)
-                            .lineLimit(1)
-                        
-                        Text("\(product.price) ₽")
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
                     }
                 }
-                .padding(.vertical, 8)
             }
         }
-        .listStyle(.plain)
+        .onAppear {
+            loadFavorites()
+        }
+    }
+
+    private func loadFavorites() {
+        isFetching = true
+        viewModel.favoritesViewModel.fetchFavorites { success in
+            DispatchQueue.main.async {
+                isFetching = false
+                if success {
+                    print("Избранное успешно загружено")
+                } else {
+                    print("Не удалось загрузить избранное")
+                }
+            }
+        }
     }
 }
 

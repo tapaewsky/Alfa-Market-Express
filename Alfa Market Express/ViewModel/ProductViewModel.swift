@@ -15,7 +15,7 @@ class ProductViewModel: ObservableObject {
     @Published var searchText: String = ""
 
     private let productsKey = "cachedProducts"
-    private let networkMonitor = NetworkMonitor() // Добавлен мониторинг сети
+    private let networkMonitor = NetworkMonitor() 
 
     init() {
         loadProducts()
@@ -27,7 +27,7 @@ class ProductViewModel: ObservableObject {
     }
     
     func fetchData(completion: @escaping (Bool) -> Void) {
-        guard networkMonitor.isConnected else { // Проверка на наличие соединения перед запросом
+        guard networkMonitor.isConnected else { 
             print("No internet connection")
             completion(false)
             return

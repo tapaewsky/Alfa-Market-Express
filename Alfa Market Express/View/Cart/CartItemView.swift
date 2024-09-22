@@ -8,22 +8,25 @@ import SwiftUI
 import Kingfisher
 
 struct CartItemView: View {
-    let cartProduct: CartProduct
     @ObservedObject var viewModel: CartViewModel
     @Binding var isSelected: Bool
-    
+    let product: Product
     @State private var quantity: Int
     @State private var totalPriceForProduct: Double
     @State private var isFavorite: Bool = false
+    @State private var isAddedToCart: Bool = false
 
-    init(cartProduct: CartProduct, viewModel: CartViewModel, isSelected: Binding<Bool>) {
+    var cartProduct: CartProduct
+
+    init(cartProduct: CartProduct, viewModel: CartViewModel, isSelected: Binding<Bool>, product: Product) {
         self.cartProduct = cartProduct
         self._quantity = State(initialValue: cartProduct.quantity)
         self._totalPriceForProduct = State(initialValue: cartProduct.getTotalPrice)
         self.viewModel = viewModel
         self._isSelected = isSelected
+        self.product = product
     }
-    
+
     var body: some View {
         HStack {
             Button(action: {
@@ -31,11 +34,11 @@ struct CartItemView: View {
                 viewModel.toggleProductSelection(cartProduct.product)
             }) {
                 Image(systemName: isSelected ? "checkmark.square" : "square")
-                    .foregroundColor(isSelected ? .colorGreen : .gray)
+                    .foregroundColor(isSelected ? .green : .gray)
             }
             .buttonStyle(PlainButtonStyle())
             .contentShape(Circle())
-            
+
             VStack {
                 if let imageUrl = URL(string: cartProduct.product.imageUrl ?? "") {
                     KFImage(imageUrl)
@@ -56,13 +59,12 @@ struct CartItemView: View {
                         .clipped()
                 }
                 Spacer()
-                
+
                 HStack {
                     Button(action: {
                         if quantity > 1 {
-                            Task {
-                                await viewModel.updateProductQuantity(cartProduct.product, newQuantity: quantity - 1)
-                            }
+                            quantity -= 1
+                            updateQuantity()
                         }
                     }) {
                         Image(systemName: "minus.circle.fill")
@@ -70,60 +72,56 @@ struct CartItemView: View {
                     }
                     .buttonStyle(PlainButtonStyle())
                     .contentShape(Circle())
-                    
+
                     Text("\(quantity)")
                         .padding(.horizontal, 8)
-                    
+
                     Button(action: {
-                        Task {
-                            await viewModel.updateProductQuantity(cartProduct.product, newQuantity: quantity + 1)
-                        }
+                        quantity += 1
+                        updateQuantity()
                     }) {
                         Image(systemName: "plus.circle.fill")
-                            .foregroundColor(.colorGreen)
+                            .foregroundColor(.green)
                     }
                     .buttonStyle(PlainButtonStyle())
                     .contentShape(Circle())
                 }
                 .padding(.horizontal)
             }
-            
+
             VStack(alignment: .leading, spacing: 8) {
                 Text(cartProduct.product.name)
                     .font(.headline)
                     .lineLimit(2)
-                
+
                 Text("\(Int(totalPriceForProduct)) ₽")
                     .font(.subheadline)
-                    .foregroundColor(.colorRed)
-                
+                    .foregroundColor(.red)
+
                 Text(cartProduct.product.description)
                     .font(.footnote)
                     .lineLimit(2)
-                
+
                 HStack {
                     Button(action: {
-                        Task {
-                            await viewModel.removeFromCart(cartProduct.product)
+                        if isAddedToCart {
+                            Task {
+                                await viewModel.removeFromCart(product)
+                            }
                         }
                     }) {
                         Image(systemName: "trash")
-                            .foregroundColor(.colorRed)
+                            .foregroundColor(.red)
                     }
                     .buttonStyle(PlainButtonStyle())
                     .contentShape(Circle())
-                    
+
                     Button(action: {
                         isFavorite.toggle()
-                        Task {
-                            if isFavorite {
-                               await viewModel.addToCart(cartProduct.product, quantity: quantity)
-                            } else {
-                               await viewModel.removeFromCart(cartProduct.product)
-                            }
-                        }}) {
+                        toggleFavorite(product)
+                    }) {
                         Image(systemName: isFavorite ? "heart.fill" : "heart")
-                            .foregroundColor(isFavorite ? .colorRed : .colorGreen)
+                            .foregroundColor(isFavorite ? .red : .green)
                     }
                     .buttonStyle(PlainButtonStyle())
                     .contentShape(Circle())
@@ -135,11 +133,23 @@ struct CartItemView: View {
         .padding(.horizontal)
         .onAppear {
             calculateTotalPrice()
-           
         }
     }
-    
+
     private func calculateTotalPrice() {
         totalPriceForProduct = (Double(cartProduct.product.price) ?? 0) * Double(quantity)
+    }
+
+    private func updateQuantity() {
+        Task {
+            await viewModel.updateProductQuantity(cartProduct.product, newQuantity: quantity)
+            calculateTotalPrice()
+        }
+    }
+
+    private func toggleFavorite(_ product: Product) {
+        Task {
+            await viewModel.favoritesViewModel.toggleFavorite(for: product)
+        }
     }
 }

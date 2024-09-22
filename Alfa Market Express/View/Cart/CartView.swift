@@ -9,11 +9,12 @@ import SwiftUI
 struct CartView: View {
     @ObservedObject var viewModel: MainViewModel
     @State private var selectAll: Bool = false
-
+    @State private var isFetching = false
+    
     var body: some View {
         VStack {
             HStack {
-                Text("\(viewModel.cartViewModel.cart.count) Товаров")
+                Text("\(viewModel.cartViewModel.cartProduct.count) Товаров")
                     .font(.headline)
                     .foregroundColor(.gray)
                 
@@ -34,39 +35,39 @@ struct CartView: View {
                 }
             }
             .padding(.horizontal)
-
-            List {
-                ForEach(viewModel.cartViewModel.cart) { product in
-                    let cartProduct = CartProduct(
-                        id: product.id,
-                        product: product,
-                        quantity: product.quantity,
-                        getTotalPrice: (Double(product.price) ?? 0) * Double(product.quantity)
-                    )
-                    
-                    let isSelected = Binding<Bool>(
-                        get: {
-                            viewModel.cartViewModel.selectedProducts[product.id] ?? false
-                        },
-                        set: { newValue in
-                            viewModel.cartViewModel.selectedProducts[product.id] = newValue
-                            viewModel.cartViewModel.updateSelectedTotalPrice()
-                        }
-                    )
-
-                    CartItemView(
-                        cartProduct: cartProduct,
-                        viewModel: viewModel.cartViewModel,
-                        isSelected: isSelected
-                    )
+            
+            ScrollView {
+                if viewModel.cartViewModel.cartProduct.isEmpty && !isFetching {
+                    Text("Корзина пуста")
+                        .padding()
+                        .foregroundColor(.gray)
+                } else {
+                    ForEach(viewModel.cartViewModel.cartProduct, id: \.id) { cartProduct in
+                        CartItemView(cartProduct: cartProduct, viewModel: viewModel.cartViewModel, isSelected: .constant(false), product: cartProduct.product)
+                                               .padding(.vertical, 6)
+                                               .padding(.horizontal, 8)
+                        let isSelected = Binding<Bool>(
+                            get: {
+                                viewModel.cartViewModel.selectedProducts[cartProduct.id] ?? false
+                            },
+                            set: { newValue in
+                                viewModel.cartViewModel.selectedProducts[cartProduct.id] = newValue
+                                viewModel.cartViewModel.updateSelectedTotalPrice()
+                            }
+                        )
+                        
+                        CartItemView(
+                            cartProduct: cartProduct,
+                            viewModel: viewModel.cartViewModel,
+                            isSelected: isSelected,
+                            product: cartProduct.product
+                        )
+                        .padding(.vertical, 6)
+                        .padding(.horizontal, 8)
+                    }
                 }
             }
-            .onAppear {
-                Task {
-                    await viewModel.cartViewModel.fetchCartData()
-                }
-            }
-
+            
             HStack {
                 Text("\(Int(viewModel.cartViewModel.selectedTotalPrice)) ₽")
                     .font(.callout)
@@ -75,6 +76,7 @@ struct CartView: View {
                 Spacer()
                 
                 Button(action: {
+                    // Действие при оформлении заказа
                 }) {
                     Text("Оформить заказ")
                         .font(.callout)
@@ -85,6 +87,23 @@ struct CartView: View {
                 }
             }
             .padding()
+        }
+        .onAppear {
+            loadCart()
+        }
+    }
+    
+    private func loadCart() {
+        isFetching = true
+        viewModel.cartViewModel.fetchCart { success in
+            DispatchQueue.main.async {
+                isFetching = false
+                if success {
+                    print("Корзина успешно загружена")
+                } else {
+                    print("Не удалось загрузить корзину")
+                }
+            }
         }
     }
 }

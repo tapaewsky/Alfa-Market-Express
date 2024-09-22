@@ -26,6 +26,7 @@ struct HomeView: View {
                                 onFavoriteToggle: { product in
                                     Task {
                                         await viewModel.favoritesViewModel.toggleFavorite(for: product)
+                                        print("\(product.name) теперь \(viewModel.favoritesViewModel.isFavorite(product) ? "в избранном" : "не в избранном")")
                                     }
                                 }
                             )
@@ -33,12 +34,9 @@ struct HomeView: View {
                     }
                 }
             }
+            .onAppear {
+                print("HomeView загружен. Текущие избранные: \(viewModel.favoritesViewModel.favorites.map { $0.name })")
+            }
         }
-    }
-}
-
-struct HomeView_Previews: PreviewProvider {
-    static var previews: some View {
-        HomeView(viewModel: MainViewModel())
     }
 }

@@ -1,0 +1,45 @@
+func fetchCart() {
+    guard let token = authManager.accessToken else {
+        isError = true
+        print("Ошибка: отсутствует токен доступа")
+        return
+    }
+    
+    isLoading = true
+    let url = URL(string: baseURL)!
+    var request = URLRequest(url: url)
+    request.httpMethod = "GET"
+    request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+    
+    print("Запрос к корзине отправлен: \(request)")
+    
+    URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+        DispatchQueue.main.async {
+            self?.isLoading = false
+            
+            if let error = error {
+                self?.isError = true
+                print("Ошибка загрузки корзины: \(error)")
+                return
+            }
+            
+            guard let data = data else {
+                self?.isError = true
+                print("Ошибка: данные отсутствуют")
+                return
+            }
+            
+            print("Полученные данные: \(String(data: data, encoding: .utf8) ?? "Нет данных")")
+            
+            do {
+                let decodedCartItems = try JSONDecoder().decode([CartProduct].self, from: data)
+                self?.cartProduct = decodedCartItems
+                print("Корзина загружена: \(decodedCartItems)")
+                self?.updateSelectedTotalPrice()
+            } catch {
+                self?.isError = true
+                print("Ошибка декодирования корзины: \(error)")
+            }
+        }
+    }.resume()
+}

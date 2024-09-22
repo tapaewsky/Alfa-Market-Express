@@ -13,7 +13,7 @@ struct ProductDetailView: View {
     @State private var quantity: Int = 1
     @State private var isFavorite: Bool = false
     @State private var isAddedToCart: Bool = false
-
+    
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
@@ -25,58 +25,63 @@ struct ProductDetailView: View {
                             }
                             .resizable()
                             .aspectRatio(contentMode: .fill)
-                            .frame(maxWidth: .infinity, maxHeight: 300)
+                            .frame(maxWidth: .infinity, maxHeight: 400)
                             .clipped()
                     } else {
                         Image(systemName: "photo")
                             .resizable()
                             .aspectRatio(contentMode: .fit)
-                            .frame(maxWidth: .infinity, maxHeight: 300)
+                            .frame(maxWidth: .infinity, maxHeight: 400)
                             .background(Color.gray.opacity(0.2))
                     }
                 }
-
+                
+                
                 
                 HStack {
                     Text(product.name)
                         .font(.title)
                         .padding(.horizontal)
-
+                    
                     Spacer()
-
+                    
                     Button(action: {
-                        toggleFavorite()
+                        Task {
+                            await viewModel.favoritesViewModel.toggleFavorite(for: product)
+                        }
                     }) {
-                        Image(systemName: isFavorite ? "heart.fill" : "heart")
-                            .resizable()
-                            .frame(width: 24, height: 24)
-                            .foregroundColor(isFavorite ? .colorRed : .colorGray)
-                            .padding()
+                        Image(systemName:  viewModel.favoritesViewModel.isFavorite(product) ? "heart.fill" : "heart")
+                            .foregroundColor( viewModel.favoritesViewModel.isFavorite(product) ? .red : .gray)
+                            .padding(5)
+                            .background(Color.gray.opacity(0.7))
+                            .cornerRadius(10)
                     }
+                    .padding(.horizontal)
                 }
-
+                
+   
                 Text(product.description)
                     .padding(.horizontal)
-
+                
                 let priceText = (Double(product.price) != nil) ? "\(product.price) ₽" : "Цена не доступна"
                 Text(priceText)
                     .font(.title)
                     .padding(.horizontal)
                     .foregroundColor(.colorRed)
-
+                
                 HStack {
                     Text("Количество:")
                         .font(.title3)
                         .padding(.horizontal)
-
+                    
                     Stepper(value: $quantity, in: 1...1000) {
                         Text("\(quantity)")
                             .font(.title3)
                     }
                     .padding(.horizontal)
                 }
-
-               
+                
+                
                 Button(action: {
                     Task {
                         await toggleCart()
@@ -91,11 +96,11 @@ struct ProductDetailView: View {
                         .shadow(radius: 5)
                 }
                 .padding(.horizontal)
-
+                
                 
                 Text("Похожие продукты")
                     .padding(.horizontal)
-
+                
                 LazyVGrid(columns: [GridItem(.flexible(), spacing: 1), GridItem(.flexible(), spacing: 10)], spacing: 5) {
                     ForEach(viewModel.productViewModel.filteredProducts) { product in
                         NavigationLink(destination: ProductDetailView(viewModel: viewModel, product: product)) {
@@ -103,8 +108,8 @@ struct ProductDetailView: View {
                                 Task {
                                     await viewModel.favoritesViewModel.toggleFavorite(for: product)
                                 }
-                           
-
+                                
+                                
                             })
                             .padding(5)
                         }
@@ -122,16 +127,10 @@ struct ProductDetailView: View {
             isAddedToCart = viewModel.cartViewModel.isInCart(product)
         }
     }
-
-    private func toggleFavorite() {
-        isFavorite.toggle()
-        if isFavorite {
-           viewModel.favoritesViewModel.addToFavorites(product)
-        } else {
-            viewModel.favoritesViewModel.removeFromFavorites(product)
-        }
-    }
-
+    
+    
+    
+    
     private func toggleCart() async {
         if isAddedToCart {
             await viewModel.cartViewModel.removeFromCart(product)
@@ -139,5 +138,10 @@ struct ProductDetailView: View {
             await viewModel.cartViewModel.addToCart(product, quantity: quantity)
         }
         isAddedToCart.toggle()
+    }
+    private func someFunctionThatCallsToggleFavorite(_ product: Product) {
+        Task {
+            await viewModel.favoritesViewModel.toggleFavorite(for: product)
+        }
     }
 }

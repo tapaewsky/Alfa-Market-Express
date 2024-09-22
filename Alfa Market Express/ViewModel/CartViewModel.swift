@@ -8,8 +8,8 @@ import Foundation
 import Combine
 
 class CartViewModel: ObservableObject {
-    @Published var cartItems: [CartProduct] = []
-//    let cartProduct: CartProduct
+    @Published var favoritesViewModel: FavoritesViewModel
+    @Published var cartProduct: [CartProduct] = []
     @Published var cart: [Product] = [] {
         didSet {
             saveCart()
@@ -21,46 +21,67 @@ class CartViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var isError = false
     @Published var selectedProducts: [Int: Bool] = [:]
-    var dataId: Int = 0
     
+    var dataId: Int = 0
     private let cartKey = "cachedCart"
     private let baseURL = "http://95.174.90.162:60/api/cart/"
     
     private var authManager = AuthManager.shared
-    
-    init() {
+
+    init(favoritesViewModel: FavoritesViewModel) {
+        self.favoritesViewModel = favoritesViewModel
         loadCart()
-        updateSelectedTotalPrice()
     }
-    
-    func fetchCartData() async {
-        guard let url = URL(string: baseURL) else { return }
-        
-        var token = authManager.accessToken
-        if token == nil {
-            await refreshAuthToken()
-            token = authManager.accessToken
-            if token == nil { return }
+
+    func fetchCart(completion: @escaping (Bool) -> Void) {
+        guard let accessToken = authManager.accessToken else {
+            print("Access token not found.")
+            completion(false)
+            return
         }
-        
+
+        guard let url = URL(string: baseURL) else {
+            print("Неверный URL")
+            completion(false)
+            return
+        }
+
         var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        request.setValue("Bearer \(token!)", forHTTPHeaderField: "Authorization")
-        
-        do {
-            let (data, _) = try await URLSession.shared.data(for: request)
-            let cartProducts = try JSONDecoder().decode([CartProduct].self, from: data)
-            DispatchQueue.main.async {
-                self.cartItems = cartProducts
-                self.cart = cartProducts.map { $0.product }
-                self.saveCart()
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                print("Ошибка при получении корзины: \(error.localizedDescription)")
+                DispatchQueue.main.async {
+                    completion(false)
+                }
+                return
             }
-        } catch {
-            DispatchQueue.main.async {
-                self.isError = true
+
+            guard let data = data else {
+                print("Нет данных в ответе")
+                DispatchQueue.main.async {
+                    completion(false)
+                }
+                return
             }
-        }
+
+            do {
+                let cartProducts = try JSONDecoder().decode([CartProduct].self, from: data)
+                DispatchQueue.main.async {
+                    self.cartProduct = cartProducts
+                    self.saveCart()
+                    completion(true)
+                }
+            } catch {
+                print("Ошибка при декодировании корзины: \(error.localizedDescription)")
+                DispatchQueue.main.async {
+                    completion(false)
+                }
+            }
+        }.resume()
     }
+
     
     func addToCart(_ product: Product, quantity: Int) async {
         guard let url = URL(string: "\(baseURL)add/") else {
