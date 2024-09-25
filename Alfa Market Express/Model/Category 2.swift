@@ -1,9 +1,11 @@
 //
-//  Category.swift
+//  Category 2.swift
 //  Alfa Market Express
 //
-//  Created by Said Tapaev on 09.08.2024.
+//  Created by Said Tapaev on 25.09.2024.
 //
+
+
 import Foundation
 
 struct Category: Identifiable, Decodable, Encodable {

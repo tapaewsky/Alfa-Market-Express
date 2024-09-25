@@ -13,8 +13,7 @@ struct CategoryProductsView: View {
     var body: some View {
         List(viewModel.productViewModel.products.filter { $0.category == category.id }) { product in
             NavigationLink(destination: ProductDetailView(viewModel: viewModel, product: product)) {
-                ProductRowView(product: product, viewModel: viewModel.productViewModel) {
-                }
+                ProductRowView(product: product, viewModel: viewModel.productViewModel) {}
             }
         }
         .navigationTitle(category.name)

@@ -4,7 +4,6 @@
 //
 //  Created by Said Tapaev on 06.07.2024.
 //
-
 import SwiftUI
 import Kingfisher
 
@@ -15,9 +14,17 @@ struct ProductRowView: View {
 
     var body: some View {
         HStack {
-            if let imageUrl = product.imageUrl, let url = URL(string: imageUrl) {
+            productImage
+            productDetails
+            Spacer()
+        }
+        .padding()
+    }
+    
+    private var productImage: some View {
+        if let imageUrl = product.imageUrl, let url = URL(string: imageUrl) {
+            return AnyView(
                 KFImage(url)
-                    
                     .placeholder {
                         ProgressView()
                     }
@@ -25,44 +32,54 @@ struct ProductRowView: View {
                     .frame(width: 50, height: 50)
                     .aspectRatio(contentMode: .fill)
                     .clipped()
-                    
-                    
-            } else {
+            )
+        } else {
+            return AnyView(
                 Image(systemName: "photo")
                     .resizable()
                     .frame(width: 50, height: 50)
                     .aspectRatio(contentMode: .fill)
                     .clipped()
-            }
-            
-            VStack(alignment: .leading) {
-                Text(product.name)
-                    .font(.headline)
-                    .foregroundColor(.black)
-                
-                HStack {
-                    Button(action: {
-                        onFavoriteToggle()
-                    }) {
-                        Image(systemName: product.isFavorite ? "heart.fill" : "heart")
-                            .foregroundColor(product.isFavorite ? .yellow : .gray)
-                            .padding(10)
-                    }
-                    
-                    if let price = Double(product.price) {
-                        Text(String(format: "%.0f ₽", price))
-                            .font(.subheadline)
-                            .foregroundColor(.black)
-                    } else {
-                        Text("Цена не указана")
-                            .font(.subheadline)
-                            .foregroundColor(.black)
-                    }
-                }
-            }
-            
-            Spacer()
+            )
         }
-        .padding()
+    }
+    
+    private var productDetails: some View {
+        VStack(alignment: .leading) {
+            Text(product.name)
+                .font(.headline)
+                .foregroundColor(.black)
+            
+            HStack {
+                favoriteButton
+                priceText
+            }
+        }
+    }
+    
+    private var favoriteButton: some View {
+        Button(action: {
+            onFavoriteToggle()
+        }) {
+            Image(systemName: product.isFavorite ? "heart.fill" : "heart")
+                .foregroundColor(product.isFavorite ? .yellow : .gray)
+                .padding(10)
+        }
+    }
+    
+    private var priceText: some View {
+        if let price = Double(product.price) {
+            return AnyView(
+                Text(String(format: "%.0f ₽", price))
+                    .font(.subheadline)
+                    .foregroundColor(.black)
+            )
+        } else {
+            return AnyView(
+                Text("Цена не указана")
+                    .font(.subheadline)
+                    .foregroundColor(.black)
+            )
+        }
     }
 }

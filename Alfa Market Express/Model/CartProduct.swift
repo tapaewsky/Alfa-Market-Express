@@ -4,15 +4,15 @@
 //
 //  Created by Said Tapaev on 14.09.2024.
 //
-struct CartProduct: Decodable , Encodable {
+import Foundation
+
+struct CartProduct: Decodable, Encodable {
     let id: Int
     let product: Product
     let quantity: Int
     let getTotalPrice: Double
-//    let selected: Bool
-    
+
     enum CodingKeys: String, CodingKey {
-        case id, product, quantity
-        case getTotalPrice = "get_total_price"
+        case id, product, quantity, getTotalPrice = "get_total_price"
     }
 }

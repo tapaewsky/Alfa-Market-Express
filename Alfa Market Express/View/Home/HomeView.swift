@@ -13,23 +13,18 @@ struct HomeView: View {
     var body: some View {
         NavigationView {
             VStack {
-                Group {
-                    ScrollView {
-                        RecommendationCardView(viewModel: viewModel, categories: viewModel.categoryViewModel.categories)
-                        SearchBar()
-                            .padding(.horizontal)
-                        
-                        VStack {
-                            CatalogGridView(viewModel: viewModel)
-                            ProductGridView(
-                                viewModel: viewModel,
-                                onFavoriteToggle: { product in
-                                    Task {
-                                        await viewModel.favoritesViewModel.toggleFavorite(for: product)
-                                        print("\(product.name) теперь \(viewModel.favoritesViewModel.isFavorite(product) ? "в избранном" : "не в избранном")")
-                                    }
-                                }
-                            )
+                ScrollView {
+                    RecommendationCardView(viewModel: viewModel, categories: viewModel.categoryViewModel.categories)
+                    SearchBar()
+                        .padding(.horizontal)
+                    
+                    VStack {
+                        CatalogGridView(viewModel: viewModel)
+                        ProductGridView(viewModel: viewModel) { product in
+                            Task {
+                                await viewModel.favoritesViewModel.toggleFavorite(for: product)
+                                print("\(product.name) теперь \(viewModel.favoritesViewModel.isFavorite(product) ? "в избранном" : "не в избранном")")
+                            }
                         }
                     }
                 }

@@ -6,9 +6,6 @@
 //
 import Foundation
 
-
-
-
 struct UserProfile: Codable {
     var id: Int
     var username: String

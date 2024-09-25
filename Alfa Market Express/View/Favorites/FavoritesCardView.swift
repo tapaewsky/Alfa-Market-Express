@@ -45,7 +45,7 @@ struct FavoritesCardView: View {
                         
                     Text("\(product.price) ₽")
                         .font(.system(size: 16, weight: .bold))
-                        .foregroundColor(.colorRed)
+                        .foregroundColor(.black)
                 }
                 .padding(.vertical)
                 
@@ -55,7 +55,7 @@ struct FavoritesCardView: View {
                     isFavorite.toggle()
                 }) {
                     Image(systemName: isFavorite ? "heart.fill" : "heart")
-                        .foregroundColor(isFavorite ? .colorRed : .gray)
+                        .foregroundColor(isFavorite ? .colorGreen : .gray)
                         .font(.system(size: 20))
                 }
             }
@@ -71,11 +71,11 @@ struct FavoritesCardView: View {
                         .padding()
                         .background(.clear)
                         .overlay(
-                                    RoundedRectangle(cornerRadius: 10)
+                                    RoundedRectangle(cornerRadius: 15)
                                         .stroke(Color.colorGreen, lineWidth: 1)
                                 )
                         .foregroundColor(.colorGreen)
-                        .cornerRadius(10)   
+                          
                 }
             } else {
                 Button(action: {

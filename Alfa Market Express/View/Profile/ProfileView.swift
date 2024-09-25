@@ -4,21 +4,14 @@
 //
 //  Created by Said Tapaev on 06.07.2024.
 //
-
 import SwiftUI
 
 struct ProfileView: View {
-    
     @ObservedObject var viewModel: MainViewModel
-    
     
     var body: some View {
         VStack {
-            
-            Group {
-//                HeaderView()
-                ProfileInfo(viewModel: ProfileViewModel())
-            }
+            ProfileInfo(viewModel: ProfileViewModel())
         }
     }
 }

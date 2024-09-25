@@ -16,6 +16,9 @@ class AuthManager: ObservableObject {
     private let accessTokenKey = "accessToken"
     private let refreshTokenKey = "refreshToken"
     
+    // Добавляем базовый URL
+    private let baseUrl = "http://95.174.90.162:60/api"
+    
     var accessToken: String? {
         UserDefaults.standard.string(forKey: accessTokenKey)
     }
@@ -48,7 +51,7 @@ class AuthManager: ObservableObject {
             return
         }
         
-        let url = URL(string: "http://95.174.90.162:60/api/token/refresh/")!
+        let url = URL(string: "\(baseUrl)/token/refresh/")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -76,13 +79,11 @@ class AuthManager: ObservableObject {
         }.resume()
     }
     
-  
     func setTokens(accessToken: String, refreshToken: String) {
         UserDefaults.standard.set(accessToken, forKey: accessTokenKey)
         UserDefaults.standard.set(refreshToken, forKey: refreshTokenKey)
     }
     
-  
     func clearTokens() {
         UserDefaults.standard.removeObject(forKey: accessTokenKey)
         UserDefaults.standard.removeObject(forKey: refreshTokenKey)

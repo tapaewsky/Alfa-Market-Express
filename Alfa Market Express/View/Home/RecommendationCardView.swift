@@ -4,7 +4,6 @@
 //
 //  Created by Said Tapaev on 25.07.2024.
 //
-
 import SwiftUI
 import Kingfisher
 
@@ -29,11 +28,10 @@ struct RecommendationCardView: View {
                     }
                 }
             }
-            .background(.clear)
+            .background(Color.clear)
             .frame(height: 200)
-            .scrollTargetLayout()
         }
         .scrollTargetBehavior(.viewAligned)
-        .safeAreaPadding(.horizontal, 40)
+        .padding(.horizontal, 40)
     }
 }

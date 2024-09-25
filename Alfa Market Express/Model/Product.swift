@@ -4,6 +4,7 @@
 //
 //  Created by Said Tapaev on 06.07.2024.
 //
+import Foundation
 
 struct Product: Identifiable, Decodable, Hashable, Encodable {
     var id: Int

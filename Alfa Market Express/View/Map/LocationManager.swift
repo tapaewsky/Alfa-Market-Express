@@ -7,7 +7,6 @@
 //
 import SwiftUI
 import CoreLocation
-import MapKit
 
 class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     private let manager = CLLocationManager()
@@ -25,8 +24,7 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
     
     func requestLocation() {
         Task {
-            let servicesEnabled = await locationServicesEnabled()
-            if servicesEnabled {
+            if await locationServicesEnabled() {
                 manager.requestLocation()
             } else {
                 print("Службы геопозиции отключены.")
@@ -38,47 +36,44 @@ class LocationManager: NSObject, ObservableObject, CLLocationManagerDelegate {
         return CLLocationManager.locationServicesEnabled()
     }
     
-    func reverseGeocode(location: CLLocation, completion: @escaping (String) -> Void) {
-        geocoder.reverseGeocodeLocation(location) { placemarks, error in
+    func reverseGeocode(location: CLLocation) {
+        geocoder.reverseGeocodeLocation(location) { [weak self] placemarks, error in
             if let error = error {
                 print("Reverse geocoding failed: \(error.localizedDescription)")
-                completion("Не удалось определить адрес")
+                self?.address = "Не удалось определить адрес"
                 return
             }
-            if let placemark = placemarks?.first {
-                let address = [placemark.thoroughfare, placemark.subThoroughfare, placemark.locality, placemark.administrativeArea, placemark.country]
-                    .compactMap { $0 }
-                    .joined(separator: ", ")
-                completion(address)
-            } else {
-                completion("Не удалось определить адрес")
-            }
+            self?.address = self?.formatAddress(from: placemarks)
         }
+    }
+    
+    private func formatAddress(from placemarks: [CLPlacemark]?) -> String? {
+        guard let placemark = placemarks?.first else { return nil }
+        return [placemark.thoroughfare, placemark.subThoroughfare, placemark.locality, placemark.administrativeArea, placemark.country]
+            .compactMap { $0 }
+            .joined(separator: ", ")
     }
     
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         guard let newLocation = locations.first else { return }
         location = newLocation
-        
-        DispatchQueue.main.async {
-            self.reverseGeocode(location: newLocation) { [weak self] address in
-                DispatchQueue.main.async {
-                    self?.address = address
-                }
-            }
-        }
+        reverseGeocode(location: newLocation)
     }
     
     func locationManager(_ manager: CLLocationManager, didFailWithError error: Error) {
         let nsError = error as NSError
-        if let clError = CLError.Code(rawValue: nsError.code) {
+        handleLocationError(nsError)
+    }
+    
+    private func handleLocationError(_ error: NSError) {
+        if let clError = CLError.Code(rawValue: error.code) {
             switch clError {
             case .denied:
                 print("Доступ к геопозиции был отклонен.")
             case .locationUnknown:
                 print("Не удалось определить местоположение.")
             default:
-                print("Неизвестная ошибка: \(nsError.localizedDescription)")
+                print("Неизвестная ошибка: \(error.localizedDescription)")
             }
         } else {
             print("Ошибка не связана с CoreLocation: \(error.localizedDescription)")

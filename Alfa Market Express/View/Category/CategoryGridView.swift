@@ -11,15 +11,12 @@ struct CategoryGridView: View {
     
     var body: some View {
         let columns = [
-            GridItem(.adaptive(minimum: 150), spacing: 15) // Адаптивное размещение карточек с минимальным размером 150
+            GridItem(.adaptive(minimum: 150), spacing: 15)
         ]
         
         LazyVGrid(columns: columns, spacing: 15) {
             ForEach(viewModel.categoryViewModel.categories) { category in
-                NavigationLink(destination: CategoryProductsView(
-                    viewModel: viewModel,
-                    category: category
-                )) {
+                NavigationLink(destination: CategoryProductsView(viewModel: viewModel, category: category)) {
                     CategoryCardView(category: category)
                 }
             }

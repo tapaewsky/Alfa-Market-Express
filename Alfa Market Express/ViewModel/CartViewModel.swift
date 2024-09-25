@@ -16,6 +16,7 @@ class CartViewModel: ObservableObject {
             updateSelectedTotalPrice()
         }
     }
+   
     @Published var totalPrice: Double = 0.0
     @Published var selectedTotalPrice: Double = 0.0
     @Published var isLoading = false
@@ -82,7 +83,6 @@ class CartViewModel: ObservableObject {
         }.resume()
     }
 
-    
     func addToCart(_ product: Product, quantity: Int) async {
         guard let url = URL(string: "\(baseURL)add/") else {
             print("Неверный URL")
@@ -158,7 +158,7 @@ class CartViewModel: ObservableObject {
     }
     
     func removeFromCart(_ product: Product) async {
-        print (dataId)
+        print(dataId)
         guard let url = URL(string: "\(baseURL)delete/\(dataId)/") else {
             print("Ошибка: Неверный URL")
             return
@@ -206,16 +206,29 @@ class CartViewModel: ObservableObject {
         for product in cart {
             selectedProducts[product.id] = selectAll
         }
+        
         updateSelectedTotalPrice()
     }
     
-    func toggleProductSelection(_ product: Product) {
-        if let isSelected = selectedProducts[product.id], isSelected {
-            selectedProducts[product.id] = false
-        } else {
-            selectedProducts[product.id] = true
+    func clearSelection() {
+        for product in cart {
+            selectedProducts[product.id] = false // Сбрасываем все выборы
         }
-        updateSelectedTotalPrice()
+    }
+    
+    var selectedTotalPriceу: Double {
+        cartProduct.reduce(0) { total, product in
+            let isSelected = selectedProducts[product.id] ?? false
+            return total + (isSelected ? product.getTotalPrice : 0)
+        }
+    }
+    
+    func toggleProductSelection(_ product: Product) {
+        if let index = cartProduct.firstIndex(where: { $0.product.id == product.id }) {
+            let isSelected = selectedProducts[product.id] ?? false
+            selectedProducts[product.id] = !isSelected
+            updateSelectedTotalPrice()
+        }
     }
     
     func isInCart(_ product: Product) -> Bool {
@@ -230,17 +243,162 @@ class CartViewModel: ObservableObject {
             return total
         }
     }
+    func selectProductsForCheckout(products: [CartProduct]) async {
+        // Проверка URL
+        guard let url = URL(string: "\(baseURL)select/") else {
+            print("Неверный URL: \(baseURL)select/")
+            return
+        }
+        print("URL запроса: \(url.absoluteString)")
+
+        var token = authManager.accessToken
+        if token == nil {
+            print("Токен не найден, пытаемся обновить...")
+            await refreshAuthToken()
+            token = authManager.accessToken
+            if token == nil {
+                print("Токен не удалось обновить. Прерывание запроса.")
+                return
+            }
+        }
+        
+        // Логируем полученный токен
+        print("Токен для авторизации: \(token!)")
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        
+        // Логируем метод запроса
+        print("HTTP метод запроса: \(request.httpMethod ?? "Не указан")")
+
+        // Добавляем заголовки
+        request.setValue("Bearer \(token!)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        // Логируем заголовки запроса
+        print("Заголовки запроса: \(request.allHTTPHeaderFields ?? [:])")
+        
+        // Формируем тело запроса
+        let body: [String: Any] = ["selected_items":  dataId] 
+        
+        // Логируем тело запроса
+        if let httpBody = try? JSONSerialization.data(withJSONObject: body) {
+            print("Тело запроса: \(String(data: httpBody, encoding: .utf8) ?? "Не удалось закодировать тело запроса")")
+            request.httpBody = httpBody
+        } else {
+            print("Ошибка формирования тела запроса.")
+            return
+        }
+
+        do {
+            // Отправляем запрос
+            let (data, response) = try await URLSession.shared.data(for: request)
+            
+            // Логируем ответ сервера
+            if let httpResponse = response as? HTTPURLResponse {
+                print("HTTP статус код: \(httpResponse.statusCode)")
+            } else {
+                print("Не удалось получить HTTP ответ.")
+            }
+            
+            // Логируем полученные данные
+            if let responseData = String(data: data, encoding: .utf8) {
+                print("Ответ от сервера: \(responseData)")
+            } else {
+                print("Не удалось декодировать ответ от сервера.")
+            }
+
+            // Попытка декодирования JSON
+            if let json = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                if let message = json["message"] as? String {
+                    print("Сообщение от сервера: \(message)")
+                } else {
+                    print("Не удалось найти ключ 'message' в ответе.")
+                }
+            } else {
+                print("Не удалось преобразовать ответ в JSON.")
+            }
+            
+        } catch {
+            // Логируем ошибки запроса
+            print("Ошибка при выполнении запроса: \(error.localizedDescription)")
+        }
+    }
+    
+//    func selectProductsForCheckout(product: Product, selectedProductIds: [Int], completion: @escaping (Bool) -> Void) {
+//        guard let url = URL(string: "\(baseURL)select/") else {
+//            print("Неверный URL")
+//            completion(false)
+//            return
+//        }
+//
+//        guard let accessToken = authManager.accessToken else {
+//            print("Access token not found.")
+//            completion(false)
+//            return
+//        }
+//
+//        var request = URLRequest(url: url)
+//        request.httpMethod = "POST"
+//        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+//        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+//
+//        // Создаем тело запроса с выбранными продуктами
+//        let body: [String: Any] = ["selected_items": selectedProductIds]
+//        request.httpBody = try? JSONSerialization.data(withJSONObject: body)
+//
+//        URLSession.shared.dataTask(with: request) { data, response, error in
+//            if let error = error {
+//                print("Ошибка при выборе продуктов: \(error.localizedDescription)")
+//                DispatchQueue.main.async {
+//                    completion(false)
+//                }
+//                return
+//            }
+//
+//            guard let data = data else {
+//                print("Нет данных в ответе")
+//                DispatchQueue.main.async {
+//                    completion(false)
+//                }
+//                return
+//            }
+//
+//            do {
+//                if let json = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
+//                   let message = json["message"] as? String {
+//                    print("Ответ от сервера: \(message)")
+//                    DispatchQueue.main.async {
+//                        completion(true)
+//                    }
+//                } else {
+//                    print("Не удалось декодировать ответ")
+//                    DispatchQueue.main.async {
+//                        completion(false)
+//                    }
+//                }
+//            } catch {
+//                print("Ошибка при декодировании ответа: \(error.localizedDescription)")
+//                DispatchQueue.main.async {
+//                    completion(false)
+//                }
+//            }
+//        }.resume()
+//    }
+
+    private func loadCart() {
+        if let data = UserDefaults.standard.data(forKey: cartKey) {
+            do {
+                cart = try JSONDecoder().decode([Product].self, from: data)
+            } catch {
+                print("Ошибка при загрузке корзины: \(error.localizedDescription)")
+            }
+        }
+    }
     
     private func saveCart() {
         if let data = try? JSONEncoder().encode(cart) {
             UserDefaults.standard.set(data, forKey: cartKey)
-        }
-    }
-    
-    private func loadCart() {
-        if let data = UserDefaults.standard.data(forKey: cartKey),
-           let savedCart = try? JSONDecoder().decode([Product].self, from: data) {
-            cart = savedCart
         }
     }
     

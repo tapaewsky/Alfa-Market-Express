@@ -10,89 +10,123 @@ struct CartView: View {
     @ObservedObject var viewModel: MainViewModel
     @State private var selectAll: Bool = false
     @State private var isFetching = false
-    
+    @State private var isSelectionMode: Bool = false
+
     var body: some View {
         VStack {
-            HStack {
-                Text("\(viewModel.cartViewModel.cartProduct.count) Товаров")
-                    .font(.headline)
-                    .foregroundColor(.gray)
-                
-                Spacer()
-                
-                Text("Корзина")
-                    .font(.headline)
-                
-                Spacer()
-                
-                Button(action: {
-                    selectAll.toggle()
-                    viewModel.cartViewModel.selectAllProducts(selectAll)
-                }) {
-                    Text(selectAll ? "Снять выбор" : "Выбрать все")
-                        .font(.headline)
-                        .foregroundColor(.colorGreen)
-                }
-            }
-            .padding(.horizontal)
-            
+            header
             ScrollView {
                 if viewModel.cartViewModel.cartProduct.isEmpty && !isFetching {
-                    Text("Корзина пуста")
-                        .padding()
-                        .foregroundColor(.gray)
+                    emptyCartView
                 } else {
-                    ForEach(viewModel.cartViewModel.cartProduct, id: \.id) { cartProduct in
-                        CartItemView(cartProduct: cartProduct, viewModel: viewModel.cartViewModel, isSelected: .constant(false), product: cartProduct.product)
-                                               .padding(.vertical, 6)
-                                               .padding(.horizontal, 8)
-                        let isSelected = Binding<Bool>(
-                            get: {
-                                viewModel.cartViewModel.selectedProducts[cartProduct.id] ?? false
-                            },
-                            set: { newValue in
-                                viewModel.cartViewModel.selectedProducts[cartProduct.id] = newValue
-                                viewModel.cartViewModel.updateSelectedTotalPrice()
-                            }
-                        )
-                        
-                        CartItemView(
-                            cartProduct: cartProduct,
-                            viewModel: viewModel.cartViewModel,
-                            isSelected: isSelected,
-                            product: cartProduct.product
-                        )
-                        .padding(.vertical, 6)
-                        .padding(.horizontal, 8)
-                    }
+                    cartItems
                 }
             }
-            
-            HStack {
-                Text("\(Int(viewModel.cartViewModel.selectedTotalPrice)) ₽")
-                    .font(.callout)
-                    .bold()
-                
-                Spacer()
-                
-                Button(action: {
-                    // Действие при оформлении заказа
-                }) {
-                    Text("Оформить заказ")
-                        .font(.callout)
-                        .padding(10)
-                        .background(Color.colorGreen)
-                        .foregroundColor(.white)
-                        .cornerRadius(17)
-                }
-            }
-            .padding()
+            footer
         }
         .onAppear {
             loadCart()
         }
     }
-    
+
+    private var header: some View {
+        VStack(alignment: .leading) {
+            HStack {
+                Text(isSelectionMode ? "Выбрано: \(viewModel.cartViewModel.selectedProducts.filter { $0.value }.count)" : "Корзина")
+                    .font(.headline)
+
+                Spacer()
+
+                Button(action: {
+                    isSelectionMode.toggle()
+                    selectAll.toggle()
+                    viewModel.cartViewModel.selectAllProducts(selectAll)
+
+                    if !isSelectionMode {
+                        selectAll = false
+                        viewModel.cartViewModel.clearSelection()
+                    }
+                }) {
+                    Text(isSelectionMode ? "Отменить" : "Выбрать")
+                        .font(.headline)
+                        .foregroundColor(.colorGreen)
+                }
+            }
+            
+          
+            if isSelectionMode {
+                HStack {
+                    Button(action: {
+                        selectAll.toggle()
+                        viewModel.cartViewModel.selectAllProducts(selectAll)
+                    }) {
+                        Text("Выбрать все")
+                            .font(.subheadline)
+                            .foregroundColor(.gray)
+                        Image(systemName: selectAll ? "square" : "checkmark.square")
+                            .foregroundColor(selectAll ? .gray : .colorGreen)
+                    }
+                }
+                .padding(.top, 5)
+            }
+        }
+        .padding(.horizontal)
+        .padding(.vertical)
+    }
+
+    private var emptyCartView: some View {
+        Text("Корзина пуста")
+            .padding()
+            .foregroundColor(.gray)
+    }
+
+    private var cartItems: some View {
+        VStack {
+            ForEach(viewModel.cartViewModel.cartProduct, id: \.id) { cartProduct in
+                let isSelected = Binding<Bool>(
+                    get: {
+                        viewModel.cartViewModel.selectedProducts[cartProduct.id] ?? false
+                    },
+                    set: { newValue in
+                        viewModel.cartViewModel.selectedProducts[cartProduct.id] = newValue
+                        viewModel.cartViewModel.updateSelectedTotalPrice()
+                    }
+                )
+
+                CartItemView(
+                    cartProduct: cartProduct,
+                    viewModel: viewModel,
+                    product: cartProduct.product
+                )
+                .padding(.vertical, 1)
+                .padding(.horizontal, 15)
+                .environment(\.isSelectionMode, isSelectionMode)
+            }
+        }
+    }
+
+    private var footer: some View {
+        HStack {
+            Text("\(Int(viewModel.cartViewModel.selectedTotalPrice)) ₽")
+                .font(.callout)
+                .bold()
+
+            Spacer()
+
+            Button(action: {
+                handleCheckout()
+            }) {
+                Text("Оформить заказ")
+                    .font(.callout)
+                    .padding(10)
+                    .background(Color.colorGreen)
+                    .foregroundColor(.white)
+                    .cornerRadius(17)
+            }
+        }
+        .padding()
+    }
+
     private func loadCart() {
         isFetching = true
         viewModel.cartViewModel.fetchCart { success in
@@ -104,6 +138,14 @@ struct CartView: View {
                     print("Не удалось загрузить корзину")
                 }
             }
+        }
+    }
+
+    private func handleCheckout() {
+        let selectedProductIds = viewModel.cartViewModel.selectedProducts.compactMap { $0.value ? $0.key : nil }
+        let selectedProducts = viewModel.cartViewModel.cartProduct.filter { selectedProductIds.contains($0.id) }
+        Task {
+            await viewModel.cartViewModel.selectProductsForCheckout(products: selectedProducts)
         }
     }
 }

@@ -4,7 +4,6 @@
 //
 //  Created by Said Tapaev on 29.07.2024.
 //
-
 import SwiftUI
 
 struct HeaderView<Content: View>: View {
@@ -15,14 +14,11 @@ struct HeaderView<Content: View>: View {
     }
 
     var body: some View {
-        Group {
-            HStack {
-                content
-                    .frame(maxWidth: .infinity, alignment: .center)    
-            }
+        HStack {
+            content
+                .frame(maxWidth: .infinity, alignment: .center)
         }
         .frame(height: 60)
-        .frame(maxWidth: .infinity)
         .background(Color.colorGreen)
     }
 }
@@ -30,6 +26,7 @@ struct HeaderView<Content: View>: View {
 struct HeaderView_Previews: PreviewProvider {
     static var previews: some View {
         HeaderView {
+            Text("Header Content")
         }
     }
 }

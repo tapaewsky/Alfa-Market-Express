@@ -4,7 +4,6 @@
 //
 //  Created by Said Tapaev on 24.07.2024.
 //
-
 import SwiftUI
 import MapKit
 
@@ -41,9 +40,13 @@ struct MapView: UIViewRepresentable {
     func updateUIView(_ uiView: MKMapView, context: Context) {
         uiView.removeAnnotations(uiView.annotations)
         uiView.addAnnotations(annotations)
+        updateMapRegion(for: uiView)
+    }
+    
+    private func updateMapRegion(for mapView: MKMapView) {
         if let coordinate = selectedCoordinate {
             let region = MKCoordinateRegion(center: coordinate, latitudinalMeters: 1000, longitudinalMeters: 1000)
-            uiView.setRegion(region, animated: true)
+            mapView.setRegion(region, animated: true)
         }
     }
 }

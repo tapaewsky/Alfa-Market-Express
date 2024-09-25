@@ -4,13 +4,14 @@
 //
 //  Created by Said Tapaev on 15.08.2024.
 //
-
 import SwiftUI
 
 class ProfileViewModel: ObservableObject {
     @Published var userProfile: UserProfile
     @Published var isEditing: Bool = false
     
+    private let baseUrl = "http://95.174.90.162:60/api"
+
     init() {
         self.userProfile = UserProfile(
             id: 0,
@@ -54,7 +55,7 @@ class ProfileViewModel: ObservableObject {
     }
     
     private func fetchUserProfile(completion: @escaping (Bool) -> Void) {
-        guard let url = URL(string: "http://95.174.90.162:60/api/me/"),
+        guard let url = URL(string: "\(baseUrl)/me/"),
               let token = AuthManager.shared.accessToken else {
             print("Неверный URL или нет токена доступа")
             completion(false)
@@ -93,7 +94,7 @@ class ProfileViewModel: ObservableObject {
     func authenticateUser(username: String, password: String, completion: @escaping (Bool) -> Void) {
         print("Начата попытка аутентификации с именем пользователя: \(username)")
         
-        guard let url = URL(string: "http://95.174.90.162:60/api/token/") else {
+        guard let url = URL(string: "\(baseUrl)/token/") else {
             print("Неверный URL")
             completion(false)
             return
@@ -140,7 +141,7 @@ class ProfileViewModel: ObservableObject {
                     DispatchQueue.main.async {
                         completion(true)
                     }
-                    return  
+                    return
                 } else {
                     print("Неверный формат ответа: \(responseDict)")
                 }

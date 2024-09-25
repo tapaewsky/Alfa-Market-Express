@@ -45,10 +45,9 @@ struct CategoryCardView: View {
                 }
             }
         }
-            .padding()
-            .background(Color.colorGray)
-            .cornerRadius(15)
-            .aspectRatio(1, contentMode: .fit) 
-        
+        .padding()
+        .background(Color.colorGray)
+        .cornerRadius(15)
+        .aspectRatio(1, contentMode: .fit)
     }
 }
