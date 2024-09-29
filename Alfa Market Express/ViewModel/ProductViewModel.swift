@@ -93,49 +93,49 @@ class ProductViewModel: ObservableObject {
     }
 
     func searchProducts(query: String, completion: @escaping (Bool) -> Void) {
-        guard !query.isEmpty else {
-            completion(false)
-            return
-        }
-
-        let searchUrl = "http://95.174.90.162:60/api/products/?search=\(query)"
-        guard let url = URL(string: searchUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "") else {
-            completion(false)
-            return
-        }
-
-        URLSession.shared.dataTask(with: url) { data, response, error in
-            if let error = error {
-                print("Error searching products: \(error.localizedDescription)")
-                DispatchQueue.main.async {
-                    completion(false)
-                }
+            guard !query.isEmpty else {
+                completion(false)
                 return
             }
 
-            guard let data = data else {
-                print("No data received")
-                DispatchQueue.main.async {
-                    completion(false)
-                }
+            let searchUrl = "http://95.174.90.162:60/api/products/?search=\(query)"
+            guard let url = URL(string: searchUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "") else {
+                completion(false)
                 return
             }
 
-            do {
-                let products = try JSONDecoder().decode([Product].self, from: data)
-                DispatchQueue.main.async {
-                    self.products = products
-                    completion(true)
+            URLSession.shared.dataTask(with: url) { data, response, error in
+                if let error = error {
+                    print("Error searching products: \(error.localizedDescription)")
+                    DispatchQueue.main.async {
+                        completion(false)
+                    }
+                    return
                 }
-            } catch {
-                print("Error decoding search results: \(error.localizedDescription)")
-                DispatchQueue.main.async {
-                    completion(false)
-                }
-            }
-        }.resume()
-    }
 
+                guard let data = data else {
+                    print("No data received")
+                    DispatchQueue.main.async {
+                        completion(false)
+                    }
+                    return
+                }
+
+                do {
+                    let products = try JSONDecoder().decode([Product].self, from: data)
+                    DispatchQueue.main.async {
+                        self.products = products
+                        completion(true)
+                    }
+                } catch {
+                    print("Error decoding search results: \(error.localizedDescription)")
+                    DispatchQueue.main.async {
+                        completion(false)
+                    }
+                }
+            }.resume()
+        }
+    
     private func saveProducts() {
         if let data = try? JSONEncoder().encode(products) {
             UserDefaults.standard.set(data, forKey: productsKey)

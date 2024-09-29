@@ -16,7 +16,7 @@ class AuthManager: ObservableObject {
     private let accessTokenKey = "accessToken"
     private let refreshTokenKey = "refreshToken"
     
-    // Добавляем базовый URL
+    
     private let baseUrl = "http://95.174.90.162:60/api"
     
     var accessToken: String? {

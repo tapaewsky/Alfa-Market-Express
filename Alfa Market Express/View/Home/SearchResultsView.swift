@@ -7,7 +7,7 @@
 import SwiftUI
 
 struct SearchBar: View {
-    @State private var searchText: String = ""
+    @ObservedObject var viewModel: MainViewModel
     
     var body: some View {
         HStack {
@@ -15,7 +15,7 @@ struct SearchBar: View {
                 .foregroundColor(.gray)
                 .padding(11)
             
-            TextField("Search", text: $searchText)
+            TextField("Поиск", text: $viewModel.productViewModel.searchText)
                 .padding(.vertical, 10)
         }
         .background(Color.white)

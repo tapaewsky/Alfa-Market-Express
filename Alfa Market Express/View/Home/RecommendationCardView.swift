@@ -28,10 +28,11 @@ struct RecommendationCardView: View {
                     }
                 }
             }
-            .background(Color.clear)
             .frame(height: 200)
+            .scrollTargetLayout()
         }
         .scrollTargetBehavior(.viewAligned)
-        .padding(.horizontal, 40)
+        .safeAreaPadding(.horizontal, 40)
     }
 }
+

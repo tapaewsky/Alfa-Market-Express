@@ -14,21 +14,22 @@ struct CartItemView: View {
     @State private var totalPriceForProduct: Double
     
     var cartProduct: CartProduct
-    @State private var isSelected: Bool = false 
+    @Binding var isSelected: Bool
     
     @Environment(\.isSelectionMode) var isSelectionMode
     
-    init(cartProduct: CartProduct, viewModel: MainViewModel, product: Product) {
+    init(cartProduct: CartProduct, viewModel: MainViewModel, product: Product, isSelected: Binding<Bool>) {
         self.cartProduct = cartProduct
         self._quantity = State(initialValue: cartProduct.quantity)
         self._totalPriceForProduct = State(initialValue: cartProduct.getTotalPrice)
         self.viewModel = viewModel
         self.product = product
+        self._isSelected = isSelected
     }
     
     var body: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 25)
+            RoundedRectangle(cornerRadius: 15)
                 .fill(Color.white)
                 .shadow(radius: 2)
             
@@ -37,12 +38,18 @@ struct CartItemView: View {
                 NavigationLink(destination: ProductDetailView(viewModel: viewModel, product: product)) {
                     productDetails
                 }
-               
             }
             .padding(.vertical)
+            .padding(.horizontal)
             .onChange(of: quantity) { newValue in
                 updateQuantity()
             }
+        }
+        .onAppear {
+            isSelected = viewModel.cartViewModel.selectedProducts[cartProduct.id] ?? false
+        }
+        .onChange(of: viewModel.cartViewModel.selectedProducts[cartProduct.id]) { newValue in
+            isSelected = newValue ?? false
         }
     }
     
@@ -68,7 +75,16 @@ struct CartItemView: View {
             if isSelectionMode {
                 Button(action: {
                     isSelected.toggle()
-                    viewModel.cartViewModel.toggleProductSelection(cartProduct.product)
+                    viewModel.cartViewModel.selectedProducts[cartProduct.id] = isSelected
+                    print("Продукт с ID \(cartProduct.id) выбран: \(isSelected ? "выбрано" : "не выбрано")")
+                    
+                    if isSelected {
+                        viewModel.cartViewModel.selectProduct(cartProduct)
+                    } else {
+                        viewModel.cartViewModel.deselectProduct(cartProduct)
+                    }
+                    
+                    viewModel.cartViewModel.updateSelectedTotalPrice()
                 }) {
                     Image(systemName: isSelected ? "checkmark.square" : "square")
                         .foregroundColor(isSelected ? .colorGreen : .gray)
@@ -121,7 +137,7 @@ struct CartItemView: View {
             .contentShape(Circle())
         }
         .padding(7)
-        .background(.colorGray)
+        .background(Color.gray.opacity(0.2))
         .cornerRadius(15)
     }
     
@@ -147,8 +163,5 @@ struct CartItemView: View {
             calculateTotalPrice()
         }
     }
-    
-   
-    
 }
 

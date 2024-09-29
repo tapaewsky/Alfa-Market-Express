@@ -16,7 +16,7 @@ struct FavoritesView: View {
     var body: some View {
         VStack {
             HeaderView {
-                SearchBar()
+                SearchBar(viewModel: viewModel)
                     .padding(.horizontal)
             }
             ScrollView {

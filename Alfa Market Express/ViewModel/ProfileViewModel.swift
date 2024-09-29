@@ -19,7 +19,7 @@ class ProfileViewModel: ObservableObject {
             firstName: "",
             lastName: "",
             storeName: "",
-            storeImageUrl: "https://via.placeholder.com/100",
+            storeImageUrl: "https://via.placeholder.com/150",
             storeAddress: "",
             storePhoneNumber: "",
             storeCode: "",
@@ -150,4 +150,43 @@ class ProfileViewModel: ObservableObject {
             }
         }.resume()
     }
+    
+    func saveProfile(completion: @escaping (Bool) -> Void) {
+            guard let url = URL(string: "\(baseUrl)/me/"),
+                  let token = AuthManager.shared.accessToken else {
+                print("Неверный URL или нет токена доступа")
+                completion(false)
+                return
+            }
+
+            var request = URLRequest(url: url)
+            request.httpMethod = "PUT"  // Изменить метод на PUT для обновления данных
+            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+            do {
+                let jsonData = try JSONEncoder().encode(userProfile)
+                request.httpBody = jsonData
+            } catch {
+                print("Ошибка при кодировании данных профиля: \(error.localizedDescription)")
+                completion(false)
+                return
+            }
+
+            URLSession.shared.dataTask(with: request) { data, response, error in
+                guard error == nil else {
+                    print("Ошибка сети: \(error!.localizedDescription)")
+                    completion(false)
+                    return
+                }
+                
+                if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
+                    print("Профиль успешно обновлен")
+                    completion(true)
+                } else {
+                    print("Ошибка при обновлении профиля")
+                    completion(false)
+                }
+            }.resume()
+        }
 }

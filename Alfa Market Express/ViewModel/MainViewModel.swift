@@ -12,11 +12,13 @@ class MainViewModel: ObservableObject {
     @Published var productViewModel: ProductViewModel
     @Published var favoritesViewModel: FavoritesViewModel
     @Published var cartViewModel: CartViewModel
+    @Published var profileViewModel: ProfileViewModel
 
     init() {
         favoritesViewModel = FavoritesViewModel()
         categoryViewModel = CategoryViewModel()
         productViewModel = ProductViewModel()
         cartViewModel = CartViewModel(favoritesViewModel: FavoritesViewModel())
+        profileViewModel = ProfileViewModel()
     }
 }

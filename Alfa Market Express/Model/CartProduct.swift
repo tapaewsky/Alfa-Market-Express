@@ -6,11 +6,12 @@
 //
 import Foundation
 
-struct CartProduct: Decodable, Encodable {
+struct CartProduct: Decodable, Encodable, Identifiable {
     let id: Int
     let product: Product
     let quantity: Int
     let getTotalPrice: Double
+    
 
     enum CodingKeys: String, CodingKey {
         case id, product, quantity, getTotalPrice = "get_total_price"

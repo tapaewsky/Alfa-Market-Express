@@ -15,7 +15,7 @@ struct HomeView: View {
             VStack {
                 ScrollView {
                     RecommendationCardView(viewModel: viewModel, categories: viewModel.categoryViewModel.categories)
-                    SearchBar()
+                    SearchBar(viewModel: viewModel)
                         .padding(.horizontal)
                     
                     VStack {

@@ -8,140 +8,105 @@ import SwiftUI
 import Kingfisher
 
 struct ProfileInfo: View {
-    @ObservedObject var viewModel: ProfileViewModel
+    @ObservedObject var viewModel: MainViewModel
     
     var body: some View {
         NavigationView {
             VStack {
-                profileImage
-                editButton
-                profileForm
-                Spacer()
+                ScrollView {
+                    profileImage
+                    shopOwner
+                    displayStoreInfo
+                    
+                    Spacer()
+                }
             }
             .padding()
-            .navigationTitle("Профиль")
+            
             .navigationBarTitleDisplayMode(.inline)
         }
     }
     
     private var profileImage: some View {
-        if let url = URL(string: viewModel.userProfile.storeImageUrl) {
+        if let url = URL(string: viewModel.profileViewModel.userProfile.storeImageUrl) {
             return AnyView(
                 KFImage(url)
                     .placeholder { ProgressView() }
                     .resizable()
                     .aspectRatio(contentMode: .fill)
-                    .frame(width: 100, height: 100)
-                    .clipShape(Circle())
+                    .frame( height: 200)  // Установите только высоту, чтобы автоматически подстраивать ширину
+                    .cornerRadius(20)
+                    .padding(.horizontal,5)  // Добавляем одинаковые отступы слева и справа
+                    .frame(maxWidth: .infinity)  // Занимаем всю доступную ширину
+                   
             )
         }
+        
         return AnyView(EmptyView())
     }
     
-    private var editButton: some View {
-        HStack {
-            Button(action: {
-                viewModel.toggleEditing()
-            }) {
-                Text(viewModel.isEditing ? "Сохранить" : "Редактировать")
-                    .fontWeight(.semibold)
-                    .padding(8)
-                    .background(Color.colorGreen)
-                    .foregroundColor(.white)
-                    .cornerRadius(8)
-            }
+    
+    
+    private var shopOwner: some View {
+        VStack  {
+            Text("Владелец магазина")
+                .font(.title2)
+                .foregroundColor(.black)
+                .bold()
+            
+            Divider()
+                .background(.gray)
+            
         }
+        
         .padding()
     }
     
-    private var profileForm: some View {
-        Form {
-            storeInfoSection
-            managerInfoSection
-            debtSection
-            favoriteProductsSection
-        }
-        .disabled(!viewModel.isEditing)
-    }
-    
-    private var storeInfoSection: some View {
-        Section(header: Text("Информация о магазине")) {
-            if viewModel.isEditing {
-                editableStoreFields
-            } else {
-                displayStoreInfo
-            }
-        }
-    }
-    
-    private var editableStoreFields: some View {
-        Group {
-            TextField("Название магазина", text: $viewModel.userProfile.storeName)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-            
-            TextField("Адрес магазина", text: $viewModel.userProfile.storeAddress)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-            
-            TextField("Телефон магазина", text: $viewModel.userProfile.storePhoneNumber)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-            
-            TextField("Код магазина", text: $viewModel.userProfile.storeCode)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
-        }
-    }
     
     private var displayStoreInfo: some View {
-        Group {
-            Text("Название магазина: \(viewModel.userProfile.storeName)")
-            Text("Адрес магазина: \(viewModel.userProfile.storeAddress)")
-            Text("Телефон магазина: \(viewModel.userProfile.storePhoneNumber)")
-            Text("Код магазина: \(viewModel.userProfile.storeCode)")
-        }
-    }
-    
-    private var managerInfoSection: some View {
-        Section(header: Text("Менеджер")) {
-            if viewModel.isEditing {
-                editableManagerFields
-            } else {
-                displayManagerInfo
-            }
-        }
-    }
-    
-    private var editableManagerFields: some View {
-        Group {
-            TextField("Имя менеджера", text: $viewModel.userProfile.managerName)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
+        VStack(alignment: .leading, spacing: 15) {
+            Text("\(viewModel.profileViewModel.userProfile.username)")
+                .foregroundColor(.gray)
+                .bold()
             
-            TextField("Телефон менеджера", text: $viewModel.userProfile.managerPhoneNumber)
-                .textFieldStyle(RoundedBorderTextFieldStyle())
+            Text("\(viewModel.profileViewModel.userProfile.storeName)")
+                .foregroundColor(.black)
+                .bold()
+            
+            Text("Адрес: ")
+                .foregroundColor(.gray)
+                .bold() +
+            Text(viewModel.profileViewModel.userProfile.storeAddress)
+                .foregroundColor(.colorGreen)
+                .bold()
+            
+            Text("Телефон: ")
+                .foregroundColor(.gray)
+                .bold() +
+            Text(viewModel.profileViewModel.userProfile.storePhoneNumber)
+                .foregroundColor(.colorGreen)
+                .bold()
+            
+            Text("Код магазина: \(viewModel.profileViewModel.userProfile.storeCode)")
+                .foregroundColor(.gray)
+                .bold()
+            
+            Divider()
+                .background(.gray)
+            
+            Text("Ваш менеджер \(viewModel.profileViewModel.userProfile.managerName)")
+                .foregroundColor(.black)
+                .bold()
+            
+            Text(viewModel.profileViewModel.userProfile.storePhoneNumber)
+                .foregroundColor(.colorGreen)
+                .bold()
+                
+            
         }
+        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
     }
     
-    private var displayManagerInfo: some View {
-        Group {
-            Text("Имя менеджера: \(viewModel.userProfile.managerName)")
-            Text("Телефон менеджера: \(viewModel.userProfile.managerPhoneNumber)")
-        }
-    }
     
-    private var debtSection: some View {
-        Section(header: Text("Остаток долга")) {
-            if viewModel.isEditing {
-                TextField("Остаток долга", text: $viewModel.userProfile.remainingDebt)
-                    .textFieldStyle(RoundedBorderTextFieldStyle())
-            } else {
-                Text("Остаток долга: \(viewModel.userProfile.remainingDebt)")
-            }
-        }
-    }
-    
-    private var favoriteProductsSection: some View {
-        Section(header: Text("Избранные продукты")) {
-            ForEach(viewModel.userProfile.favoriteProducts, id: \.self) { productId in
-                Text("Продукт \(productId)")
-            }
-        }
-    }
 }
