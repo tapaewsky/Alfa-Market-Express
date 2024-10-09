@@ -118,7 +118,7 @@ class FavoritesViewModel: ObservableObject {
                 if httpResponse.statusCode == 200 {
                     DispatchQueue.main.async {
                         self.toggleProductFavoriteStatus(product: product)
-                        self.saveFavorites() // Сохраняем измененные избранные товары
+                        self.saveFavorites()
                     }
                 } else {
                     errorMessage = "Failed to update favorite. Response code: \(httpResponse.statusCode)"

@@ -32,16 +32,14 @@ struct CategoryCardView: View {
                         }
                         .resizable()
                         .scaledToFit()
-                        .cornerRadius(10)
                         .clipped()
-                        .aspectRatio(1, contentMode: .fit)
+                        .aspectRatio(contentMode: .fit)
                 } else {
                     Image(systemName: "photo")
                         .resizable()
                         .scaledToFit()
-                        .cornerRadius(10)
                         .clipped()
-                        .aspectRatio(1, contentMode: .fit)
+                        .aspectRatio( contentMode: .fit)
                 }
             }
         }

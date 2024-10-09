@@ -97,7 +97,7 @@ struct CheckoutView: View {
                 
                 Spacer()
                 
-                Text("\(Int(selectedTotalPrice)) ₽") // Удаляем десятичные цифры
+                Text("\(Int(selectedTotalPrice)) ₽") 
                     .foregroundColor(.colorRed)
                     .font(.title3)
                     .bold()

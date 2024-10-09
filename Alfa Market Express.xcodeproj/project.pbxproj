@@ -43,6 +43,7 @@
 		8FA6AB362C67AAE700C267FE /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FA6AB352C67AAE700C267FE /* Network.swift */; };
 		8FB1CC452C6E44FD002C054C /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FB1CC442C6E44FD002C054C /* UserProfile.swift */; };
 		8FB1CC472C6E45B3002C054C /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FB1CC462C6E45B3002C054C /* ProfileViewModel.swift */; };
+		8FB938E42CB702FB000B2FC2 /* Order.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FB938E32CB702FB000B2FC2 /* Order.swift */; };
 		8FC1321E2C865C3200F5C553 /* ProfileInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FC1321D2C865C3200F5C553 /* ProfileInfo.swift */; };
 		8FC4764F2C8C8EA200A9560C /* CatalogCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FC4764E2C8C8EA200A9560C /* CatalogCardView.swift */; };
 		8FC476512C8CA4F000A9560C /* CatalogGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FC476502C8CA4F000A9560C /* CatalogGridView.swift */; };
@@ -98,6 +99,7 @@
 		8FA6AB352C67AAE700C267FE /* Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
 		8FB1CC442C6E44FD002C054C /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
 		8FB1CC462C6E45B3002C054C /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
+		8FB938E32CB702FB000B2FC2 /* Order.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Order.swift; sourceTree = "<group>"; };
 		8FC1321D2C865C3200F5C553 /* ProfileInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileInfo.swift; sourceTree = "<group>"; };
 		8FC4764E2C8C8EA200A9560C /* CatalogCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogCardView.swift; sourceTree = "<group>"; };
 		8FC476502C8CA4F000A9560C /* CatalogGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogGridView.swift; sourceTree = "<group>"; };
@@ -184,6 +186,7 @@
 				8F2137D82C6669BA00A42845 /* Category.swift */,
 				8FB1CC442C6E44FD002C054C /* UserProfile.swift */,
 				8FCF2F452C95AB74000B5EE1 /* CartProduct.swift */,
+				8FB938E32CB702FB000B2FC2 /* Order.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -420,6 +423,7 @@
 				8F97BB162C56F642009C1BC7 /* CategoryProductsView.swift in Sources */,
 				8FC1321E2C865C3200F5C553 /* ProfileInfo.swift in Sources */,
 				8F6A23BD2C397432005A3320 /* ProductDetailView.swift in Sources */,
+				8FB938E42CB702FB000B2FC2 /* Order.swift in Sources */,
 				8FB1CC472C6E45B3002C054C /* ProfileViewModel.swift in Sources */,
 				8FED08B32C930EFD00094A3C /* CartItemView.swift in Sources */,
 				8F35BF8F2C4EA45F00A77E77 /* SearchResultsView.swift in Sources */,

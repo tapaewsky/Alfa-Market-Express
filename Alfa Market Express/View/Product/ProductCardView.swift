@@ -14,7 +14,7 @@ struct ProductCardView: View {
     @State private var quantity: Int = 1
     @State private var isFavorite: Bool = false
     @State private var isAddedToCart: Bool = false
-    
+
     var body: some View {
         VStack(alignment: .leading) {
             productImageAndFavoriteButton
@@ -30,41 +30,39 @@ struct ProductCardView: View {
             isAddedToCart = viewModel.cartViewModel.isInCart(product)
         }
     }
-    
-    // MARK: - Приватные функции для отдельных частей представления
 
     private var productImageAndFavoriteButton: some View {
         ZStack(alignment: .topTrailing) {
-            if let imageUrl = product.imageUrl, let url = URL(string: imageUrl) {
-                KFImage(url)
-                    .placeholder {
-                        ProgressView()
-                            .frame(width: 150, height: 100)
-                    }
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .cornerRadius(10)
-                    .clipped()
-            } else {
-                Image(systemName: "photo")
-                    .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .cornerRadius(10)
-                    .clipped()
+            GeometryReader { geometry in
+                if let imageUrl = product.imageUrl, let url = URL(string: imageUrl) {
+                    KFImage(url)
+                        .placeholder {
+                            ProgressView()
+                                .frame(width: geometry.size.width, height: geometry.size.width)
+                        }
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: geometry.size.width, height: geometry.size.height)
+                        .clipped()
+                } else {
+                    Image(systemName: "photo")
+                        .resizable()
+                        .scaledToFit()
+                        .frame(width: geometry.size.width, height: geometry.size.height)
+                        .clipped()
+                }
             }
-            
+            .aspectRatio( contentMode: .fit) // сохраняем соотношение сторон
+
             Button(action: {
                 someFunctionThatCallsToggleFavorite(product)
             }) {
                 Image(systemName: isFavorite ? "heart.fill" : "heart")
                     .foregroundColor(isFavorite ? .red : .gray)
-                    .padding(5)
-
-                    .cornerRadius(10)
             }
         }
     }
-    
+
     private var productDetails: some View {
         VStack(alignment: .leading) {
             Text(product.name)
@@ -72,22 +70,22 @@ struct ProductCardView: View {
                 .lineLimit(1)
                 .minimumScaleFactor(0.5)
                 .foregroundColor(.primary)
-            
+
             Spacer()
-            
+
             Text("Цена за 1 шт")
                 .foregroundStyle(.gray)
         }
     }
-    
+
     private var productPriceAndCartButton: some View {
         HStack {
             Text(String(format: "%.0f₽", Double(product.price) ?? 0))
                 .font(.headline)
                 .foregroundColor(.red)
-            
+
             Spacer()
-            
+
             Button(action: {
                 Task {
                     await toggleCart()
@@ -103,8 +101,6 @@ struct ProductCardView: View {
         }
     }
 
-    // MARK: - Логика для работы с корзиной и избранным
-
     private func toggleCart() async {
         if isAddedToCart {
             await viewModel.cartViewModel.removeFromCart(product)
@@ -113,10 +109,11 @@ struct ProductCardView: View {
         }
         isAddedToCart.toggle()
     }
-    
+
     private func someFunctionThatCallsToggleFavorite(_ product: Product) {
         Task {
             await viewModel.favoritesViewModel.toggleFavorite(for: product)
         }
     }
 }
+

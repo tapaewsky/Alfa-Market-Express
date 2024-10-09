@@ -13,6 +13,8 @@ class MainViewModel: ObservableObject {
     @Published var favoritesViewModel: FavoritesViewModel
     @Published var cartViewModel: CartViewModel
     @Published var profileViewModel: ProfileViewModel
+    @Published var ordersViewModel: OrdersViewModel
+    @Published var authManager = AuthManager.shared
 
     init() {
         favoritesViewModel = FavoritesViewModel()
@@ -20,5 +22,7 @@ class MainViewModel: ObservableObject {
         productViewModel = ProductViewModel()
         cartViewModel = CartViewModel(favoritesViewModel: FavoritesViewModel())
         profileViewModel = ProfileViewModel()
+        ordersViewModel = OrdersViewModel(cartViewModel: CartViewModel(favoritesViewModel: FavoritesViewModel()))
+      
     }
 }
