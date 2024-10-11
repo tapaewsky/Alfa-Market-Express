@@ -18,6 +18,9 @@ struct ProductCardView: View {
     var body: some View {
         
         VStack(alignment: .leading) {
+//            RoundedRectangle(cornerRadius: 15)
+//                .fill(Color.white)
+//                .shadow(radius: 2)
             productImageAndFavoriteButton
                 .padding(0)
             Spacer()

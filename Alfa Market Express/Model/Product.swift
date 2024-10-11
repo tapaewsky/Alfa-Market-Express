@@ -30,18 +30,17 @@ struct Product: Identifiable, Decodable, Hashable, Encodable {
     }
 
     init(from decoder: Decoder) throws {
-           let container = try decoder.container(keyedBy: CodingKeys.self)
-           id = try container.decode(Int.self, forKey: .id)
-           name = try container.decode(String.self, forKey: .name)
-           description = try container.decode(String.self, forKey: .description)
-           price = try container.decode(String.self, forKey: .price) 
-           imageUrl = try container.decodeIfPresent(String.self, forKey: .imageUrl)
-           category = try container.decode(Int.self, forKey: .category)
-           isFavorite = try container.decodeIfPresent(Bool.self, forKey: .isFavorite) ?? false
-           isInCart = try container.decodeIfPresent(Bool.self, forKey: .isInCart) ?? false
-           quantity = try container.decodeIfPresent(Int.self, forKey: .quantity) ?? 1
-       }
-   
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        id = try container.decode(Int.self, forKey: .id)
+        name = try container.decode(String.self, forKey: .name)
+        description = try container.decode(String.self, forKey: .description)
+        price = try container.decode(String.self, forKey: .price)
+        imageUrl = try container.decodeIfPresent(String.self, forKey: .imageUrl)
+        category = try container.decodeIfPresent(Int.self, forKey: .category) ?? 0 
+        isFavorite = try container.decodeIfPresent(Bool.self, forKey: .isFavorite) ?? false
+        isInCart = try container.decodeIfPresent(Bool.self, forKey: .isInCart) ?? false
+        quantity = try container.decodeIfPresent(Int.self, forKey: .quantity) ?? 1
+    }
 
     func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
@@ -51,7 +50,7 @@ struct Product: Identifiable, Decodable, Hashable, Encodable {
         try container.encode(price, forKey: .price)
         try container.encode(imageUrl, forKey: .imageUrl)
         try container.encode(category, forKey: .category)
-        try container.encode(isFavorite, forKey: .isFavorite) 
+        try container.encode(isFavorite, forKey: .isFavorite)
         try container.encode(isInCart, forKey: .isInCart)
         try container.encode(quantity, forKey: .quantity)
     }
