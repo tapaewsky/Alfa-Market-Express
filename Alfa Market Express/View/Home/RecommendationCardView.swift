@@ -15,18 +15,19 @@ struct RecommendationCardView: View {
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             LazyHStack {
-                ForEach(categories) { category in
-                    NavigationLink(destination: CategoryProductsView(viewModel: viewModel, category: category)) {
-                        KFImage(URL(string: category.imageUrl ?? "https://example.com/placeholder.png"))
-                            .placeholder {
-                                ProgressView()
-                                    .frame(width: 300, height: 150)
-                            }
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: 305, height: 150)
-                            .clipShape(RoundedRectangle(cornerRadius: 10))
-                            
+                ForEach((0..<1000), id: \.self) { index in
+                                   ForEach(categories) { category in
+                                       NavigationLink(destination: CategoryProductsView(viewModel: viewModel, category: category)) {
+                                           KFImage(URL(string: category.imageUrl ?? "https://example.com/placeholder.png"))
+                                               .placeholder {
+                                                   ProgressView()
+                                                       .frame(width: 300, height: 150)
+                                               }
+                                               .resizable()
+                                               .scaledToFill()
+                                               .frame(width: 305, height: 150)
+                                               .cornerRadius(10)
+                                       }
                     }
                 }
             }
@@ -34,7 +35,7 @@ struct RecommendationCardView: View {
             .scrollTargetLayout()
         }
         .scrollTargetBehavior(.viewAligned)
-        .safeAreaPadding(.horizontal, 40)
+        .safeAreaPadding(.horizontal,35)
     }
 }
 

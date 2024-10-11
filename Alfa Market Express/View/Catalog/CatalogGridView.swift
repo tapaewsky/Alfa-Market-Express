@@ -49,7 +49,7 @@ struct CatalogGridView: View {
                 }
                 .padding(.horizontal, 15)
             }
-            .padding(.top, 0)
+            .padding(/*.top,*/ 0)
             .frame(height: 100)
             .shadow(radius: 2)
             
