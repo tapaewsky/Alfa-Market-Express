@@ -19,8 +19,9 @@ struct CategoryCardView: View {
                             .frame(width: 150, height: 150)
                     }
                     .resizable()
-                    .cornerRadius(20)
                     .scaledToFit()
+                    .clipped()
+                    .padding(0)
             } else {
                 Image(systemName: "photo")
                     .resizable()
@@ -34,13 +35,13 @@ struct CategoryCardView: View {
                 .fontWeight(.bold)
                 .lineLimit(1)
                 .foregroundColor(.primary) // Изменено на белый цвет для лучшей видимости
-                .padding(5) // Добавьте отступы для визуального отделения от края
+                .padding(5) 
                
                
         }
         .padding(0)
         .background(Color.colorGray)
         .cornerRadius(15)
-        .aspectRatio(1, contentMode: .fit)
+//        .aspectRatio(1, contentMode: .fit)
     }
 }

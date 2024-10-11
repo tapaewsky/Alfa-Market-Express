@@ -10,17 +10,15 @@ struct CategoryGridView: View {
     @ObservedObject var viewModel: MainViewModel
     
     var body: some View {
-        let columns = [
-            GridItem(.adaptive(minimum: 150), spacing: 15)
-        ]
         
-        LazyVGrid(columns: columns, spacing: 15) {
+        
+        LazyVGrid(columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 1)], spacing: 10) {
             ForEach(viewModel.categoryViewModel.categories) { category in
                 NavigationLink(destination: CategoryProductsView(viewModel: viewModel, category: category)) {
                     CategoryCardView(category: category)
                 }
             }
         }
-        .padding(.horizontal, 10)
+       
     }
 }
