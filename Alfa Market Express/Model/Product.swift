@@ -36,7 +36,7 @@ struct Product: Identifiable, Decodable, Hashable, Encodable {
         description = try container.decode(String.self, forKey: .description)
         price = try container.decode(String.self, forKey: .price)
         imageUrl = try container.decodeIfPresent(String.self, forKey: .imageUrl)
-        category = try container.decodeIfPresent(Int.self, forKey: .category) ?? 0 // Установите значение по умолчанию
+        category = try container.decodeIfPresent(Int.self, forKey: .category) ?? 0 
         isFavorite = try container.decodeIfPresent(Bool.self, forKey: .isFavorite) ?? false
         isInCart = try container.decodeIfPresent(Bool.self, forKey: .isInCart) ?? false
         quantity = try container.decodeIfPresent(Int.self, forKey: .quantity) ?? 1

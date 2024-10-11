@@ -30,29 +30,29 @@ struct ProductCardView: View {
             isAddedToCart = viewModel.cartViewModel.isInCart(product)
         }
     }
-
+    
     private var productImageAndFavoriteButton: some View {
         ZStack(alignment: .topTrailing) {
-            GeometryReader { geometry in
                 if let imageUrl = product.imageUrl, let url = URL(string: imageUrl) {
                     KFImage(url)
                         .placeholder {
                             ProgressView()
-                                .frame(width: geometry.size.width, height: geometry.size.width)
                         }
                         .resizable()
                         .scaledToFit()
-                        .frame(width: geometry.size.width, height: geometry.size.height)
+                        .frame(width: 140, height: 150)
                         .clipped()
+//                        .background(.gray)
+                        .cornerRadius(10)
                 } else {
                     Image(systemName: "photo")
                         .resizable()
                         .scaledToFit()
-                        .frame(width: geometry.size.width, height: geometry.size.height)
                         .clipped()
                 }
-            }
-            .aspectRatio( contentMode: .fit) // сохраняем соотношение сторон
+               
+            
+            
 
             Button(action: {
                 someFunctionThatCallsToggleFavorite(product)

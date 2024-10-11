@@ -6,7 +6,7 @@
 //
 import Foundation
 
-struct Order: Codable {
+struct Order: Codable  {
     let id: Int
     let items: [OrderItem]
     let comments: String
@@ -23,7 +23,7 @@ struct OrderItem: Codable {
     let product: String
     let productId: Int
     let quantity: Int
-    let price: String
+    let price: Double
     let image: String
 
     enum CodingKeys: String, CodingKey {

@@ -12,6 +12,8 @@
 		8F2137D92C6669BA00A42845 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F2137D82C6669BA00A42845 /* Category.swift */; };
 		8F2137DE2C666E1B00A42845 /* Network.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F2137DC2C666E0300A42845 /* Network.framework */; };
 		8F35BF8F2C4EA45F00A77E77 /* SearchResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F35BF8E2C4EA45F00A77E77 /* SearchResultsView.swift */; };
+		8F4D1EFD2CB85B8500DF89B8 /* OrdersCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F4D1EFC2CB85B8500DF89B8 /* OrdersCard.swift */; };
+		8F4D1EFF2CB8930300DF89B8 /* SuccessfullOrderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F4D1EFE2CB8930300DF89B8 /* SuccessfullOrderView.swift */; };
 		8F61CCB42C51507B004A2DC4 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F61CCB32C51507B004A2DC4 /* MapView.swift */; };
 		8F61CCB62C515111004A2DC4 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F61CCB52C515111004A2DC4 /* LocationManager.swift */; };
 		8F65E7FC2CA6FA7200B3E012 /* CartMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F65E7FB2CA6FA7200B3E012 /* CartMainView.swift */; };
@@ -67,6 +69,8 @@
 		8F2137DA2C666DB000A42845 /* Alfa Market Express.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Alfa Market Express.entitlements"; sourceTree = "<group>"; };
 		8F2137DC2C666E0300A42845 /* Network.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Network.framework; path = System/Library/Frameworks/Network.framework; sourceTree = SDKROOT; };
 		8F35BF8E2C4EA45F00A77E77 /* SearchResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsView.swift; sourceTree = "<group>"; };
+		8F4D1EFC2CB85B8500DF89B8 /* OrdersCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrdersCard.swift; sourceTree = "<group>"; };
+		8F4D1EFE2CB8930300DF89B8 /* SuccessfullOrderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessfullOrderView.swift; sourceTree = "<group>"; };
 		8F61CCB32C51507B004A2DC4 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		8F61CCB52C515111004A2DC4 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		8F65E7FB2CA6FA7200B3E012 /* CartMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartMainView.swift; sourceTree = "<group>"; };
@@ -285,6 +289,8 @@
 				8F6A23C22C39746A005A3320 /* ProfileView.swift */,
 				8FFDFF5C2CA4197B00FA96AB /* EditProfile.swift */,
 				8FFDFF5E2CA4198500FA96AB /* OrdersView.swift */,
+				8F4D1EFC2CB85B8500DF89B8 /* OrdersCard.swift */,
+				8F4D1EFE2CB8930300DF89B8 /* SuccessfullOrderView.swift */,
 				8FC1321D2C865C3200F5C553 /* ProfileInfo.swift */,
 			);
 			path = Profile;
@@ -412,6 +418,7 @@
 				8F6A23BF2C397446005A3320 /* CartView.swift in Sources */,
 				8FB1CC452C6E44FD002C054C /* UserProfile.swift in Sources */,
 				8F6A23E42C39C2B8005A3320 /* HomeView.swift in Sources */,
+				8F4D1EFD2CB85B8500DF89B8 /* OrdersCard.swift in Sources */,
 				8FA6AB362C67AAE700C267FE /* Network.swift in Sources */,
 				8FC4764F2C8C8EA200A9560C /* CatalogCardView.swift in Sources */,
 				8F2137D92C6669BA00A42845 /* Category.swift in Sources */,
@@ -436,6 +443,7 @@
 				8FC476512C8CA4F000A9560C /* CatalogGridView.swift in Sources */,
 				8F16D5A72C4876B900C3F429 /* FavoritesView.swift in Sources */,
 				8F6A23A12C396A5C005A3320 /* AlfaMarketExpressApp.swift in Sources */,
+				8F4D1EFF2CB8930300DF89B8 /* SuccessfullOrderView.swift in Sources */,
 				8FFA9D7D2C78B0AD00115DFE /* AuthManager.swift in Sources */,
 				8FFAD55F2CA214B800734F6D /* EnvironmentKeys.swift in Sources */,
 				8F6A23BB2C39740A005A3320 /* ProductRowView.swift in Sources */,

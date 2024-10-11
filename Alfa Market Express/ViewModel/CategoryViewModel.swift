@@ -9,12 +9,14 @@ import Combine
 import Foundation
 
 class CategoryViewModel: ObservableObject {
+    // MARK: - Properties
     @Published var categories: [Category] = []
     @Published var isLoading = false
     @Published var isError = false
 
     private let categoriesKey = "cachedCategories"
 
+    // MARK: - Initializer
     init() {
         loadCachedData()
         fetchData { success in
@@ -24,6 +26,7 @@ class CategoryViewModel: ObservableObject {
         }
     }
 
+    // MARK: - Data Fetching
     func fetchData(completion: @escaping (Bool) -> Void) {
         isLoading = true
         isError = false
@@ -41,13 +44,6 @@ class CategoryViewModel: ObservableObject {
             self.isLoading = false
             self.isError = !success
             completion(success)
-        }
-    }
-
-    private func loadCachedData() {
-        if let categoriesData = UserDefaults.standard.data(forKey: categoriesKey),
-           let cachedCategories = try? JSONDecoder().decode([Category].self, from: categoriesData) {
-            categories = cachedCategories
         }
     }
 
@@ -88,6 +84,14 @@ class CategoryViewModel: ObservableObject {
                 }
             }
         }.resume()
+    }
+
+    // MARK: - Caching
+    private func loadCachedData() {
+        if let categoriesData = UserDefaults.standard.data(forKey: categoriesKey),
+           let cachedCategories = try? JSONDecoder().decode([Category].self, from: categoriesData) {
+            categories = cachedCategories
+        }
     }
 
     private func saveCategories() {

@@ -15,8 +15,12 @@ class ProductViewModel: ObservableObject {
     @Published var searchText: String = ""
 
     private let productsKey = "cachedProducts"
-    private let networkMonitor = NetworkMonitor() 
+    private let networkMonitor = NetworkMonitor()
+    
+    // MARK: - Base URL
+    private let baseURL = "http://95.174.90.162:60/api/products/"
 
+    // MARK: - Initialization
     init() {
         loadProducts()
         fetchData { success in
@@ -26,8 +30,9 @@ class ProductViewModel: ObservableObject {
         }
     }
     
+    // MARK: - Data Fetching
     func fetchData(completion: @escaping (Bool) -> Void) {
-        guard networkMonitor.isConnected else { 
+        guard networkMonitor.isConnected else {
             print("No internet connection")
             completion(false)
             return
@@ -53,7 +58,7 @@ class ProductViewModel: ObservableObject {
     }
     
     func fetchProducts(completion: @escaping (Bool) -> Void) {
-        guard let url = URL(string: "http://95.174.90.162:60/api/products/") else {
+        guard let url = URL(string: baseURL) else {
             print("Invalid URL")
             completion(false)
             return
@@ -92,50 +97,52 @@ class ProductViewModel: ObservableObject {
         }.resume()
     }
 
+    // MARK: - Search Products
     func searchProducts(query: String, completion: @escaping (Bool) -> Void) {
-            guard !query.isEmpty else {
-                completion(false)
-                return
-            }
-
-            let searchUrl = "http://95.174.90.162:60/api/products/?search=\(query)"
-            guard let url = URL(string: searchUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "") else {
-                completion(false)
-                return
-            }
-
-            URLSession.shared.dataTask(with: url) { data, response, error in
-                if let error = error {
-                    print("Error searching products: \(error.localizedDescription)")
-                    DispatchQueue.main.async {
-                        completion(false)
-                    }
-                    return
-                }
-
-                guard let data = data else {
-                    print("No data received")
-                    DispatchQueue.main.async {
-                        completion(false)
-                    }
-                    return
-                }
-
-                do {
-                    let products = try JSONDecoder().decode([Product].self, from: data)
-                    DispatchQueue.main.async {
-                        self.products = products
-                        completion(true)
-                    }
-                } catch {
-                    print("Error decoding search results: \(error.localizedDescription)")
-                    DispatchQueue.main.async {
-                        completion(false)
-                    }
-                }
-            }.resume()
+        guard !query.isEmpty else {
+            completion(false)
+            return
         }
-    
+
+        let searchUrl = "\(baseURL)?search=\(query)"
+        guard let url = URL(string: searchUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "") else {
+            completion(false)
+            return
+        }
+
+        URLSession.shared.dataTask(with: url) { data, response, error in
+            if let error = error {
+                print("Error searching products: \(error.localizedDescription)")
+                DispatchQueue.main.async {
+                    completion(false)
+                }
+                return
+            }
+
+            guard let data = data else {
+                print("No data received")
+                DispatchQueue.main.async {
+                    completion(false)
+                }
+                return
+            }
+
+            do {
+                let products = try JSONDecoder().decode([Product].self, from: data)
+                DispatchQueue.main.async {
+                    self.products = products
+                    completion(true)
+                }
+            } catch {
+                print("Error decoding search results: \(error.localizedDescription)")
+                DispatchQueue.main.async {
+                    completion(false)
+                }
+            }
+        }.resume()
+    }
+
+    // MARK: - Caching Products
     private func saveProducts() {
         if let data = try? JSONEncoder().encode(products) {
             UserDefaults.standard.set(data, forKey: productsKey)
@@ -149,6 +156,7 @@ class ProductViewModel: ObservableObject {
         }
     }
 
+    // MARK: - Filtered Products
     var filteredProducts: [Product] {
         if searchText.isEmpty {
             return products

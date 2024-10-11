@@ -13,14 +13,14 @@ class OrdersViewModel: ObservableObject {
     @Published var errorMessage: String?
     @Published var cartViewModel: CartViewModel
     private var cancellables = Set<AnyCancellable>()
-    private var authManager = AuthManager.shared
+    var authManager = AuthManager.shared
     private let baseURL = "http://95.174.90.162:60/api/orders/"
-    
+    private let orderKey = "cashedOrder"
     init(cartViewModel: CartViewModel) {
         self.cartViewModel = cartViewModel
     }
     
-    // Получить заказы
+    // MARK: - Fetch Orders
     func fetchOrders(completion: @escaping (Bool) -> Void) {
         guard let accessToken = authManager.accessToken else {
             print("Access token not found.")
@@ -46,6 +46,17 @@ class OrdersViewModel: ObservableObject {
                 return
             }
             
+            if let httpResponse = response as? HTTPURLResponse {
+                print("HTTP Status Code: \(httpResponse.statusCode)")
+                guard (200...299).contains(httpResponse.statusCode) else {
+                    print("Unexpected HTTP Status Code: \(httpResponse.statusCode)")
+                    DispatchQueue.main.async {
+                        completion(false)
+                    }
+                    return
+                }
+            }
+            
             guard let data = data else {
                 print("No data in response")
                 DispatchQueue.main.async {
@@ -55,9 +66,17 @@ class OrdersViewModel: ObservableObject {
             }
             
             do {
-                let fetchedOrders = try JSONDecoder().decode([Order].self, from: data)
+                // Принт JSON в виде строки
+                if let jsonString = String(data: data, encoding: .utf8) {
+                    print("Received JSON: \(jsonString)")
+                }
+                
+                // Декодирование JSON
+                let fetchedOrders: [Order] = try JSONDecoder().decode([Order].self, from: data)
+                print("Fetched orders: \(fetchedOrders)")
                 DispatchQueue.main.async {
                     self.orders = fetchedOrders
+                    self.saveOrder()
                     completion(true)
                 }
             } catch {
@@ -69,7 +88,7 @@ class OrdersViewModel: ObservableObject {
         }.resume()
     }
     
-    // Отменить заказ
+    // MARK: - Cancel Order
     func cancelOrder(orderId: Int) async {
         guard let url = URL(string: "\(baseURL)cancel/\(orderId)/") else { return }
         
@@ -82,29 +101,21 @@ class OrdersViewModel: ObservableObject {
             let (data, response) = try await URLSession.shared.data(for: request)
             let _ = try JSONDecoder().decode(CancelOrderResponse.self, from: data)
             DispatchQueue.main.async {
-                self.errorMessage = "Заказ успешно отменен."
+                self.errorMessage = "Order successfully canceled."
             }
         } catch {
             DispatchQueue.main.async {
-                self.errorMessage = "Ошибка при отмене заказа: \(error.localizedDescription)"
+                self.errorMessage = "Error canceling order: \(error.localizedDescription)"
             }
         }
     }
     
+    // MARK: - Create Order
     func createOrder(items: [OrderItem], comments: String, accessToken: String) async throws -> Order {
-        // Логируем товары в корзине перед созданием заказа
-        print("Товары в корзине перед созданием заказа: \(cartViewModel.cartProduct)")
-
-        let products = cartViewModel.cartProduct.map { orderItemFromCartProduct($0) }
-        
-        // Логируем количество товаров после конвертации
-        print("Конвертированные товары для заказа: \(products)")
-        
-        if products.isEmpty {
-            print("Ошибка: корзина пуста, невозможно создать заказ.")
+        if items.isEmpty {
             throw URLError(.badServerResponse)
         }
-        
+
         guard let url = URL(string: "\(baseURL)create/") else {
             throw URLError(.badURL)
         }
@@ -114,49 +125,38 @@ class OrdersViewModel: ObservableObject {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
 
-        let orderRequest = CreateOrderRequest(items: products, comments: comments)
+        let orderRequest = CreateOrderRequest(items: items, comments: comments)
 
         do {
             let data = try JSONEncoder().encode(orderRequest)
-            if let jsonString = String(data: data, encoding: .utf8) {
-                print("Отправляемые данные: \(jsonString)")
-            }
             request.httpBody = data
 
             let (dataResponse, response) = try await URLSession.shared.data(for: request)
 
-            if let httpResponse = response as? HTTPURLResponse {
-                print("Response code: \(httpResponse.statusCode)")
-                if httpResponse.statusCode != 201 {
-                    let responseString = String(data: dataResponse, encoding: .utf8)
-                    print("Ответ сервера: \(responseString ?? "No response")")
-                    throw URLError(.badServerResponse)
-                }
+            if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode != 201 {
+                throw URLError(.badServerResponse)
             }
 
             let responseOrder = try JSONDecoder().decode(Order.self, from: dataResponse)
             return responseOrder
         } catch {
-            print("Ошибка при создании заказа: \(error.localizedDescription)")
             throw error
         }
     }
 
-    // Логируем каждый OrderItem, создаваемый из CartProduct
-    private func orderItemFromCartProduct(_ cartProduct: CartProduct) -> OrderItem {
-        print("Создание OrderItem для продукта: \(cartProduct)")
+    // MARK: - Convert CartProduct to OrderItem
+    func orderItemFromCartProduct(_ cartProduct: CartProduct) -> OrderItem {
         let orderItem = OrderItem(
             product: cartProduct.product.name,
             productId: cartProduct.product.id,
             quantity: cartProduct.quantity,
-            price: cartProduct.product.price,
+            price: Double(cartProduct.product.price) ?? 0.0,
             image: cartProduct.product.imageUrl ?? "defaultImageUrl"
         )
-        print("Создан OrderItem: \(orderItem)")
         return orderItem
     }
 
-    // Обновить комментарий заказа
+    // MARK: - Update Order Comment
     func updateOrderComment(orderId: Int, comment: String) async {
         guard let url = URL(string: "\(baseURL)comment/\(orderId)/") else { return }
         
@@ -172,16 +172,16 @@ class OrdersViewModel: ObservableObject {
             let (data, response) = try await URLSession.shared.data(for: request)
             let _ = try JSONDecoder().decode(UpdateCommentResponse.self, from: data)
             DispatchQueue.main.async {
-                self.errorMessage = "Комментарий обновлен."
+                self.errorMessage = "Comment updated."
             }
         } catch {
             DispatchQueue.main.async {
-                self.errorMessage = "Ошибка при обновлении комментария: \(error.localizedDescription)"
+                self.errorMessage = "Error updating comment: \(error.localizedDescription)"
             }
         }
     }
     
-    // Вспомогательные методы
+    // MARK: - Helper Methods
     private func getToken() async -> String? {
         var token = authManager.accessToken
         if token == nil {
@@ -205,6 +205,12 @@ class OrdersViewModel: ObservableObject {
             authManager.refreshAccessToken { success in
                 continuation.resume(returning: success)
             }
+        }
+    }
+    
+    private func saveOrder() {
+        if let data = try? JSONEncoder().encode(orders) {
+            UserDefaults.standard.set(data, forKey: orderKey)
         }
     }
 }

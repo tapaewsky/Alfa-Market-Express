@@ -23,8 +23,9 @@ struct RecommendationCardView: View {
                             }
                             .resizable()
                             .scaledToFill()
-                            .frame(width: 300, height: 150)
+                            .frame(width: 305, height: 150)
                             .clipShape(RoundedRectangle(cornerRadius: 10))
+                            
                     }
                 }
             }

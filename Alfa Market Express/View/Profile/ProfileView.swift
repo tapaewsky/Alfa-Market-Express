@@ -22,7 +22,7 @@ struct ProfileView: View {
             TabView(selection: $selectedTab) {
                 ProfileInfo(viewModel: viewModel)
                     .tag(0)
-                OrdersView()
+                OrdersView(viewModel: viewModel)
                     .tag(1)
                 EditProfile(viewModel: viewModel)
                     .tag(2)

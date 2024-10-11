@@ -8,14 +8,15 @@ import Foundation
 import SwiftUI
 
 class AuthManager: ObservableObject {
+    // MARK: - Singleton Instance
     static let shared = AuthManager()
     
+    // MARK: - Properties
     @Published var isAuthenticated: Bool = false
     @Published var isCheckingAuth: Bool = true
 
     private let accessTokenKey = "accessToken"
     private let refreshTokenKey = "refreshToken"
-    
     
     private let baseUrl = "http://95.174.90.162:60/api"
     
@@ -27,6 +28,7 @@ class AuthManager: ObservableObject {
         UserDefaults.standard.string(forKey: refreshTokenKey)
     }
     
+    // MARK: - Authentication Check
     func checkAuthentication() {
         DispatchQueue.global().async {
             if self.accessToken != nil {
@@ -45,6 +47,7 @@ class AuthManager: ObservableObject {
         }
     }
     
+    // MARK: - Token Refresh
     func refreshAccessToken(completion: @escaping (Bool) -> Void) {
         guard let refreshToken = self.refreshToken else {
             completion(false)
@@ -79,6 +82,7 @@ class AuthManager: ObservableObject {
         }.resume()
     }
     
+    // MARK: - Token Management
     func setTokens(accessToken: String, refreshToken: String) {
         UserDefaults.standard.set(accessToken, forKey: accessTokenKey)
         UserDefaults.standard.set(refreshToken, forKey: refreshTokenKey)

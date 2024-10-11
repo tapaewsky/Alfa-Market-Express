@@ -8,23 +8,24 @@ import Foundation
 import Combine
 
 class FavoritesViewModel: ObservableObject {
+    // MARK: - Properties
     @Published var favorites: [Product] = []
     @Published var isLoading = false
     @Published var errorMessage: String?
-    
     
     private let favoritesKey = "cachedFavorites"
     private let authManager = AuthManager.shared
     private let networkMonitor = NetworkMonitor()
     
-    
     private let baseUrl = "http://95.174.90.162:60/api"
 
+    // MARK: - Initializer
     init() {
         loadFavorites()
         fetchData()
     }
     
+    // MARK: - Data Fetching
     func fetchData() {
         guard networkMonitor.isConnected else {
             print("No internet connection")
@@ -90,6 +91,7 @@ class FavoritesViewModel: ObservableObject {
         }.resume()
     }
     
+    // MARK: - Favorite Management
     func toggleFavorite(for product: Product) async {
         guard let accessToken = authManager.accessToken else {
             errorMessage = "Access token not found."
@@ -138,15 +140,17 @@ class FavoritesViewModel: ObservableObject {
         print("Товар \(product.name) теперь \(isFavorite(product) ? "в избранном" : "не в избранном")")
     }
     
+    // MARK: - Persistence
     private func saveFavorites() {
         if let data = try? JSONEncoder().encode(favorites) {
             UserDefaults.standard.set(data, forKey: favoritesKey)
         }
     }
     
+    // MARK: - Check Favorites
     func isFavorite(_ product: Product) -> Bool {
-            return favorites.contains(where: { $0.id == product.id })
-        }
+        return favorites.contains(where: { $0.id == product.id })
+    }
     
     private func loadFavorites() {
         if let data = UserDefaults.standard.data(forKey: favoritesKey),

@@ -4,14 +4,17 @@
 //
 //  Created by Said Tapaev on 15.08.2024.
 //
+
 import SwiftUI
 
 class ProfileViewModel: ObservableObject {
+    // MARK: - Properties
     @Published var userProfile: UserProfile
     @Published var isEditing: Bool = false
     
     private let baseUrl = "http://95.174.90.162:60/api"
 
+    // MARK: - Initializer
     init() {
         self.userProfile = UserProfile(
             id: 0,
@@ -32,14 +35,11 @@ class ProfileViewModel: ObservableObject {
         if AuthManager.shared.accessToken != nil {
             loadUserProfile()
         } else {
-            print("Нет токена доступа")
+            print("No access token")
         }
     }
     
-    func toggleEditing() {
-        isEditing.toggle()
-    }
-    
+    // MARK: - Profile Management
     func loadUserProfile() {
         fetchUserProfile { [weak self] success in
             if !success {
@@ -47,7 +47,7 @@ class ProfileViewModel: ObservableObject {
                     if refreshed {
                         self?.fetchUserProfile(completion: { _ in })
                     } else {
-                        print("Не удалось обновить токен")
+                        print("Failed to refresh token")
                     }
                 }
             }
@@ -57,7 +57,7 @@ class ProfileViewModel: ObservableObject {
     private func fetchUserProfile(completion: @escaping (Bool) -> Void) {
         guard let url = URL(string: "\(baseUrl)/me/"),
               let token = AuthManager.shared.accessToken else {
-            print("Неверный URL или нет токена доступа")
+            print("Invalid URL or no access token")
             completion(false)
             return
         }
@@ -73,7 +73,7 @@ class ProfileViewModel: ObservableObject {
             }
             
             guard let data = data, error == nil else {
-                print("Ошибка при получении данных: \(error?.localizedDescription ?? "Неизвестная ошибка")")
+                print("Error fetching data: \(error?.localizedDescription ?? "Unknown error")")
                 completion(false)
                 return
             }
@@ -85,24 +85,25 @@ class ProfileViewModel: ObservableObject {
                     completion(true)
                 }
             } catch {
-                print("Не удалось декодировать JSON: \(error.localizedDescription)")
+                print("Failed to decode JSON: \(error.localizedDescription)")
                 completion(false)
             }
         }.resume()
     }
     
+    // MARK: - User Authentication
     func authenticateUser(username: String, password: String, completion: @escaping (Bool) -> Void) {
-        print("Начата попытка аутентификации с именем пользователя: \(username)")
+        print("Attempting to authenticate with username: \(username)")
         
         guard let url = URL(string: "\(baseUrl)/token/") else {
-            print("Неверный URL")
+            print("Invalid URL")
             completion(false)
             return
         }
         
         let body: [String: String] = ["username": username, "password": password]
         guard let jsonData = try? JSONSerialization.data(withJSONObject: body) else {
-            print("Не удалось сериализовать JSON")
+            print("Failed to serialize JSON")
             completion(false)
             return
         }
@@ -112,7 +113,7 @@ class ProfileViewModel: ObservableObject {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = jsonData
         
-        print("Отправка запроса на сервер...")
+        print("Sending request to server...")
         
         URLSession.shared.dataTask(with: request) { data, response, error in
             defer {
@@ -122,71 +123,77 @@ class ProfileViewModel: ObservableObject {
             }
             
             if let error = error {
-                print("Ошибка при получении данных: \(error.localizedDescription)")
+                print("Error fetching data: \(error.localizedDescription)")
                 return
             }
             
             guard let data = data else {
-                print("Данные отсутствуют")
+                print("No data received")
                 return
             }
             
             do {
                 let responseDict = try JSONDecoder().decode([String: String].self, from: data)
-                print("Ответ сервера: \(responseDict)")
+                print("Server response: \(responseDict)")
                 
                 if let accessToken = responseDict["access"], let refreshToken = responseDict["refresh"] {
-                    print("Токены получены: \(accessToken)")
+                    print("Tokens received: \(accessToken)")
                     AuthManager.shared.setTokens(accessToken: accessToken, refreshToken: refreshToken)
                     DispatchQueue.main.async {
                         completion(true)
                     }
                     return
                 } else {
-                    print("Неверный формат ответа: \(responseDict)")
+                    print("Invalid response format: \(responseDict)")
                 }
             } catch {
-                print("Не удалось декодировать JSON: \(error.localizedDescription)")
+                print("Failed to decode JSON: \(error.localizedDescription)")
             }
         }.resume()
     }
     
+    // MARK: - Profile Saving
     func saveProfile(completion: @escaping (Bool) -> Void) {
-            guard let url = URL(string: "\(baseUrl)/me/"),
-                  let token = AuthManager.shared.accessToken else {
-                print("Неверный URL или нет токена доступа")
-                completion(false)
-                return
-            }
-
-            var request = URLRequest(url: url)
-            request.httpMethod = "PUT"  // Изменить метод на PUT для обновления данных
-            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
-            do {
-                let jsonData = try JSONEncoder().encode(userProfile)
-                request.httpBody = jsonData
-            } catch {
-                print("Ошибка при кодировании данных профиля: \(error.localizedDescription)")
-                completion(false)
-                return
-            }
-
-            URLSession.shared.dataTask(with: request) { data, response, error in
-                guard error == nil else {
-                    print("Ошибка сети: \(error!.localizedDescription)")
-                    completion(false)
-                    return
-                }
-                
-                if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
-                    print("Профиль успешно обновлен")
-                    completion(true)
-                } else {
-                    print("Ошибка при обновлении профиля")
-                    completion(false)
-                }
-            }.resume()
+        guard let url = URL(string: "\(baseUrl)/me/"),
+              let token = AuthManager.shared.accessToken else {
+            print("Invalid URL or no access token")
+            completion(false)
+            return
         }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "PUT"
+        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+
+        do {
+            let jsonData = try JSONEncoder().encode(userProfile)
+            request.httpBody = jsonData
+        } catch {
+            print("Error encoding profile data: \(error.localizedDescription)")
+            completion(false)
+            return
+        }
+
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            guard error == nil else {
+                print("Network error: \(error!.localizedDescription)")
+                completion(false)
+                return
+            }
+            
+            if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
+                print("Profile successfully updated")
+                completion(true)
+            } else {
+                print("Error updating profile")
+                completion(false)
+            }
+        }.resume()
+    }
+    
+    // MARK: - Editing
+    func toggleEditing() {
+        isEditing.toggle()
+    }
 }

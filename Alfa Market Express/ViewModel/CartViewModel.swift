@@ -8,6 +8,7 @@ import Foundation
 import Combine
 
 class CartViewModel: ObservableObject {
+    // MARK: - Properties
     @Published var favoritesViewModel: FavoritesViewModel
     @Published var cartProduct: [CartProduct] = []
     @Published var cart: [Product] = [] {
@@ -27,12 +28,14 @@ class CartViewModel: ObservableObject {
     private let cartKey = "cachedCart"
     private let baseURL = "http://95.174.90.162:60/api/cart/"
     private var authManager = AuthManager.shared
-    
+
+    // MARK: - Initializer
     init(favoritesViewModel: FavoritesViewModel) {
         self.favoritesViewModel = favoritesViewModel
         loadCart()
     }
     
+    // MARK: - API Calls
     func fetchCart(completion: @escaping (Bool) -> Void) {
         guard let accessToken = authManager.accessToken else {
             print("Access token not found.")
@@ -81,7 +84,7 @@ class CartViewModel: ObservableObject {
             }
         }.resume()
     }
-    
+
     func addToCart(_ product: Product, quantity: Int) async {
         guard let url = URL(string: "\(baseURL)add/") else {
             print("Invalid URL")
@@ -111,7 +114,7 @@ class CartViewModel: ObservableObject {
             print("Error adding to cart: \(error.localizedDescription)")
         }
     }
-    
+
     func updateProductQuantity(_ product: Product, newQuantity: Int) async {
         guard let url = URL(string: "\(baseURL)update/\(product.id)/") else { return }
         
@@ -167,23 +170,21 @@ class CartViewModel: ObservableObject {
         }
     }
     
+    // MARK: - Product Selection
     func selectAllProducts(_ selectAll: Bool) {
-           for product in cartProduct {
-               selectedProducts[product.id] = selectAll
-           }
-           print("Все продукты выбраны: \(selectAll)") 
-           updateSelectedTotalPrice()
-       }
+        for product in cartProduct {
+            selectedProducts[product.id] = selectAll
+        }
+        print("Все продукты выбраны: \(selectAll)")
+        updateSelectedTotalPrice()
+    }
 
-    
     func clearSelection() {
         for product in cart {
             selectedProducts[product.id] = false
         }
     }
-    
-    
-    
+
     func toggleProductSelection(_ product: Product) {
         if let index = cartProduct.firstIndex(where: { $0.product.id == product.id }) {
             let isSelected = selectedProducts[product.id] ?? false
@@ -191,11 +192,11 @@ class CartViewModel: ObservableObject {
             updateSelectedTotalPrice()
         }
     }
-    
+
     func isInCart(_ product: Product) -> Bool {
         return cart.contains(where: { $0.id == product.id })
     }
-    
+
     func updateSelectedTotalPrice() {
         selectedTotalPrice = cart.reduce(0) { total, product in
             if selectedProducts[product.id] == true {
@@ -204,7 +205,7 @@ class CartViewModel: ObservableObject {
             return total
         }
     }
-    
+
     func selectProductsForCheckout(products: [CartProduct]) async {
         guard let url = URL(string: "\(baseURL)select/") else {
             print("Invalid URL: \(baseURL)select/")
@@ -230,6 +231,7 @@ class CartViewModel: ObservableObject {
         }
     }
     
+    // MARK: - Cart Management
     private func loadCart() {
         if let data = UserDefaults.standard.data(forKey: cartKey) {
             do {
@@ -256,14 +258,16 @@ class CartViewModel: ObservableObject {
         }
     }
     
+    // MARK: - Product Selection Helpers
     func selectProduct(_ cartProduct: CartProduct) {
-            selectedProducts[cartProduct.id] = true
-        }
+        selectedProducts[cartProduct.id] = true
+    }
 
-        func deselectProduct(_ cartProduct: CartProduct) {
-            selectedProducts[cartProduct.id] = false
-        }
+    func deselectProduct(_ cartProduct: CartProduct) {
+        selectedProducts[cartProduct.id] = false
+    }
     
+    // MARK: - Token Management
     private func getToken() async -> String? {
         var token = authManager.accessToken
         if token == nil {
@@ -274,6 +278,7 @@ class CartViewModel: ObservableObject {
         return token
     }
     
+    // MARK: - Request Helper
     private func createRequest(url: URL, method: String, token: String) -> URLRequest {
         var request = URLRequest(url: url)
         request.httpMethod = method
@@ -282,16 +287,17 @@ class CartViewModel: ObservableObject {
         return request
     }
     
+    // MARK: - Response Handling
     private func handleCheckoutResponse(data: Data, response: URLResponse) {
-        if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 201 {
-            DispatchQueue.main.async {
-                self.isError = false 
-            }
-        } else {
-            let statusCode = (response as? HTTPURLResponse)?.statusCode ?? -1
-            DispatchQueue.main.async {
-                print("Failed to checkout with status code: \(statusCode)")
-                self.isError = true
+        if let httpResponse = response as? HTTPURLResponse {
+            print("HTTP Status Code: \(httpResponse.statusCode)")
+            if httpResponse.statusCode == 200 {
+                print("Checkout successful")
+            } else {
+                print("Checkout failed")
+                DispatchQueue.main.async {
+                    self.isError = true
+                }
             }
         }
     }
