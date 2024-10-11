@@ -9,29 +9,35 @@ import SwiftUI
 struct HomeView: View {
     @ObservedObject var viewModel: MainViewModel
     @StateObject private var networkMonitor = NetworkMonitor()
-    
+    @State private var shuffledProducts: [Product] = []
+
     var body: some View {
         NavigationView {
             VStack {
                 ScrollView {
-                    RecommendationCardView(viewModel: viewModel, categories: viewModel.categoryViewModel.categories)
+                    RecommendationCardView(viewModel: viewModel, products: shuffledProducts, categories: viewModel.categoryViewModel.categories)
                     SearchBar(viewModel: viewModel)
                         .padding(.horizontal)
                     
                     VStack {
                         CatalogGridView(viewModel: viewModel)
-                        ProductGridView(viewModel: viewModel) { product in
-                            Task {
-                                await viewModel.favoritesViewModel.toggleFavorite(for: product)
-                                print("\(product.name) теперь \(viewModel.favoritesViewModel.isFavorite(product) ? "в избранном" : "не в избранном")")
-                            }
+                        ProductGridView(viewModel: viewModel, products: shuffledProducts) { product in
+
                         }
                     }
                 }
             }
+            .background(.colorGray)
             .onAppear {
-                print("HomeView загружен. Текущие избранные: \(viewModel.favoritesViewModel.favorites.map { $0.name })")
+                print("HomeView загружен.)")
+                shuffleProductsIfNeeded()
             }
+        }
+    }
+    
+    private func shuffleProductsIfNeeded() {
+        if !viewModel.productViewModel.products.isEmpty {
+            shuffledProducts = viewModel.productViewModel.products.shuffled()
         }
     }
 }

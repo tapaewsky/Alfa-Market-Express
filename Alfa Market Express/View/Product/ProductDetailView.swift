@@ -21,10 +21,11 @@ struct ProductDetailView: View {
                 productTitleAndFavoriteButton
                 productDescription
                 productPrice
-                productQuantityStepper
+//                productQuantityStepper
                 addToCartButton
                 similarProductsSection
             }
+            .background(.colorGray)
             .padding(.vertical)
         }
         .navigationTitle("Информация о продукте")
@@ -38,24 +39,35 @@ struct ProductDetailView: View {
     // MARK: - Приватные функции для отдельных частей представления
     
     private var productImage: some View {
-        ZStack(alignment: .topLeading) {
+        ZStack(alignment: .topTrailing) {
             if let imageUrl = product.imageUrl, let url = URL(string: imageUrl) {
                 KFImage(url)
                     .placeholder {
                         ProgressView()
                     }
                     .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(maxWidth: .infinity, maxHeight: 400)
-                    .clipped()
+                    
+                    
+                    .cornerRadius(20)
+                    .scaledToFit()
             } else {
                 Image(systemName: "photo")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-                    .frame(maxWidth: .infinity, maxHeight: 400)
+//                    .frame(maxWidth: .infinity, maxHeight: 400)
                     .background(Color.gray.opacity(0.2))
             }
+            Button(action: {
+                Task {
+                    await viewModel.favoritesViewModel.toggleFavorite(for: product)
+                }
+            }) {
+                Image(systemName: viewModel.favoritesViewModel.isFavorite(product) ? "heart.fill" : "heart")
+                    .foregroundColor(viewModel.favoritesViewModel.isFavorite(product) ? .colorGreen: .gray)
+                    .padding()
+            }
         }
+        .padding()
     }
     
     private var productTitleAndFavoriteButton: some View {
@@ -64,20 +76,20 @@ struct ProductDetailView: View {
                 .font(.title)
                 .padding(.horizontal)
             
-            Spacer()
             
-            Button(action: {
-                Task {
-                    await viewModel.favoritesViewModel.toggleFavorite(for: product)
-                }
-            }) {
-                Image(systemName: viewModel.favoritesViewModel.isFavorite(product) ? "heart.fill" : "heart")
-                    .foregroundColor(viewModel.favoritesViewModel.isFavorite(product) ? .red : .gray)
-                    .padding(5)
-                    .background(Color.gray.opacity(0.7))
-                    .cornerRadius(10)
-            }
-            .padding(.horizontal)
+            
+//            Button(action: {
+//                Task {
+//                    await viewModel.favoritesViewModel.toggleFavorite(for: product)
+//                }
+//            }) {
+//                Image(systemName: viewModel.favoritesViewModel.isFavorite(product) ? "heart.fill" : "heart")
+//                    .foregroundColor(viewModel.favoritesViewModel.isFavorite(product) ? .red : .gray)
+//                    .padding(5)
+//                    .background(Color.gray.opacity(0.7))
+//                    .cornerRadius(10)
+//            }
+            
         }
     }
     
@@ -118,7 +130,7 @@ struct ProductDetailView: View {
                     .fontWeight(.bold)
                     .foregroundColor(.white)
                     .frame(maxWidth: .infinity, minHeight: 50)
-                    .background(isAddedToCart ? Color.red : Color.green)
+                    .background(isAddedToCart ? .colorRed : .colorGreen)
                     .cornerRadius(10)
                     .shadow(radius: 5)
             }
@@ -127,8 +139,9 @@ struct ProductDetailView: View {
     
     private var similarProductsSection: some View {
         VStack(alignment: .leading) {
-            Text("Похожие продукты")
+            Text("Похожие товары")
                 .padding(.horizontal)
+                .bold()
             
             LazyVGrid(columns: [GridItem(.flexible(), spacing: 1), GridItem(.flexible(), spacing: 10)], spacing: 5) {
                 ForEach(viewModel.productViewModel.filteredProducts) { product in
@@ -145,6 +158,7 @@ struct ProductDetailView: View {
             }
             .padding(.horizontal, 10)
         }
+        
     }
     
     // MARK: - Логика для работы с корзиной и избранным

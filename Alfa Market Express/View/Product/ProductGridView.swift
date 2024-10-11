@@ -8,11 +8,12 @@ import SwiftUI
 
 struct ProductGridView: View {
     @ObservedObject var viewModel: MainViewModel
+    var products: [Product] 
     var onFavoriteToggle: (Product) -> Void
     
     var body: some View {
-        LazyVGrid(columns: [GridItem(.flexible(), spacing: 1), GridItem(.flexible(), spacing: 1)], spacing: 5) {
-            ForEach(viewModel.productViewModel.filteredProducts) { product in
+        LazyVGrid(columns: [GridItem(.flexible(), spacing: 1), GridItem(.flexible(), spacing: 1)], spacing: 1) {
+            ForEach(products) { product in // Используйте переданные продукты
                 NavigationLink(destination: ProductDetailView(
                     viewModel: viewModel,
                     product: product)) {

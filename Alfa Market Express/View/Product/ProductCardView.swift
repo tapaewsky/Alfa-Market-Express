@@ -16,15 +16,30 @@ struct ProductCardView: View {
     @State private var isAddedToCart: Bool = false
 
     var body: some View {
+        
         VStack(alignment: .leading) {
             productImageAndFavoriteButton
+                .padding(0)
+            Spacer()
             productDetails
+//                .padding()
+//                .padding(.leading)
             productPriceAndCartButton
+//                .padding()
+//                .padding(.leading)
+            cartButton
+                .padding(.horizontal)
+               
         }
-        .padding()
-        .background(Color.white)
-        .cornerRadius(10)
-        .shadow(radius: 2)
+        
+        
+//        .overlay(
+//            RoundedRectangle(cornerRadius: 1)
+//                .foregroundColor(.white)
+//        )
+        .background(.clear)
+        
+//        .shadow(radius: 2)
         .onAppear {
             isFavorite = viewModel.favoritesViewModel.isFavorite(product)
             isAddedToCart = viewModel.cartViewModel.isInCart(product)
@@ -35,34 +50,46 @@ struct ProductCardView: View {
         ZStack(alignment: .topTrailing) {
                 if let imageUrl = product.imageUrl, let url = URL(string: imageUrl) {
                     KFImage(url)
+//                        .placeholder {
+//                            ProgressView()
+//                        }
+//                        .resizable()
+//                        .scaledToFit()
+//                        .frame(width: 150, height: 150)
+//                        .clipped()
+////                        .background(.gray)
+//                        .cornerRadius(10)
+//                } else {
+//                    Image(systemName: "photo")
+//                        .resizable()
+//                        .scaledToFit()
+//                        .clipped()
+//                }
                         .placeholder {
-                            ProgressView()
+                            Image(systemName: "photo")
+                                .resizable()
+                                .background(.red)
+                                .cornerRadius(20)
+                                .scaledToFit()
+                                .foregroundColor(.gray)
                         }
-                        .resizable()
+                        .resizable() 
+                        .cornerRadius(20)
                         .scaledToFit()
-                        .frame(width: 140, height: 150)
-                        .clipped()
-//                        .background(.gray)
-                        .cornerRadius(10)
-                } else {
-                    Image(systemName: "photo")
-                        .resizable()
-                        .scaledToFit()
-                        .clipped()
+//                        .frame(width: 150, height: 150)
                 }
-               
-            
-            
-
+                
             Button(action: {
                 someFunctionThatCallsToggleFavorite(product)
             }) {
                 Image(systemName: isFavorite ? "heart.fill" : "heart")
                     .foregroundColor(isFavorite ? .red : .gray)
             }
+            .padding()
         }
+       
     }
-
+  
     private var productDetails: some View {
         VStack(alignment: .leading) {
             Text(product.name)
@@ -71,7 +98,7 @@ struct ProductCardView: View {
                 .minimumScaleFactor(0.5)
                 .foregroundColor(.primary)
 
-            Spacer()
+            
 
             Text("Цена за 1 шт")
                 .foregroundStyle(.gray)
@@ -79,25 +106,30 @@ struct ProductCardView: View {
     }
 
     private var productPriceAndCartButton: some View {
-        HStack {
+        VStack {
             Text(String(format: "%.0f₽", Double(product.price) ?? 0))
                 .font(.headline)
-                .foregroundColor(.red)
+                .foregroundColor(.colorRed)
+        }
+    }
 
-            Spacer()
-
-            Button(action: {
-                Task {
-                    await toggleCart()
+    private var cartButton: some View {
+        VStack {
+            HStack {
+                Button(action: {
+                    Task {
+                        await toggleCart()
+                    }
+                }) {
+                    Text(isAddedToCart ? "В корзине" : "В корзину")        
+                    Image(systemName: isAddedToCart ? "cart.fill" : "cart")
                 }
-            }) {
-                Image(systemName: isAddedToCart ? "cart.fill" : "cart")
-                    .padding(10)
-                    .foregroundColor(.white)
-                    .background(isAddedToCart ? Color.gray : Color.colorGreen)
-                    .cornerRadius(30)
-                    .shadow(radius: 5)
             }
+            .padding(.vertical, 15)
+            .frame(maxWidth: .infinity)
+            .foregroundColor(.white)
+            .background(isAddedToCart ? Color.gray : .colorGreen)
+            .cornerRadius(15)
         }
     }
 
@@ -117,3 +149,29 @@ struct ProductCardView: View {
     }
 }
 
+//struct ProductCardViewPreview_Previews: PreviewProvider {
+//    static var previews: some View {
+//        let mainViewModel = MainViewModel()
+//        
+//       
+//        let previewProduct = Product(
+//            id: 1,
+//            name: "Gorilla Mango",
+//            description: "A delicious tropical fruit drink.",
+//            price: "150", 
+//            imageUrl: "https://ir.ozone.ru/s3/multimedia-l/wc1000/6897748341.jpg",
+//            category: 2,
+//            isFavorite: false,
+//            isInCart: true,
+//            quantity: 1
+//        )
+//        
+//        return ProductCardView(
+//            product: previewProduct,
+//            viewModel: mainViewModel,
+//            onFavoriteToggle: {}
+//        )
+//        .previewLayout(.sizeThatFits)
+//        .padding()
+//    }
+//}

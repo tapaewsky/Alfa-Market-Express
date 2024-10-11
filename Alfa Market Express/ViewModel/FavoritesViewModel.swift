@@ -133,9 +133,9 @@ class FavoritesViewModel: ObservableObject {
 
     private func toggleProductFavoriteStatus(product: Product) {
         if let index = favorites.firstIndex(where: { $0.id == product.id }) {
-            favorites.remove(at: index) // Удаляем из избранного
+            favorites.remove(at: index)
         } else {
-            favorites.append(product) // Добавляем в избранное
+            favorites.append(product)
         }
         print("Товар \(product.name) теперь \(isFavorite(product) ? "в избранном" : "не в избранном")")
     }

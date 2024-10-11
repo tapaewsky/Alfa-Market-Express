@@ -8,9 +8,8 @@ import SwiftUI
 
 struct CatalogGridView: View {
     @ObservedObject var viewModel: MainViewModel
-    
-    
-    
+    @State private var shuffledCategories: [Category] = []
+
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
             
@@ -28,20 +27,18 @@ struct CatalogGridView: View {
                         .foregroundColor(.gray)
                 }
             }
-            
             .padding(.horizontal, 15)
             Spacer()
             
             GeometryReader { geometry in
                 let totalWidth = geometry.size.width
-                let cardWidth = (totalWidth - 5 * 15) / 4  
+                let cardWidth = (totalWidth - 5 * 15) / 4
                 
                 LazyVGrid(columns: Array(repeating: GridItem(.flexible(), spacing: 15), count: 4), spacing: 15) {
-                    ForEach(viewModel.categoryViewModel.categories.prefix(4)) { category in
+                    ForEach(shuffledCategories.prefix(4)) { category in
                         NavigationLink(destination: CategoryProductsView(viewModel: viewModel, category: category)) {
                             VStack {
                                 CatalogCardView(category: category)
-                                   
                             }
                             .frame(width: cardWidth, height: cardWidth)
                             .background(Color.white)
@@ -57,5 +54,12 @@ struct CatalogGridView: View {
             .shadow(radius: 2)
             
         }
+        .onAppear {
+            shuffleCategories()
+        }
+    }
+    
+    private func shuffleCategories() {
+        shuffledCategories = viewModel.categoryViewModel.categories.shuffled()
     }
 }

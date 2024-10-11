@@ -27,7 +27,7 @@ struct ContentView: View {
             .tabItem {
                 Image(systemName: "cart")
             }
-
+            
             NavigationView {
                 FavoritesView(viewModel: MainViewModel())
             }

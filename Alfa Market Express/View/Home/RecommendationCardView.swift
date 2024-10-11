@@ -9,6 +9,7 @@ import Kingfisher
 
 struct RecommendationCardView: View {
     @ObservedObject var viewModel: MainViewModel
+    var products: [Product]
     let categories: [Category]
     
     var body: some View {

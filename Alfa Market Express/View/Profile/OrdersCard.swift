@@ -114,7 +114,7 @@ struct Preview_OrdersCard: PreviewProvider {
                                         productId: 3,
                                         quantity: 1,
                                         price: 50.0, // Double
-                                        image: "http://95.174.90.162:60/media/product_images/1676729872_7fon-club-p-pepsi-na-belom-fone-40.jpg"),
+                                        image: "https://ir.ozone.ru/s3/multimedia-l/wc1000/6897748341.jpg"),
                    createdAt: "2024-10-10T23:27:13.650331Z",
                    status: "обработка")
             .previewLayout(.sizeThatFits)

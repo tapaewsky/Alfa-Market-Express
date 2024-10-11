@@ -11,39 +11,34 @@ struct CategoryCardView: View {
     let category: Category
     
     var body: some View {
-        VStack {
+        ZStack(alignment: .topLeading) {
+            if let imageUrl = category.imageUrl, let url = URL(string: imageUrl) {
+                KFImage(url)
+                    .placeholder {
+                        ProgressView()
+                            .frame(width: 150, height: 150)
+                    }
+                    .resizable()
+                    .cornerRadius(20)
+                    .scaledToFit()
+            } else {
+                Image(systemName: "photo")
+                    .resizable()
+                    .scaledToFit()
+                    .clipped()
+                    .aspectRatio(contentMode: .fit)
+            }
+            
             Text(category.name)
                 .font(.subheadline)
                 .fontWeight(.bold)
                 .lineLimit(1)
-                .minimumScaleFactor(0.5)
-                .foregroundColor(.primary)
-                .frame(maxWidth: .infinity, alignment: .leading)
-                .padding([.leading, .trailing, .top], 10)
-            
-            Spacer()
-            
-            ZStack(alignment: .topTrailing) {
-                if let imageUrl = category.imageUrl, let url = URL(string: imageUrl) {
-                    KFImage(url)
-                        .placeholder {
-                            ProgressView()
-                                .frame(width: 150, height: 150)
-                        }
-                        .resizable()
-                        .scaledToFit()
-                        .clipped()
-                        .aspectRatio(contentMode: .fit)
-                } else {
-                    Image(systemName: "photo")
-                        .resizable()
-                        .scaledToFit()
-                        .clipped()
-                        .aspectRatio( contentMode: .fit)
-                }
-            }
+                .foregroundColor(.primary) // Изменено на белый цвет для лучшей видимости
+                .padding(5) // Добавьте отступы для визуального отделения от края
+               
+               
         }
-        .padding()
+        .padding(0)
         .background(Color.colorGray)
         .cornerRadius(15)
         .aspectRatio(1, contentMode: .fit)
