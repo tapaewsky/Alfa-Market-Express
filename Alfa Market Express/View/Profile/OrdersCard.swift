@@ -23,7 +23,8 @@ struct OrdersCard: View {
                 createdAtInfo
                 statusInfo
             }
-            .padding(.leading)
+           
+//            .padding(.leading)
 
             Spacer()
         }
@@ -39,14 +40,14 @@ struct OrdersCard: View {
                 Image(systemName: "photo")
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 100, height: 100)
+                    .frame(maxWidth: 50, maxHeight: 50)
                     .foregroundColor(.gray)
             }
             .resizable()
-            .scaledToFill()
-            .frame(width: 100, height: 100)
+            .scaledToFit()
+            .frame(maxWidth: 75, maxHeight: 100) 
+           
     }
-
     private var productInfo: some View {
         HStack {
             Text(orderItem.product)
@@ -114,7 +115,7 @@ struct Preview_OrdersCard: PreviewProvider {
                                         productId: 3,
                                         quantity: 1,
                                         price: 50.0, // Double
-                                        image: "https://ir.ozone.ru/s3/multimedia-l/wc1000/6897748341.jpg"),
+                                        image: "https://avatars.mds.yandex.net/get-mpic/6559549/2a0000018ac1d8e3008a371458cfe88c20e7/orig"),
                    createdAt: "2024-10-10T23:27:13.650331Z",
                    status: "обработка")
             .previewLayout(.sizeThatFits)

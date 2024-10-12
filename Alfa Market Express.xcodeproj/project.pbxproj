@@ -243,8 +243,8 @@
 			isa = PBXGroup;
 			children = (
 				8F6A23BC2C397432005A3320 /* ProductDetailView.swift */,
-				8F6A23C42C3975CC005A3320 /* ProductCardView.swift */,
 				8F6A23BA2C39740A005A3320 /* ProductRowView.swift */,
+				8F6A23C42C3975CC005A3320 /* ProductCardView.swift */,
 				8F97BB132C56E4C7009C1BC7 /* ProductGridView.swift */,
 			);
 			path = Product;

@@ -142,21 +142,50 @@ class CartViewModel: ObservableObject {
     }
     
     func removeFromCart(_ product: Product) async {
+        print("Attempting to remove product: \(product.name), ID: \(product.id)")
+
+        // Проверяем, установлен ли dataId
+        guard dataId != 0 else {
+            print("Error: dataId is 0. Unable to remove product.")
+            return
+        }
+
         guard let url = URL(string: "\(baseURL)delete/\(dataId)/") else {
             print("Error: Invalid URL")
             return
         }
-        
+
+        print("URL to remove product: \(url)")
+
         var token = await getToken()
-        guard token != nil else { return }
-        
+        guard token != nil else {
+            print("Error: Unable to get token")
+            return
+        }
+
+        print("Token received: \(token!)")
+
         var request = createRequest(url: url, method: "DELETE", token: token!)
         
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
+            
             if let httpResponse = response as? HTTPURLResponse {
                 print("HTTP Status Code: \(httpResponse.statusCode)")
+                
+                if httpResponse.statusCode == 204 {
+                    print("Product successfully removed")
+                } else {
+                    print("Failed to remove product. Status code: \(httpResponse.statusCode)")
+                }
             }
+            
+            if let jsonResponse = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                print("Response JSON: \(jsonResponse)")
+            } else {
+                print("Failed to parse response data")
+            }
+            
             DispatchQueue.main.async {
                 self.cart.removeAll { $0.id == product.id }
                 self.saveCart()
@@ -169,6 +198,7 @@ class CartViewModel: ObservableObject {
             }
         }
     }
+
     
     // MARK: - Product Selection
     func selectAllProducts(_ selectAll: Bool) {
@@ -199,12 +229,11 @@ class CartViewModel: ObservableObject {
 
     func updateSelectedTotalPrice() {
         selectedTotalPrice = cart.reduce(0) { total, product in
-            if selectedProducts[product.id] == true {
-                return total + (Double(product.price) ?? 0) * Double(product.quantity)
-            }
-            return total
+            let isSelected = selectedProducts[product.id] ?? false
+            return total + (isSelected ? (Double(product.price) ?? 0) * Double(product.quantity) : 0)
         }
     }
+
 
     func selectProductsForCheckout(products: [CartProduct]) async {
         guard let url = URL(string: "\(baseURL)select/") else {

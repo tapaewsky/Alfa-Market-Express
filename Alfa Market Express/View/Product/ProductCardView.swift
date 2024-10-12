@@ -138,6 +138,8 @@ struct ProductCardView: View {
 
     private func toggleCart() async {
         if isAddedToCart {
+            print("Product to remove: \(product.id), name: \(product.name)")
+
             await viewModel.cartViewModel.removeFromCart(product)
         } else {
             await viewModel.cartViewModel.addToCart(product, quantity: quantity)
@@ -162,7 +164,7 @@ struct ProductCardView: View {
 //            name: "Gorilla Mango",
 //            description: "A delicious tropical fruit drink.",
 //            price: "150", 
-//            imageUrl: "https://ir.ozone.ru/s3/multimedia-l/wc1000/6897748341.jpg",
+//            imageUrl: "https://avatars.mds.yandex.net/i?id=8e94bb0804af03474956f3d282b1f3b62a783e17-10639895-images-thumbs&n=13",
 //            category: 2,
 //            isFavorite: false,
 //            isInCart: true,
