@@ -9,26 +9,29 @@ import Kingfisher
 
 struct RecommendationCardView: View {
     @ObservedObject var viewModel: MainViewModel
-    var products: [Product]
-    let categories: [Category]
+    let slide: [Slide]
     
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             LazyHStack {
-                ForEach((0..<1000), id: \.self) { index in
-                                   ForEach(categories) { category in
-                                       NavigationLink(destination: CategoryProductsView(viewModel: viewModel, category: category)) {
-                                           KFImage(URL(string: category.imageUrl ?? "https://example.com/placeholder.png"))
-                                               .placeholder {
-                                                   ProgressView()
-                                                       .frame(width: 300, height: 150)
-                                               }
-                                               .resizable()
-                                               .scaledToFill()
-                                               .frame(width: 305, height: 150)
-                                               .cornerRadius(10)
-                                       }
+                ForEach(slide, id: \.id) { singleSlide in
+                    if let imageUrl = URL(string: singleSlide.image) {
+                        KFImage(imageUrl)
+                            .placeholder {
+                                ProgressView()
+                                    .frame(width: 300, height: 150)
+                            }
+                            .resizable()
+                            .scaledToFill()
+                            .frame(width: 305, height: 150)
+                            .cornerRadius(10)
+                    } else {
+                        Text("Invalid URL")
+                            .frame(width: 305, height: 150)
+                            .background(Color.gray)
+                            .cornerRadius(10)
                     }
+
                 }
             }
             .frame(height: 200)
@@ -38,4 +41,3 @@ struct RecommendationCardView: View {
         .safeAreaPadding(.horizontal,35)
     }
 }
-

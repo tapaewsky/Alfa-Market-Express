@@ -42,6 +42,8 @@
 		8F97BB1A2C56F6AC009C1BC7 /* CategoryGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F97BB192C56F6AC009C1BC7 /* CategoryGridView.swift */; };
 		8F97BB1F2C56FCDD009C1BC7 /* HeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F97BB1E2C56FCDD009C1BC7 /* HeaderView.swift */; };
 		8FA2314C2C8DB2DB00F1FC4A /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 8FA2314B2C8DB2DB00F1FC4A /* Kingfisher */; };
+		8FA2B1562CBF11BB00B42241 /* Slide.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FA2B1552CBF11BB00B42241 /* Slide.swift */; };
+		8FA2B1582CBF138B00B42241 /* SlideViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FA2B1572CBF138B00B42241 /* SlideViewModel.swift */; };
 		8FA6AB362C67AAE700C267FE /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FA6AB352C67AAE700C267FE /* Network.swift */; };
 		8FB1CC452C6E44FD002C054C /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FB1CC442C6E44FD002C054C /* UserProfile.swift */; };
 		8FB1CC472C6E45B3002C054C /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FB1CC462C6E45B3002C054C /* ProfileViewModel.swift */; };
@@ -100,6 +102,8 @@
 		8F97BB172C56F665009C1BC7 /* CategoryCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryCardView.swift; sourceTree = "<group>"; };
 		8F97BB192C56F6AC009C1BC7 /* CategoryGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryGridView.swift; sourceTree = "<group>"; };
 		8F97BB1E2C56FCDD009C1BC7 /* HeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HeaderView.swift; sourceTree = "<group>"; };
+		8FA2B1552CBF11BB00B42241 /* Slide.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Slide.swift; sourceTree = "<group>"; };
+		8FA2B1572CBF138B00B42241 /* SlideViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideViewModel.swift; sourceTree = "<group>"; };
 		8FA6AB352C67AAE700C267FE /* Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
 		8FB1CC442C6E44FD002C054C /* UserProfile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserProfile.swift; sourceTree = "<group>"; };
 		8FB1CC462C6E45B3002C054C /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
@@ -191,6 +195,7 @@
 				8FB1CC442C6E44FD002C054C /* UserProfile.swift */,
 				8FCF2F452C95AB74000B5EE1 /* CartProduct.swift */,
 				8FB938E32CB702FB000B2FC2 /* Order.swift */,
+				8FA2B1552CBF11BB00B42241 /* Slide.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -224,6 +229,7 @@
 				8F9001352C8F28E2006654C3 /* MainViewModel.swift */,
 				8F9001372C8F29A3006654C3 /* CategoryViewModel.swift */,
 				8FFDFF5A2CA418FD00FA96AB /* OrdersViewModel.swift */,
+				8FA2B1572CBF138B00B42241 /* SlideViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -423,6 +429,7 @@
 				8FC4764F2C8C8EA200A9560C /* CatalogCardView.swift in Sources */,
 				8F2137D92C6669BA00A42845 /* Category.swift in Sources */,
 				8F6A23B52C397350005A3320 /* NetworkManager.swift in Sources */,
+				8FA2B1562CBF11BB00B42241 /* Slide.swift in Sources */,
 				8F6A23A32C396A5C005A3320 /* ContentView.swift in Sources */,
 				8F004F062C51BA4600540FDA /* RecommendationCardView.swift in Sources */,
 				8FFAD5652CA37C1E00734F6D /* AuthenticatedView.swift in Sources */,
@@ -447,6 +454,7 @@
 				8FFA9D7D2C78B0AD00115DFE /* AuthManager.swift in Sources */,
 				8FFAD55F2CA214B800734F6D /* EnvironmentKeys.swift in Sources */,
 				8F6A23BB2C39740A005A3320 /* ProductRowView.swift in Sources */,
+				8FA2B1582CBF138B00B42241 /* SlideViewModel.swift in Sources */,
 				8F9001322C8F1E22006654C3 /* CartViewModel.swift in Sources */,
 				8F97BB1F2C56FCDD009C1BC7 /* HeaderView.swift in Sources */,
 				8F6A23C52C3975CC005A3320 /* ProductCardView.swift in Sources */,
