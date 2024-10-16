@@ -7,7 +7,7 @@
 import SwiftUI
 
 struct SearchBar: View {
-    @ObservedObject var viewModel: MainViewModel
+    @EnvironmentObject var viewModel: MainViewModel
     @State private var isSearching: Bool = false
     @State private var showSearchResults: Bool = false // Для показа нового экрана
 
@@ -68,7 +68,7 @@ struct SearchResultsView: View {
     
     var body: some View {
         ScrollView {
-            ProductGridView(viewModel: MainViewModel(), products: products, onFavoriteToggle: onFavoriteToggle)
+            ProductGridView( products: products, onFavoriteToggle: onFavoriteToggle)
                 .navigationTitle("Результаты поиска")
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationBarItems(leading: CustomBackButton(label: "Назад", color: .colorGreen) {

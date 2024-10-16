@@ -9,12 +9,10 @@ import Kingfisher
 
 struct RecommendationCardView: View {
     @ObservedObject var viewModel: MainViewModel
-    let slide: [Slide]
-    
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             LazyHStack {
-                ForEach(slide, id: \.id) { singleSlide in
+                ForEach(viewModel.slideViewModel.slides, id: \.id) { singleSlide in
                     if let imageUrl = URL(string: singleSlide.image) {
                         KFImage(imageUrl)
                             .placeholder {
@@ -26,18 +24,17 @@ struct RecommendationCardView: View {
                             .frame(width: 305, height: 150)
                             .cornerRadius(10)
                     } else {
-                        Text("Invalid URL")
+                        Color.gray
                             .frame(width: 305, height: 150)
-                            .background(Color.gray)
                             .cornerRadius(10)
+                            .overlay(Text("Invalid URL").foregroundColor(.white))
                     }
-
                 }
             }
             .frame(height: 200)
             .scrollTargetLayout()
         }
         .scrollTargetBehavior(.viewAligned)
-        .safeAreaPadding(.horizontal,35)
+        .padding(.horizontal, 35)
     }
 }

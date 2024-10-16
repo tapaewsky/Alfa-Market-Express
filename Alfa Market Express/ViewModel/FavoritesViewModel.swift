@@ -8,90 +8,58 @@ import Foundation
 import Combine
 
 class FavoritesViewModel: ObservableObject {
-    // MARK: - Properties
     @Published var favorites: [Product] = []
     @Published var isLoading = false
     @Published var errorMessage: String?
-    
+
     private let favoritesKey = "cachedFavorites"
     private let authManager = AuthManager.shared
     private let networkMonitor = NetworkMonitor()
-    
     private let baseUrl = "http://95.174.90.162:60/api"
 
-    // MARK: - Initializer
     init() {
         loadFavorites()
-        fetchData()
+//        await fetchFavorites()
     }
-    
-    // MARK: - Data Fetching
-    func fetchData() {
-        guard networkMonitor.isConnected else {
-            print("No internet connection")
-            return
-        }
-        
-        isLoading = true
-        
-        fetchFavorites { success in
-            self.isLoading = false
-            if !success {
-                self.loadFavorites()
-            }
+
+    private func loadFavorites() {
+        if let data = UserDefaults.standard.data(forKey: favoritesKey),
+           let savedFavorites = try? JSONDecoder().decode([Product].self, from: data) {
+            self.favorites = savedFavorites
         }
     }
-    
-    func fetchFavorites(completion: @escaping (Bool) -> Void) {
+
+    func fetchFavorites() async {
         guard let accessToken = authManager.accessToken else {
-            print("Access token not found.")
-            completion(false)
+            errorMessage = "Access token not found."
             return
         }
-        
+
         guard let url = URL(string: "\(baseUrl)/favorites/") else {
             print("Неверный URL")
-            completion(false)
             return
         }
 
         var request = URLRequest(url: url)
         request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
 
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            if let error = error {
-                print("Ошибка при получении избранного: \(error.localizedDescription)")
-                DispatchQueue.main.async {
-                    completion(false)
-                }
-                return
-            }
-
-            guard let data = data else {
-                print("Нет данных в ответе")
-                DispatchQueue.main.async {
-                    completion(false)
-                }
-                return
-            }
-
-            do {
+        do {
+            let (data, response) = try await URLSession.shared.data(for: request)
+            if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
                 let favorites = try JSONDecoder().decode([Product].self, from: data)
                 DispatchQueue.main.async {
-                    self.favorites = favorites
+                    self.favorites = favorites // Обновление локального массива
                     self.saveFavorites()
-                    completion(true)
                 }
-            } catch {
-                print("Ошибка при декодировании избранного: \(error.localizedDescription)")
-                DispatchQueue.main.async {
-                    completion(false)
-                }
+            } else {
+                errorMessage = "Ошибка при получении избранного"
             }
-        }.resume()
+        } catch {
+            errorMessage = "Ошибка при получении избранного: \(error.localizedDescription)"
+        }
     }
-    
-    // MARK: - Favorite Management
+
+
     func toggleFavorite(for product: Product) async {
         guard let accessToken = authManager.accessToken else {
             errorMessage = "Access token not found."
@@ -118,6 +86,7 @@ class FavoritesViewModel: ObservableObject {
             let (data, response) = try await URLSession.shared.data(for: request)
             if let httpResponse = response as? HTTPURLResponse {
                 if httpResponse.statusCode == 200 {
+                    // Обновляем локальные данные
                     DispatchQueue.main.async {
                         self.toggleProductFavoriteStatus(product: product)
                         self.saveFavorites()
@@ -131,6 +100,7 @@ class FavoritesViewModel: ObservableObject {
         }
     }
 
+
     private func toggleProductFavoriteStatus(product: Product) {
         if let index = favorites.firstIndex(where: { $0.id == product.id }) {
             favorites.remove(at: index)
@@ -139,23 +109,14 @@ class FavoritesViewModel: ObservableObject {
         }
         print("Товар \(product.name) теперь \(isFavorite(product) ? "в избранном" : "не в избранном")")
     }
-    
-    // MARK: - Persistence
+
     private func saveFavorites() {
         if let data = try? JSONEncoder().encode(favorites) {
             UserDefaults.standard.set(data, forKey: favoritesKey)
         }
     }
-    
-    // MARK: - Check Favorites
+
     func isFavorite(_ product: Product) -> Bool {
         return favorites.contains(where: { $0.id == product.id })
-    }
-    
-    private func loadFavorites() {
-        if let data = UserDefaults.standard.data(forKey: favoritesKey),
-           let savedFavorites = try? JSONDecoder().decode([Product].self, from: data) {
-            self.favorites = savedFavorites
-        }
     }
 }

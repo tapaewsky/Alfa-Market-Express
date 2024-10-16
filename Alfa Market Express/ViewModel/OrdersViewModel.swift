@@ -22,6 +22,7 @@ class OrdersViewModel: ObservableObject {
     
     // MARK: - Fetch Orders
     func fetchOrders(completion: @escaping (Bool) -> Void) {
+        print("Запрос продуктов из OrdersViewModel")
         guard let accessToken = authManager.accessToken else {
             print("Access token not found.")
             completion(false)

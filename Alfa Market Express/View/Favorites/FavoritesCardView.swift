@@ -80,13 +80,16 @@ struct FavoritesCardView: View {
     // Приватный компонент для кнопки "избранное"
     private var favoriteButton: some View {
         Button(action: {
-            isFavorite.toggle()
+            Task {
+                await viewModel.favoritesViewModel.toggleFavorite(for: product)
+            }
         }) {
-            Image(systemName: isFavorite ? "heart.fill" : "heart")
-                .foregroundColor(isFavorite ? .colorGreen : .gray)
+            Image(systemName: viewModel.favoritesViewModel.isFavorite(product) ? "heart.fill" : "heart")
+                .foregroundColor(viewModel.favoritesViewModel.isFavorite(product) ? .colorGreen : .gray)
                 .font(.system(size: 20))
         }
     }
+
     
     // Приватный компонент для кнопки корзины
     private var cartButton: some View {

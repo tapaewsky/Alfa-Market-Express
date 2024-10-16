@@ -13,7 +13,7 @@ struct CategoryView: View {
     var body: some View {
         VStack {
             HeaderView {
-                SearchBar(viewModel: viewModel)
+                SearchBar()
                     .padding(.horizontal)
             }
             ScrollView {

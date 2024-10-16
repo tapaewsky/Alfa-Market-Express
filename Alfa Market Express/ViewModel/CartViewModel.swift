@@ -37,6 +37,7 @@ class CartViewModel: ObservableObject {
     
     // MARK: - API Calls
     func fetchCart(completion: @escaping (Bool) -> Void) {
+        print("Запрос продуктов из CartViewModel")
         guard let accessToken = authManager.accessToken else {
             print("Access token not found.")
             completion(false)

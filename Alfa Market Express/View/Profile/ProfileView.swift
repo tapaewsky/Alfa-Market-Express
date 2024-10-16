@@ -16,7 +16,7 @@ struct ProfileView: View {
                 Image("logo_v1")
                     .resizable()
                     .scaledToFit()
-                    .padding(.horizontal) 
+                    .padding(.horizontal)
             }
             NavigationButtons(selectedTab: $selectedTab)
             TabView(selection: $selectedTab) {
@@ -28,8 +28,11 @@ struct ProfileView: View {
                     .tag(2)
             }
         }
+        
+        }
     }
-}
+
+
 
 struct NavigationButtons: View {
     @Binding var selectedTab: Int

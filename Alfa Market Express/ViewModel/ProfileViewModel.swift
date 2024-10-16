@@ -32,29 +32,39 @@ class ProfileViewModel: ObservableObject {
             favoriteProducts: []
         )
         
-        if AuthManager.shared.accessToken != nil {
-            loadUserProfile()
-        } else {
-            print("No access token")
-        }
+//        if AuthManager.shared.accessToken != nil {
+//            loadUserProfile()
+//        } else {
+//            print("No access token")
+//        }
+//    }
+//    
+//    // MARK: - Profile Management
+//    func loadUserProfile() {
+//        fetchUserProfile { [weak self] success in
+//            if !success {
+//                AuthManager.shared.refreshAccessToken { [weak self] refreshed in
+//                    if refreshed {
+//                        self?.fetchUserProfile(completion: { _ in })
+//                    } else {
+//                        print("Failed to refresh token")
+//                    }
+//                }
+//            }
+//        }
     }
-    
-    // MARK: - Profile Management
     func loadUserProfile() {
-        fetchUserProfile { [weak self] success in
-            if !success {
-                AuthManager.shared.refreshAccessToken { [weak self] refreshed in
-                    if refreshed {
-                        self?.fetchUserProfile(completion: { _ in })
-                    } else {
-                        print("Failed to refresh token")
-                    }
+            fetchUserProfile { success in
+                if !success {
+                    // Здесь можно добавить логику для обработки ошибок, если нужно
+                    print("Ошибка загрузки профиля")
                 }
             }
         }
-    }
+        
     
     private func fetchUserProfile(completion: @escaping (Bool) -> Void) {
+        print("Запрос продуктов из ProfileViewModel")
         guard let url = URL(string: "\(baseUrl)/me/"),
               let token = AuthManager.shared.accessToken else {
             print("Invalid URL or no access token")

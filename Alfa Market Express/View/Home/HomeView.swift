@@ -7,43 +7,50 @@
 import SwiftUI
 
 struct HomeView: View {
-    @ObservedObject var viewModel: MainViewModel
+    @StateObject var viewModel: MainViewModel
     @StateObject private var networkMonitor = NetworkMonitor()
     @State private var shuffledProducts: [Product] = []
-   
+
     var body: some View {
         NavigationView {
             ZStack {
                 if !networkMonitor.isConnected {
                     Text("Пожалуйста, проверьте соединение с интернетом.")
                         .foregroundColor(.red)
-                }
+                } else {
+                    ScrollView {
+                        RecommendationCardView(viewModel: viewModel)
+                          
 
-                ScrollView {
-                    RecommendationCardView(viewModel: viewModel, slide: viewModel.slideViewModel.slides)
-                    
-                    SearchBar(viewModel: viewModel)
+                        SearchBar()
+                            .environmentObject(viewModel)
                        
-
-                    if shuffledProducts.isEmpty {
-                        ProgressView("Загрузка продуктов...")
-                    } else {
-                        ProductGridView(viewModel: viewModel, products: shuffledProducts) { product in
-                                
+                        if shuffledProducts.isEmpty {
+                            ProgressView("Загрузка продуктов...")
+                        } else {
+                            ProductGridView(products: shuffledProducts, onFavoriteToggle: {_ in })
+                                .environmentObject(viewModel)
+                                .padding(.vertical)
                         }
-                        .padding(.vertical)
                     }
                 }
             }
             .onAppear {
                 print("HomeView загружен.")
-                viewModel.slideViewModel.fetchSlides { _ in }
-                viewModel.productViewModel.fetchProducts { _ in }
+                loadProductsIfNeeded()
                 shuffleProductsIfNeeded()
             }
         }
     }
-    
+
+    private func loadProductsIfNeeded() {
+        if viewModel.productViewModel.products.isEmpty {
+            viewModel.productViewModel.fetchData()
+        } else {
+            shuffledProducts = viewModel.productViewModel.products.shuffled()
+        }
+    }
+
     private func shuffleProductsIfNeeded() {
         if !viewModel.productViewModel.products.isEmpty {
             shuffledProducts = viewModel.productViewModel.products.shuffled()

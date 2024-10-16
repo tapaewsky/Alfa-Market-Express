@@ -19,15 +19,16 @@ class CategoryViewModel: ObservableObject {
     // MARK: - Initializer
     init() {
         loadCachedData()
-        fetchData { success in
-            if !success {
-                self.loadCachedData()
-            }
-        }
+//        fetchData { success in
+//            if !success {
+//                self.loadCachedData()
+//            }
+//        }
     }
 
     // MARK: - Data Fetching
     func fetchData(completion: @escaping (Bool) -> Void) {
+        print("Запрос продуктов из CategoryViewModel")
         isLoading = true
         isError = false
         
