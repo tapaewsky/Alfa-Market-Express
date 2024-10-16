@@ -13,8 +13,7 @@ struct CartItemView: View {
     @State private var quantity: Int
     @State private var totalPriceForProduct: Double
     var cartProduct: CartProduct
-    @Binding var isSelected: Bool
-   
+    @State var isSelected: Bool = false
     
     @Environment(\.isSelectionMode) var isSelectionMode
     
@@ -24,7 +23,7 @@ struct CartItemView: View {
         self._totalPriceForProduct = State(initialValue: cartProduct.getTotalPrice)
         self.viewModel = viewModel
         self.product = product
-        self._isSelected = isSelected
+//        self._isSelected = isSelected
     }
     
     var body: some View {
@@ -38,7 +37,6 @@ struct CartItemView: View {
                 Spacer()
                 deleteButton
             }
-//            .padding(.horizontal)
         }
         .onChange(of: quantity) { _ in updateQuantity() }
         .onAppear { updateSelection() }
@@ -59,7 +57,7 @@ struct CartItemView: View {
         ZStack(alignment: .topLeading) {
             if let imageUrl = URL(string: cartProduct.product.imageUrl ?? "") {
                 KFImage(imageUrl)
-                    .placeholder { ProgressView().frame(width: 108, height: 140) }
+                    .placeholder { ProgressView()}
                     .resizable()
                     .scaledToFill()
                     .frame(maxWidth: 115, maxHeight: 150)
@@ -68,7 +66,7 @@ struct CartItemView: View {
                 Image(systemName: "photo")
                     .resizable()
                     .scaledToFill()
-                    .frame(maxWidth: 85, maxHeight: 120)
+                    .frame(maxWidth: 115, maxHeight: 150)
             }
             
             if isSelectionMode {
@@ -122,7 +120,12 @@ struct CartItemView: View {
     
     // Кнопка выбора
     private var selectButton: some View {
-        Button(action: toggleSelection) {
+        Button(action: {
+            Task {
+                await toggleSelection() // Асинхронная функция для обновления логики выбора
+                isSelected.toggle() // Переключение состояния вручную
+            }
+        }) {
             Image(systemName: isSelected ? "checkmark.square" : "square")
                 .foregroundColor(isSelected ? .colorGreen : .gray)
                 .padding(8)
@@ -165,7 +168,7 @@ struct CartItemView: View {
         }
     }
     
-    private func toggleSelection() {
+    private func toggleSelection() async {
         isSelected.toggle()
         viewModel.cartViewModel.selectedProducts[cartProduct.id] = isSelected
         if isSelected {

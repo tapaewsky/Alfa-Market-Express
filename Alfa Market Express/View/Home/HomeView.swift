@@ -13,28 +13,25 @@ struct HomeView: View {
    
     var body: some View {
         NavigationView {
-            VStack {
+            ZStack {
                 if !networkMonitor.isConnected {
                     Text("Пожалуйста, проверьте соединение с интернетом.")
                         .foregroundColor(.red)
                 }
 
                 ScrollView {
-                    if viewModel.slideViewModel.slides.isEmpty {
-                        ProgressView("Загрузка слайдов...")
-                    } else {
-                        RecommendationCardView(viewModel: viewModel, slide: viewModel.slideViewModel.slides)
-                    }
+                    RecommendationCardView(viewModel: viewModel, slide: viewModel.slideViewModel.slides)
                     
                     SearchBar(viewModel: viewModel)
-                        .padding(.horizontal)
+                       
 
                     if shuffledProducts.isEmpty {
                         ProgressView("Загрузка продуктов...")
                     } else {
                         ProductGridView(viewModel: viewModel, products: shuffledProducts) { product in
-                            // Действия при выборе продукта
+                                
                         }
+                        .padding(.vertical)
                     }
                 }
             }

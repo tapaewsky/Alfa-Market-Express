@@ -28,8 +28,9 @@ struct FavoritesView: View {
                     ForEach(viewModel.favoritesViewModel.favorites.filter { searchText.isEmpty ? true : $0.name.contains(searchText) }, id: \.id) { product in
                         NavigationLink(destination: ProductDetailView(viewModel: viewModel, product: product)) {
                             FavoritesCardView(product: product, viewModel: viewModel)
-                                .padding(.vertical, 6)
-                                .padding(.horizontal, 8)
+                               
+
+                                
                         }
                     }
                 }

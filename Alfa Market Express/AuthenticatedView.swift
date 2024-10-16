@@ -17,11 +17,11 @@ struct AuthenticatedView: View {
                 ProgressView()
             } else if authManager.isAuthenticated {
                 ContentView()
-                    .preferredColorScheme(.light)
+//                    .preferredColorScheme(.light)
                     .environmentObject(mainViewModel)
             } else {
                 LoginView()
-                    .preferredColorScheme(.light)
+//                    .preferredColorScheme(.light)
             }
         }
         .onAppear {

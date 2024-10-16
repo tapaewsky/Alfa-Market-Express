@@ -14,6 +14,8 @@
 		8F35BF8F2C4EA45F00A77E77 /* SearchResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F35BF8E2C4EA45F00A77E77 /* SearchResultsView.swift */; };
 		8F4D1EFD2CB85B8500DF89B8 /* OrdersCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F4D1EFC2CB85B8500DF89B8 /* OrdersCard.swift */; };
 		8F4D1EFF2CB8930300DF89B8 /* SuccessfullOrderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F4D1EFE2CB8930300DF89B8 /* SuccessfullOrderView.swift */; };
+		8F501BEA2CC0523B00280C3C /* NavigationSearchBar in Frameworks */ = {isa = PBXBuildFile; productRef = 8F501BE92CC0523B00280C3C /* NavigationSearchBar */; };
+		8F501BEC2CC0663A00280C3C /* customBackButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F501BEB2CC0663A00280C3C /* customBackButton.swift */; };
 		8F61CCB42C51507B004A2DC4 /* MapView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F61CCB32C51507B004A2DC4 /* MapView.swift */; };
 		8F61CCB62C515111004A2DC4 /* LocationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F61CCB52C515111004A2DC4 /* LocationManager.swift */; };
 		8F65E7FC2CA6FA7200B3E012 /* CartMainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F65E7FB2CA6FA7200B3E012 /* CartMainView.swift */; };
@@ -73,6 +75,7 @@
 		8F35BF8E2C4EA45F00A77E77 /* SearchResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsView.swift; sourceTree = "<group>"; };
 		8F4D1EFC2CB85B8500DF89B8 /* OrdersCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrdersCard.swift; sourceTree = "<group>"; };
 		8F4D1EFE2CB8930300DF89B8 /* SuccessfullOrderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessfullOrderView.swift; sourceTree = "<group>"; };
+		8F501BEB2CC0663A00280C3C /* customBackButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = customBackButton.swift; sourceTree = "<group>"; };
 		8F61CCB32C51507B004A2DC4 /* MapView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapView.swift; sourceTree = "<group>"; };
 		8F61CCB52C515111004A2DC4 /* LocationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManager.swift; sourceTree = "<group>"; };
 		8F65E7FB2CA6FA7200B3E012 /* CartMainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartMainView.swift; sourceTree = "<group>"; };
@@ -129,6 +132,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8F501BEA2CC0523B00280C3C /* NavigationSearchBar in Frameworks */,
 				8FA2314C2C8DB2DB00F1FC4A /* Kingfisher in Frameworks */,
 				8F2137DE2C666E1B00A42845 /* Network.framework in Frameworks */,
 			);
@@ -306,6 +310,7 @@
 			isa = PBXGroup;
 			children = (
 				8FFAD5622CA37B2A00734F6D /* SplashScreen.swift */,
+				8F501BEB2CC0663A00280C3C /* customBackButton.swift */,
 			);
 			path = Another;
 			sourceTree = "<group>";
@@ -362,6 +367,7 @@
 			name = "Alfa Market Express";
 			packageProductDependencies = (
 				8FA2314B2C8DB2DB00F1FC4A /* Kingfisher */,
+				8F501BE92CC0523B00280C3C /* NavigationSearchBar */,
 			);
 			productName = WareHouse1;
 			productReference = 8F6A239D2C396A5C005A3320 /* Alfa Marker Express.app */;
@@ -393,6 +399,7 @@
 			mainGroup = 8F6A23942C396A5C005A3320;
 			packageReferences = (
 				8FA2314A2C8DB2DA00F1FC4A /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				8F501BE82CC0523B00280C3C /* XCRemoteSwiftPackageReference "NavigationSearchBar" */,
 			);
 			productRefGroup = 8F6A239E2C396A5C005A3320 /* Products */;
 			projectDirPath = "";
@@ -469,6 +476,7 @@
 				8FFD1D182CA9E05A008F7F8A /* CheckoutView.swift in Sources */,
 				8F97BB142C56E4C7009C1BC7 /* ProductGridView.swift in Sources */,
 				8FFAD5632CA37B2A00734F6D /* SplashScreen.swift in Sources */,
+				8F501BEC2CC0663A00280C3C /* customBackButton.swift in Sources */,
 				8FFA9D7B2C78B07E00115DFE /* LoginView.swift in Sources */,
 				8F6A23B72C39736C005A3320 /* ProductViewModel.swift in Sources */,
 			);
@@ -702,6 +710,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		8F501BE82CC0523B00280C3C /* XCRemoteSwiftPackageReference "NavigationSearchBar" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/markvanwijnen/NavigationSearchBar.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.3.0;
+			};
+		};
 		8FA2314A2C8DB2DA00F1FC4A /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/onevcat/Kingfisher.git";
@@ -713,6 +729,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		8F501BE92CC0523B00280C3C /* NavigationSearchBar */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8F501BE82CC0523B00280C3C /* XCRemoteSwiftPackageReference "NavigationSearchBar" */;
+			productName = NavigationSearchBar;
+		};
 		8FA2314B2C8DB2DB00F1FC4A /* Kingfisher */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 8FA2314A2C8DB2DA00F1FC4A /* XCRemoteSwiftPackageReference "Kingfisher" */;

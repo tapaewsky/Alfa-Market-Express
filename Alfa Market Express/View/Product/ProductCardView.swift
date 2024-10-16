@@ -83,7 +83,10 @@ struct ProductCardView: View {
                 }
                 
             Button(action: {
-                someFunctionThatCallsToggleFavorite(product)
+                Task {
+                    await someFunctionThatCallsToggleFavorite()
+                    isFavorite.toggle() // Обновляем состояние сразу после вызова
+                }
             }) {
                 Image(systemName: isFavorite ? "heart.fill" : "heart")
                     .foregroundColor(isFavorite ? .red : .gray)
@@ -147,7 +150,7 @@ struct ProductCardView: View {
         isAddedToCart.toggle()
     }
 
-    private func someFunctionThatCallsToggleFavorite(_ product: Product) {
+    private func someFunctionThatCallsToggleFavorite() async {
         Task {
             await viewModel.favoritesViewModel.toggleFavorite(for: product)
         }

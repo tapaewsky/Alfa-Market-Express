@@ -13,84 +13,12 @@ struct FavoritesCardView: View {
     @State private var isFavorite = true
     @State private var isAddedToCart: Bool = false
     @State private var quantity: Int = 1
+//    var orderItem: OrderItem
     
     var body: some View {
         VStack(spacing: 12) {
-            HStack(alignment: .top) {
-                if let imageUrl = product.imageUrl, let url = URL(string: imageUrl) {
-                    KFImage(url)
-                        .placeholder {
-                            ProgressView()
-                                .frame(width: 100, height: 100)
-                        }
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 100, height: 120)
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                } else {
-                    Image(systemName: "photo")
-                        .resizable()
-                        .scaledToFit()
-                        .frame(width: 100, height: 120)
-                        .clipShape(RoundedRectangle(cornerRadius: 10))
-                }
-                
-                VStack(alignment: .leading, spacing: 8) {
-                    Text(product.name)
-                        .font(.system(size: 14, weight: .semibold))
-                        .multilineTextAlignment(.leading)
-                        .foregroundColor(.black)
-                    
-                    Spacer()
-                        
-                    Text("\(product.price) ₽")
-                        .font(.system(size: 16, weight: .bold))
-                        .foregroundColor(.black)
-                }
-                .padding(.vertical)
-                
-                Spacer()
-                
-                Button(action: {
-                    isFavorite.toggle()
-                }) {
-                    Image(systemName: isFavorite ? "heart.fill" : "heart")
-                        .foregroundColor(isFavorite ? .colorGreen : .gray)
-                        .font(.system(size: 20))
-                }
-            }
-
-            if isAddedToCart {
-                Button(action: {
-                    Task {
-                        await toggleCart()
-                    }
-                }) {
-                    Text("В корзине")
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(.clear)
-                        .overlay(
-                                    RoundedRectangle(cornerRadius: 15)
-                                        .stroke(Color.colorGreen, lineWidth: 1)
-                                )
-                        .foregroundColor(.colorGreen)
-                          
-                }
-            } else {
-                Button(action: {
-                    Task {
-                        await toggleCart()
-                    }
-                }) {
-                    Text("В корзину")
-                        .frame(maxWidth: .infinity)
-                        .padding()
-                        .background(.colorGreen)
-                        .foregroundColor(.white)
-                        .cornerRadius(10)
-                }
-            }
+            productImageAndInfo
+            cartButton
         }
         .padding()
         .background(
@@ -98,6 +26,94 @@ struct FavoritesCardView: View {
                 .fill(Color.white)
                 .shadow(radius: 1)
         )
+    }
+    
+    // Приватный компонент для изображения и информации о продукте
+    private var productImageAndInfo: some View {
+        HStack(alignment: .top) {
+            productImage
+            productInfo
+            Spacer()
+            favoriteButton
+        }
+    }
+    
+    // Приватный компонент для изображения продукта
+    private var productImage: some View {
+        Group {
+            if let imageUrl = product.imageUrl, let url = URL(string: imageUrl) {
+                KFImage(url)
+                    .placeholder { ProgressView()}
+                    .resizable()
+                    .scaledToFill()
+                    .frame(maxWidth: 115, maxHeight: 150)
+                    .cornerRadius(15)
+            } else {
+                Image(systemName: "photo")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(maxWidth: 115, maxHeight: 150)
+            }
+           
+        }
+    }
+    
+    // Приватный компонент для информации о продукте
+    private var productInfo: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(product.name)
+                .font(.system(size: 14, weight: .semibold))
+                .multilineTextAlignment(.leading)
+                .foregroundColor(.black)
+            
+//            Text("ID: \(orderItem.productId)")
+//                .font(.subheadline)
+//                .foregroundColor(.gray)
+                
+            Text(String(format: "%.0f₽", Double(product.price) ?? 0))
+                .font(.headline)
+                .foregroundColor(.black)
+        }
+        .padding(.vertical)
+    }
+    
+    // Приватный компонент для кнопки "избранное"
+    private var favoriteButton: some View {
+        Button(action: {
+            isFavorite.toggle()
+        }) {
+            Image(systemName: isFavorite ? "heart.fill" : "heart")
+                .foregroundColor(isFavorite ? .colorGreen : .gray)
+                .font(.system(size: 20))
+        }
+    }
+    
+    // Приватный компонент для кнопки корзины
+    private var cartButton: some View {
+        Button(action: {
+            Task {
+                await toggleCart()
+            }
+        }) {
+            if isAddedToCart {
+                Text("В корзине")
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(.clear)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 15)
+                            .stroke(Color.colorGreen, lineWidth: 1)
+                    )
+                    .foregroundColor(.colorGreen)
+            } else {
+                Text("В корзину")
+                    .frame(maxWidth: .infinity)
+                    .padding()
+                    .background(.colorGreen)
+                    .foregroundColor(.white)
+                    .cornerRadius(10)
+            }
+        }
     }
     
     private func toggleCart() async {

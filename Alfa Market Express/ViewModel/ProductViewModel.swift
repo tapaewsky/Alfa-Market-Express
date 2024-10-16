@@ -13,13 +13,13 @@ class ProductViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var isError = false
     @Published var searchText: String = ""
-
+    
     private let productsKey = "cachedProducts"
     private let networkMonitor = NetworkMonitor()
     
     // MARK: - Base URL
     private let baseURL = "http://95.174.90.162:60/api/products/"
-
+    
     // MARK: - Initialization
     init() {
         loadProducts()
@@ -63,7 +63,7 @@ class ProductViewModel: ObservableObject {
             completion(false)
             return
         }
-
+        
         URLSession.shared.dataTask(with: url) { data, response, error in
             if let error = error {
                 print("Error fetching products: \(error.localizedDescription)")
@@ -72,7 +72,7 @@ class ProductViewModel: ObservableObject {
                 }
                 return
             }
-
+            
             guard let data = data else {
                 print("No data received")
                 DispatchQueue.main.async {
@@ -80,7 +80,7 @@ class ProductViewModel: ObservableObject {
                 }
                 return
             }
-
+            
             do {
                 let products = try JSONDecoder().decode([Product].self, from: data)
                 DispatchQueue.main.async {
@@ -96,21 +96,25 @@ class ProductViewModel: ObservableObject {
             }
         }.resume()
     }
-
-    // MARK: - Search Products
+    
     func searchProducts(query: String, completion: @escaping (Bool) -> Void) {
         guard !query.isEmpty else {
             completion(false)
             return
         }
-
+        
         let searchUrl = "\(baseURL)?search=\(query)"
-        guard let url = URL(string: searchUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? "") else {
+        
+        // Создаем URL с проверкой
+        guard let encodedUrlString = searchUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
+              let url = URL(string: encodedUrlString) else {
+            print("Invalid search URL")
             completion(false)
             return
         }
-
+        
         URLSession.shared.dataTask(with: url) { data, response, error in
+            // Проверка на наличие ошибок
             if let error = error {
                 print("Error searching products: \(error.localizedDescription)")
                 DispatchQueue.main.async {
@@ -118,7 +122,17 @@ class ProductViewModel: ObservableObject {
                 }
                 return
             }
-
+            
+            // Проверка на корректность ответа
+            if let httpResponse = response as? HTTPURLResponse, !(200...299).contains(httpResponse.statusCode) {
+                print("Error: HTTP status code \(httpResponse.statusCode)")
+                DispatchQueue.main.async {
+                    completion(false)
+                }
+                return
+            }
+            
+            // Проверка данных
             guard let data = data else {
                 print("No data received")
                 DispatchQueue.main.async {
@@ -126,11 +140,13 @@ class ProductViewModel: ObservableObject {
                 }
                 return
             }
-
+            
+            // Декодируем данные
             do {
                 let products = try JSONDecoder().decode([Product].self, from: data)
                 DispatchQueue.main.async {
                     self.products = products
+                    self.saveProducts() // Сохраняем кэшированные продукты
                     completion(true)
                 }
             } catch {
@@ -141,21 +157,30 @@ class ProductViewModel: ObservableObject {
             }
         }.resume()
     }
-
+    
     // MARK: - Caching Products
     private func saveProducts() {
-        if let data = try? JSONEncoder().encode(products) {
+        // Сохраняем продукты с обработкой ошибок
+        do {
+            let data = try JSONEncoder().encode(products)
             UserDefaults.standard.set(data, forKey: productsKey)
+        } catch {
+            print("Error saving products: \(error.localizedDescription)")
         }
     }
-
+    
     private func loadProducts() {
-        if let data = UserDefaults.standard.data(forKey: productsKey),
-           let savedProducts = try? JSONDecoder().decode([Product].self, from: data) {
-            self.products = savedProducts
+        // Загрузка продуктов с обработкой ошибок
+        if let data = UserDefaults.standard.data(forKey: productsKey) {
+            do {
+                let savedProducts = try JSONDecoder().decode([Product].self, from: data)
+                self.products = savedProducts
+            } catch {
+                print("Error loading cached products: \(error.localizedDescription)")
+            }
         }
     }
-
+    
     // MARK: - Filtered Products
     var filteredProducts: [Product] {
         if searchText.isEmpty {
