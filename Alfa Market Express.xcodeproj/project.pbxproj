@@ -12,6 +12,7 @@
 		8F2137D92C6669BA00A42845 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F2137D82C6669BA00A42845 /* Category.swift */; };
 		8F2137DE2C666E1B00A42845 /* Network.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F2137DC2C666E0300A42845 /* Network.framework */; };
 		8F35BF8F2C4EA45F00A77E77 /* SearchResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F35BF8E2C4EA45F00A77E77 /* SearchResultsView.swift */; };
+		8F4366882CC191540074A475 /* CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F4366872CC191540074A475 /* CacheManager.swift */; };
 		8F4D1EFD2CB85B8500DF89B8 /* OrdersCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F4D1EFC2CB85B8500DF89B8 /* OrdersCard.swift */; };
 		8F4D1EFF2CB8930300DF89B8 /* SuccessfullOrderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F4D1EFE2CB8930300DF89B8 /* SuccessfullOrderView.swift */; };
 		8F501BEA2CC0523B00280C3C /* NavigationSearchBar in Frameworks */ = {isa = PBXBuildFile; productRef = 8F501BE92CC0523B00280C3C /* NavigationSearchBar */; };
@@ -73,6 +74,7 @@
 		8F2137DA2C666DB000A42845 /* Alfa Market Express.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Alfa Market Express.entitlements"; sourceTree = "<group>"; };
 		8F2137DC2C666E0300A42845 /* Network.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Network.framework; path = System/Library/Frameworks/Network.framework; sourceTree = SDKROOT; };
 		8F35BF8E2C4EA45F00A77E77 /* SearchResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchResultsView.swift; sourceTree = "<group>"; };
+		8F4366872CC191540074A475 /* CacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheManager.swift; sourceTree = "<group>"; };
 		8F4D1EFC2CB85B8500DF89B8 /* OrdersCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrdersCard.swift; sourceTree = "<group>"; };
 		8F4D1EFE2CB8930300DF89B8 /* SuccessfullOrderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SuccessfullOrderView.swift; sourceTree = "<group>"; };
 		8F501BEB2CC0663A00280C3C /* customBackButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = customBackButton.swift; sourceTree = "<group>"; };
@@ -234,6 +236,7 @@
 				8F9001372C8F29A3006654C3 /* CategoryViewModel.swift */,
 				8FFDFF5A2CA418FD00FA96AB /* OrdersViewModel.swift */,
 				8FA2B1572CBF138B00B42241 /* SlideViewModel.swift */,
+				8F4366872CC191540074A475 /* CacheManager.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -479,6 +482,7 @@
 				8F501BEC2CC0663A00280C3C /* customBackButton.swift in Sources */,
 				8FFA9D7B2C78B07E00115DFE /* LoginView.swift in Sources */,
 				8F6A23B72C39736C005A3320 /* ProductViewModel.swift in Sources */,
+				8F4366882CC191540074A475 /* CacheManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

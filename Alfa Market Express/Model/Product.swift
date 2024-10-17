@@ -16,6 +16,7 @@ struct Product: Identifiable, Decodable, Hashable, Encodable {
     var isFavorite: Bool
     var isInCart: Bool
     var quantity: Int
+    var lastUpdated: Date?
 
     private enum CodingKeys: String, CodingKey {
         case id

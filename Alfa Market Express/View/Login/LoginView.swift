@@ -7,7 +7,7 @@
 import SwiftUI
 
 struct LoginView: View {
-    @StateObject private var profileViewModel = ProfileViewModel()
+    @EnvironmentObject var authManager: AuthManager
     @State private var username: String = ""
     @State private var password: String = ""
     @State private var showPassword: Bool = false
@@ -99,7 +99,7 @@ struct LoginView: View {
     private func login() {
         guard !isLoggingIn else { return }
         isLoggingIn = true
-        profileViewModel.authenticateUser(username: username, password: password) { success in
+        authManager.authenticateUser(username: username, password: password) { success in
             isLoggingIn = false
             if success {
                 navigateToContentView = true

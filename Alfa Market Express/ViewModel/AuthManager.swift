@@ -82,6 +82,52 @@ class AuthManager: ObservableObject {
         }.resume()
     }
     
+    func authenticateUser(username: String, password: String, completion: @escaping (Bool) -> Void) {
+        print("Authenticating user...")
+        guard let url = URL(string: "\(baseUrl)/token/") else {
+            print("Invalid URL")
+            completion(false)
+            return
+        }
+
+        let body: [String: String] = ["username": username, "password": password]
+        guard let jsonData = try? JSONSerialization.data(withJSONObject: body) else {
+            print("Failed to serialize JSON")
+            completion(false)
+            return
+        }
+
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.httpBody = jsonData
+
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            guard let data = data, error == nil else {
+                print("Error: \(error?.localizedDescription ?? "Unknown error")")
+                completion(false)
+                return
+            }
+
+            do {
+                let responseDict = try JSONDecoder().decode([String: String].self, from: data)
+                if let accessToken = responseDict["access"], let refreshToken = responseDict["refresh"] {
+                    AuthManager.shared.setTokens(accessToken: accessToken, refreshToken: refreshToken)
+                    DispatchQueue.main.async {
+                        completion(true)
+                    }
+                } else {
+                    print("Invalid response format")
+                    completion(false)
+                }
+            } catch {
+                print("Failed to decode JSON: \(error.localizedDescription)")
+                completion(false)
+            }
+        }.resume()
+    }
+
+    
     // MARK: - Token Management
     func setTokens(accessToken: String, refreshToken: String) {
         UserDefaults.standard.set(accessToken, forKey: accessTokenKey)
@@ -92,4 +138,5 @@ class AuthManager: ObservableObject {
         UserDefaults.standard.removeObject(forKey: accessTokenKey)
         UserDefaults.standard.removeObject(forKey: refreshTokenKey)
     }
+    
 }
