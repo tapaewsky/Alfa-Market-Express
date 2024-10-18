@@ -35,26 +35,20 @@ struct OrdersView: View {
                 }
             }
             .onAppear {
-                loadOrder()
+                loadCart()
             }
         }
     }
     
-    private func loadOrder() {
-        print("loadOrder called")
+    private func loadCart() {
         isFetching = true
         viewModel.ordersViewModel.fetchOrders { success in
             DispatchQueue.main.async {
                 isFetching = false
                 if success {
-                    if !viewModel.ordersViewModel.orders.isEmpty {
-                        print("Orders: \(viewModel.ordersViewModel.orders)")
-                    } else {
-                        print("Orders array is empty")
-                    }
-                    print("Заказы успешно загружены")
+                    print("Избранное успешно загружена")
                 } else {
-                    print("Не удалось загрузить заказы")
+                    print("Не удалось загрузить избранное")
                 }
             }
         }

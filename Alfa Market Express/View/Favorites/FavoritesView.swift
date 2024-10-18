@@ -11,11 +11,12 @@ import Combine
 struct FavoritesView: View {
     @ObservedObject var viewModel: MainViewModel
     @State private var searchText = ""
+    @State private var isFetching: Bool = false
 
     var body: some View {
         VStack {
             HeaderView {
-                SearchBar()
+                SearchBar(viewModel: viewModel)
                     .padding(.horizontal)
             }
             ScrollView {
@@ -27,8 +28,32 @@ struct FavoritesView: View {
                     ForEach(viewModel.favoritesViewModel.favorites.filter { searchText.isEmpty || $0.name.contains(searchText) }, id: \.id) { product in
                         NavigationLink(destination: ProductDetailView(viewModel: viewModel, product: product)) {
                             FavoritesCardView(product: product, viewModel: viewModel)
+                             
                         }
                     }
+                }
+                   
+            }
+            .onAppear {
+                loadCart()
+                print("Избранные товары: \(self.viewModel.favoritesViewModel.favorites)")
+            }
+        }
+        
+//        .onAppear {
+//            loadCart()
+//        }
+    }
+    
+    private func loadCart() {
+        isFetching = true
+        viewModel.favoritesViewModel.fetchFavorites { success in
+            DispatchQueue.main.async {
+                isFetching = false
+                if success {
+                    print("Избранное успешно загружена")
+                } else {
+                    print("Не удалось загрузить избранное")
                 }
             }
         }

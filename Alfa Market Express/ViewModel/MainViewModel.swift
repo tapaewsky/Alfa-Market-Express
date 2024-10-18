@@ -21,10 +21,10 @@ class MainViewModel: ObservableObject {
         favoritesViewModel = FavoritesViewModel()
         categoryViewModel = CategoryViewModel()
         productViewModel = ProductViewModel()
-        cartViewModel = CartViewModel(favoritesViewModel: FavoritesViewModel())
+        cartViewModel = CartViewModel()
         profileViewModel = ProfileViewModel()
-        ordersViewModel = OrdersViewModel(cartViewModel: CartViewModel(favoritesViewModel: FavoritesViewModel()))
+        ordersViewModel = OrdersViewModel(cartViewModel: CartViewModel())
         slideViewModel = SlideViewModel(authManager:   AuthManager())
       
-    }
+    } 
 }

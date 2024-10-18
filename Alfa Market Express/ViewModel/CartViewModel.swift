@@ -9,11 +9,10 @@ import Combine
 
 class CartViewModel: ObservableObject {
     // MARK: - Properties
-    @Published var favoritesViewModel: FavoritesViewModel
+//    @Published var favoritesViewModel: FavoritesViewModel
     @Published var cartProduct: [CartProduct] = []
     @Published var cart: [Product] = [] {
         didSet {
-            saveCart()
             updateSelectedTotalPrice()
         }
     }
@@ -25,15 +24,14 @@ class CartViewModel: ObservableObject {
     @Published var selectedProducts: [Int: Bool] = [:]
     @Published var selectedProduct: Product?
     private var dataId: Int = 0
-    private let cartKey = "cachedCart"
     private let baseURL = "http://95.174.90.162:60/api/cart/"
     private var authManager = AuthManager.shared
 
     // MARK: - Initializer
-    init(favoritesViewModel: FavoritesViewModel) {
-        self.favoritesViewModel = favoritesViewModel
-        loadCart()
-    }
+//    init(favoritesViewModel: FavoritesViewModel) {
+//        self.favoritesViewModel = favoritesViewModel
+//        // loadCart() // Закомментировано для удаления кэширования
+//    }
     
     // MARK: - API Calls
     func fetchCart(completion: @escaping (Bool) -> Void) {
@@ -45,7 +43,7 @@ class CartViewModel: ObservableObject {
         }
         
         guard let url = URL(string: baseURL) else {
-            print("Invalid URL")
+            print("Неверный URL")
             completion(false)
             return
         }
@@ -74,7 +72,7 @@ class CartViewModel: ObservableObject {
                 let cartProducts = try JSONDecoder().decode([CartProduct].self, from: data)
                 DispatchQueue.main.async {
                     self.cartProduct = cartProducts
-                    self.saveCart()
+                    // self.saveCart() // Закомментировано для удаления кэширования
                     completion(true)
                 }
             } catch {
@@ -133,7 +131,7 @@ class CartViewModel: ObservableObject {
                 if let index = self.cart.firstIndex(where: { $0.id == updatedProduct.product.id }) {
                     self.cart[index].quantity = updatedProduct.quantity
                 }
-                self.saveCart()
+                // self.saveCart() // Закомментировано для удаления кэширования
             }
         } catch {
             DispatchQueue.main.async {
@@ -189,7 +187,7 @@ class CartViewModel: ObservableObject {
             
             DispatchQueue.main.async {
                 self.cart.removeAll { $0.id == product.id }
-                self.saveCart()
+                // self.saveCart() // Закомментировано для удаления кэширования
                 print("Cart updated: product with ID \(product.id) removed")
             }
         } catch {
@@ -235,7 +233,6 @@ class CartViewModel: ObservableObject {
         }
     }
 
-
     func selectProductsForCheckout(products: [CartProduct]) async {
         guard let url = URL(string: "\(baseURL)select/") else {
             print("Invalid URL: \(baseURL)select/")
@@ -262,22 +259,8 @@ class CartViewModel: ObservableObject {
     }
     
     // MARK: - Cart Management
-    private func loadCart() {
-        if let data = UserDefaults.standard.data(forKey: cartKey) {
-            do {
-                cart = try JSONDecoder().decode([Product].self, from: data)
-            } catch {
-                print("Error loading cart: \(error.localizedDescription)")
-            }
-        }
-    }
-    
-    private func saveCart() {
-        if let data = try? JSONEncoder().encode(cart) {
-            UserDefaults.standard.set(data, forKey: cartKey)
-        }
-    }
-    
+    // Удалены методы loadCart и saveCart для отключения кэширования
+
     private func refreshAuthToken() {
         authManager.refreshAccessToken { success in
             if success {
@@ -299,16 +282,9 @@ class CartViewModel: ObservableObject {
     
     // MARK: - Token Management
     private func getToken() async -> String? {
-        var token = authManager.accessToken
-        if token == nil {
-            print("Token not found, attempting to refresh...")
-            await refreshAuthToken()
-            token = authManager.accessToken
-        }
-        return token
+        return authManager.accessToken
     }
-    
-    // MARK: - Request Helper
+
     private func createRequest(url: URL, method: String, token: String) -> URLRequest {
         var request = URLRequest(url: url)
         request.httpMethod = method
@@ -317,18 +293,16 @@ class CartViewModel: ObservableObject {
         return request
     }
     
-    // MARK: - Response Handling
+    // MARK: - Handle Response
     private func handleCheckoutResponse(data: Data, response: URLResponse) {
         if let httpResponse = response as? HTTPURLResponse {
             print("HTTP Status Code: \(httpResponse.statusCode)")
-            if httpResponse.statusCode == 200 {
-                print("Checkout successful")
-            } else {
-                print("Checkout failed")
-                DispatchQueue.main.async {
-                    self.isError = true
-                }
-            }
+        }
+        
+        if let jsonResponse = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+            print("Checkout Response: \(jsonResponse)")
+        } else {
+            print("Failed to decode response data")
         }
     }
 }

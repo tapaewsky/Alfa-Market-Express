@@ -7,7 +7,7 @@
 import SwiftUI
 
 struct SearchBar: View {
-    @EnvironmentObject var viewModel: MainViewModel
+    @ObservedObject var viewModel: MainViewModel
     @State private var isSearching: Bool = false
     @State private var showSearchResults: Bool = false // Для показа нового экрана
 
@@ -49,7 +49,7 @@ struct SearchBar: View {
 
             // Переход на новый экран с результатами поиска
             NavigationLink(destination: SearchResultsView(
-                viewModel: viewModel.productViewModel,
+                viewModel: viewModel,
                 products: viewModel.productViewModel.filteredProducts, // Передаем отфильтрованные продукты
                 onFavoriteToggle: { product in
                     viewModel.productViewModel
@@ -61,14 +61,14 @@ struct SearchBar: View {
 }
 
 struct SearchResultsView: View {
-    @Environment(\.presentationMode) var presentationMode // Окружение для управления навигацией
-    @ObservedObject var viewModel: ProductViewModel
+    @Environment(\.presentationMode) var presentationMode
+    @ObservedObject var viewModel: MainViewModel
     var products: [Product]
     var onFavoriteToggle: (Product) -> Void
     
     var body: some View {
         ScrollView {
-            ProductGridView( products: products, onFavoriteToggle: onFavoriteToggle)
+            ProductGridView(viewModel: viewModel, products: products, onFavoriteToggle: onFavoriteToggle)
                 .navigationTitle("Результаты поиска")
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationBarItems(leading: CustomBackButton(label: "Назад", color: .colorGreen) {

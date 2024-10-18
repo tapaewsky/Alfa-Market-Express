@@ -5,55 +5,47 @@
 //  Created by Said Tapaev on 06.07.2024.
 //
 import SwiftUI
+import Combine
 
 struct HomeView: View {
-    @StateObject var viewModel: MainViewModel
+    @ObservedObject var viewModel: MainViewModel
     @StateObject private var networkMonitor = NetworkMonitor()
     @State private var shuffledProducts: [Product] = []
+    @State var isFetching: Bool = false
 
     var body: some View {
         NavigationView {
             ZStack {
-                if !networkMonitor.isConnected {
-                    Text("Пожалуйста, проверьте соединение с интернетом.")
-                        .foregroundColor(.red)
-                } else {
-                    ScrollView {
-                        RecommendationCardView(viewModel: viewModel)
-                          
-
-                        SearchBar()
-                            .environmentObject(viewModel)
+                ScrollView {
+                    RecommendationCardView(viewModel: viewModel)
+                    SearchBar(viewModel: viewModel)
                        
-                        if shuffledProducts.isEmpty {
-                            ProgressView("Загрузка продуктов...")
-                        } else {
-                            ProductGridView(products: shuffledProducts, onFavoriteToggle: {_ in })
-                                .environmentObject(viewModel)
-                                .padding(.vertical)
-                        }
-                    }
+                    
+                    ProductGridView(viewModel: viewModel, products: shuffledProducts, onFavoriteToggle: { _ in })
+                       
+                        .padding(.vertical)
                 }
             }
-            .onAppear {
-                print("HomeView загружен.")
-                loadProductsIfNeeded()
-                shuffleProductsIfNeeded()
+        }
+        .onAppear {
+            loadCart()
+            updateShuffledProducts()
+        }
+    }
+    private func loadCart() {
+        isFetching = true
+        viewModel.productViewModel.fetchProducts { success in
+            DispatchQueue.main.async {
+                isFetching = false
+                if success {
+                    print("Избранное успешно загружена")
+                } else {
+                    print("Не удалось загрузить избранное")
+                }
             }
         }
     }
-
-    private func loadProductsIfNeeded() {
-        if viewModel.productViewModel.products.isEmpty {
-            viewModel.productViewModel.fetchData()
-        } else {
-            shuffledProducts = viewModel.productViewModel.products.shuffled()
-        }
-    }
-
-    private func shuffleProductsIfNeeded() {
-        if !viewModel.productViewModel.products.isEmpty {
-            shuffledProducts = viewModel.productViewModel.products.shuffled()
-        }
+    private func updateShuffledProducts() {
+        shuffledProducts = viewModel.productViewModel.products.shuffled()
     }
 }

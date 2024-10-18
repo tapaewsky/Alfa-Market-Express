@@ -8,7 +8,9 @@ import SwiftUI
 import Kingfisher
 
 struct RecommendationCardView: View {
+    
     @ObservedObject var viewModel: MainViewModel
+    @State var isFetching: Bool = false
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             LazyHStack {
@@ -34,7 +36,24 @@ struct RecommendationCardView: View {
             .frame(height: 200)
             .scrollTargetLayout()
         }
+        .onAppear() {
+            loadSlides()
+        }
+
         .scrollTargetBehavior(.viewAligned)
         .padding(.horizontal, 35)
+    }
+    private func loadSlides() {
+        isFetching = true
+        viewModel.slideViewModel.fetchSlides { success in
+            DispatchQueue.main.async {
+                isFetching = false
+                if success {
+                    print("Избранное успешно загружена")
+                } else {
+                    print("Не удалось загрузить избранное")
+                }
+            }
+        }
     }
 }

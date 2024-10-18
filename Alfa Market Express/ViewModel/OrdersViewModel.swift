@@ -12,6 +12,8 @@ class OrdersViewModel: ObservableObject {
     @Published var orders: [Order] = []
     @Published var errorMessage: String?
     @Published var cartViewModel: CartViewModel
+    @Published var isLoading = false
+    @Published var isError = false
     private var cancellables = Set<AnyCancellable>()
     var authManager = AuthManager.shared
     private let baseURL = "http://95.174.90.162:60/api/orders/"
@@ -23,6 +25,7 @@ class OrdersViewModel: ObservableObject {
     // MARK: - Fetch Orders
     func fetchOrders(completion: @escaping (Bool) -> Void) {
         print("Запрос продуктов из OrdersViewModel")
+        
         guard let accessToken = authManager.accessToken else {
             print("Access token not found.")
             completion(false)
@@ -30,7 +33,7 @@ class OrdersViewModel: ObservableObject {
         }
         
         guard let url = URL(string: baseURL) else {
-            print("Invalid URL")
+            print("Неверный URL")
             completion(false)
             return
         }
@@ -38,28 +41,19 @@ class OrdersViewModel: ObservableObject {
         var request = URLRequest(url: url)
         request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
         
-        URLSession.shared.dataTask(with: request) { data, response, error in
+        URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+            guard let self = self else { return }
+
             if let error = error {
-                print("Error fetching orders: \(error.localizedDescription)")
+                print("Ошибка при получении заказов: \(error.localizedDescription)")
                 DispatchQueue.main.async {
                     completion(false)
                 }
                 return
             }
             
-            if let httpResponse = response as? HTTPURLResponse {
-                print("HTTP Status Code: \(httpResponse.statusCode)")
-                guard (200...299).contains(httpResponse.statusCode) else {
-                    print("Unexpected HTTP Status Code: \(httpResponse.statusCode)")
-                    DispatchQueue.main.async {
-                        completion(false)
-                    }
-                    return
-                }
-            }
-            
             guard let data = data else {
-                print("No data in response")
+                print("Нет данных в ответе")
                 DispatchQueue.main.async {
                     completion(false)
                 }
@@ -67,27 +61,22 @@ class OrdersViewModel: ObservableObject {
             }
             
             do {
-                // Принт JSON в виде строки
-                if let jsonString = String(data: data, encoding: .utf8) {
-                    print("Received JSON: \(jsonString)")
-                }
-                
-                // Декодирование JSON
                 let fetchedOrders: [Order] = try JSONDecoder().decode([Order].self, from: data)
                 print("Fetched orders: \(fetchedOrders)")
                 DispatchQueue.main.async {
                     self.orders = fetchedOrders
-                    self.saveOrder()
+                    // self.saveOrder() // Закомментировано для удаления кэширования
                     completion(true)
                 }
             } catch {
-                print("Error decoding orders: \(error.localizedDescription)")
+                print("Ошибка декодирования заказов: \(error.localizedDescription)")
                 DispatchQueue.main.async {
                     completion(false)
                 }
             }
         }.resume()
     }
+
     
     // MARK: - Cancel Order
     func cancelOrder(orderId: Int) async {

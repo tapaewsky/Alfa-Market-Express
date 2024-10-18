@@ -42,12 +42,9 @@ struct CartMainView: View {
                 } else {
                     cartCountView
                 }
-                
                 Spacer()
-                
                 selectionButton
             }
-            
             if isSelectionMode {
                 selectionControls
             }

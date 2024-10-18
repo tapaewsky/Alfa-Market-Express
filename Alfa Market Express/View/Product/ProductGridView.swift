@@ -7,7 +7,7 @@
 import SwiftUI
 
 struct ProductGridView: View {
-    @EnvironmentObject var viewModel: MainViewModel
+    @ObservedObject var viewModel: MainViewModel
     var products: [Product] 
     var onFavoriteToggle: (Product) -> Void
     

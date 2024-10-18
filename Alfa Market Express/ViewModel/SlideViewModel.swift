@@ -18,15 +18,17 @@ class SlideViewModel: ObservableObject {
 //        fetchSlides()
     }
     
-    func fetchSlides() {
+    func fetchSlides(completion: @escaping (Bool) -> Void) {
         print("Запрос продуктов из SlidesViewModel")
         guard let accessToken = authManager.accessToken else {
             print("Access token not found.")
+            completion(false)
             return
         }
         
         guard let url = URL(string: baseURL) else {
-            print("Invalid URL")
+            print("Неверный URL")
+            completion(false)
             return
         }
 
@@ -35,23 +37,34 @@ class SlideViewModel: ObservableObject {
 
         URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
             if let error = error {
-                print("Error fetching slides: \(error.localizedDescription)")
+                print("Ошибка при получении слайдов: \(error.localizedDescription)")
+                DispatchQueue.main.async {
+                    completion(false)
+                }
                 return
             }
 
             guard let data = data else {
-                print("No data in response")
+                print("Нет данных в ответе")
+                DispatchQueue.main.async {
+                    completion(false)
+                }
                 return
             }
 
             do {
                 let slides = try JSONDecoder().decode([Slide].self, from: data)
                 DispatchQueue.main.async {
-                    self?.slides = slides
+                    self?.slides = slides // Обновление локального массива
+                    completion(true)
                 }
             } catch {
-                print("Error decoding slides: \(error.localizedDescription)")
+                print("Ошибка декодирования слайдов: \(error.localizedDescription)")
+                DispatchQueue.main.async {
+                    completion(false)
+                }
             }
         }.resume()
     }
+
 }

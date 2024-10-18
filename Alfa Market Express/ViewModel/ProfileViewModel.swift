@@ -11,7 +11,8 @@ class ProfileViewModel: ObservableObject {
     // MARK: - Properties
     @Published var userProfile: UserProfile
     @Published var isEditing: Bool = false
-    
+    @Published var isLoading = false
+    @Published var isError = false
     private let baseUrl = "http://95.174.90.162:60/api"
     
     // MARK: - Initializer
@@ -31,22 +32,22 @@ class ProfileViewModel: ObservableObject {
             remainingDebt: "",
             favoriteProducts: []
         )
-        loadUserProfile()
+//        loadUserProfile()
     }
     
-    // MARK: - Profile Management
-    private func loadUserProfile() {
-        guard let token = AuthManager.shared.accessToken else {
-            print("No access token available")
-            return
-        }
-        
-        fetchUserProfile { [weak self] success in
-            if !success {
-                self?.refreshTokenAndRetry()
-            }
-        }
-    }
+//    // MARK: - Profile Management
+//    private func loadUserProfile() {
+//        guard let token = AuthManager.shared.accessToken else {
+//            print("No access token available")
+//            return
+//        }
+//        
+//        fetchUserProfile { [weak self] success in
+//            if !success {
+//                self?.refreshTokenAndRetry()
+//            }
+//        }
+//    }
     
     private func refreshTokenAndRetry() {
         AuthManager.shared.refreshAccessToken { [weak self] refreshed in
@@ -58,10 +59,16 @@ class ProfileViewModel: ObservableObject {
         }
     }
     
-    private func fetchUserProfile(completion: @escaping (Bool) -> Void) {
+     func fetchUserProfile(completion: @escaping (Bool) -> Void) {
+        print("Запрос профиля пользователя")
+        isLoading = true
+        isError = false
+        
         guard let url = URL(string: "\(baseUrl)/me/"),
               let token = AuthManager.shared.accessToken else {
-            print("Invalid URL or no access token")
+            print("Неверный URL или отсутствует токен доступа")
+            isLoading = false
+            isError = true
             completion(false)
             return
         }
@@ -71,28 +78,50 @@ class ProfileViewModel: ObservableObject {
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
 
         URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
-            guard let data = data, error == nil else {
-                print("Error fetching data: \(error?.localizedDescription ?? "Unknown error")")
-                completion(false)
+            guard let self = self else { return }
+            
+            if let error = error {
+                print("Ошибка при получении данных: \(error.localizedDescription)")
+                DispatchQueue.main.async {
+                    self.isLoading = false
+                    self.isError = true
+                    completion(false)
+                }
+                return
+            }
+
+            guard let data = data else {
+                print("Нет данных в ответе")
+                DispatchQueue.main.async {
+                    self.isLoading = false
+                    self.isError = true
+                    completion(false)
+                }
                 return
             }
 
             do {
                 let userProfile = try JSONDecoder().decode(UserProfile.self, from: data)
                 DispatchQueue.main.async {
-                    self?.userProfile = userProfile
+                    self.userProfile = userProfile
+                    self.isLoading = false
                     completion(true)
                 }
             } catch {
-                print("Failed to decode JSON: \(error.localizedDescription)")
-                completion(false)
+                print("Не удалось декодировать JSON: \(error.localizedDescription)")
+                DispatchQueue.main.async {
+                    self.isLoading = false
+                    self.isError = true
+                    completion(false)
+                }
             }
         }.resume()
     }
+
     
     // MARK: - Profile Saving
     func saveProfile(completion: @escaping (Bool) -> Void) {
-        guard let url = URL(string: "\(baseUrl)/me/"),
+        guard let url = URL(string: "\(baseUrl)/me/update/"),
               let token = AuthManager.shared.accessToken else {
             print("Invalid URL or no access token")
             completion(false)
@@ -100,7 +129,7 @@ class ProfileViewModel: ObservableObject {
         }
 
         var request = URLRequest(url: url)
-        request.httpMethod = "PUT"
+        request.httpMethod = "PATCH"
         request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
