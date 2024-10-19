@@ -13,7 +13,8 @@ class ProfileViewModel: ObservableObject {
     @Published var isEditing: Bool = false
     @Published var isLoading = false
     @Published var isError = false
-    private let baseUrl = "http://95.174.90.162:60/api"
+    private let baseURL = "http://95.174.90.162:60/api"
+    private let authManager = AuthManager.shared
     
     // MARK: - Initializer
     init() {
@@ -32,25 +33,22 @@ class ProfileViewModel: ObservableObject {
             remainingDebt: "",
             favoriteProducts: []
         )
-    } 
+    }
+    
     private func refreshTokenAndRetry() {
         AuthManager.shared.refreshAccessToken { [weak self] refreshed in
             if refreshed {
                 self?.fetchUserProfile(completion: { _ in })
-            } else {
-                print("Failed to refresh token")
             }
         }
     }
     
-     func fetchUserProfile(completion: @escaping (Bool) -> Void) {
-        print("Запрос профиля пользователя")
+    func fetchUserProfile(completion: @escaping (Bool) -> Void) {
         isLoading = true
         isError = false
         
-        guard let url = URL(string: "\(baseUrl)/me/"),
+        guard let url = URL(string: "\(baseURL)/me/"),
               let token = AuthManager.shared.accessToken else {
-            print("Неверный URL или отсутствует токен доступа")
             isLoading = false
             isError = true
             completion(false)
@@ -64,18 +62,7 @@ class ProfileViewModel: ObservableObject {
         URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
             guard let self = self else { return }
             
-            if let error = error {
-                print("Ошибка при получении данных: \(error.localizedDescription)")
-                DispatchQueue.main.async {
-                    self.isLoading = false
-                    self.isError = true
-                    completion(false)
-                }
-                return
-            }
-
-            guard let data = data else {
-                print("Нет данных в ответе")
+            if error != nil || data == nil {
                 DispatchQueue.main.async {
                     self.isLoading = false
                     self.isError = true
@@ -85,14 +72,13 @@ class ProfileViewModel: ObservableObject {
             }
 
             do {
-                let userProfile = try JSONDecoder().decode(UserProfile.self, from: data)
+                let userProfile = try JSONDecoder().decode(UserProfile.self, from: data!)
                 DispatchQueue.main.async {
                     self.userProfile = userProfile
                     self.isLoading = false
                     completion(true)
                 }
             } catch {
-                print("Не удалось декодировать JSON: \(error.localizedDescription)")
                 DispatchQueue.main.async {
                     self.isLoading = false
                     self.isError = true
@@ -102,47 +88,39 @@ class ProfileViewModel: ObservableObject {
         }.resume()
     }
 
-    
     // MARK: - Profile Saving
-    func saveProfile(completion: @escaping (Bool) -> Void) {
-        guard let url = URL(string: "\(baseUrl)/me/update/"),
-              let token = AuthManager.shared.accessToken else {
-            print("Invalid URL or no access token")
+    func updateProfile(completion: @escaping (Bool) -> Void) {
+        guard let url = URL(string: "\(baseURL)/me/update/"),
+              let accessToken = authManager.accessToken else {
             completion(false)
             return
         }
-
+        
         var request = URLRequest(url: url)
         request.httpMethod = "PATCH"
-        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-
-        do {
-            let jsonData = try JSONEncoder().encode(userProfile)
-            request.httpBody = jsonData
-        } catch {
-            print("Error encoding profile data: \(error.localizedDescription)")
-            completion(false)
-            return
-        }
-
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            guard error == nil else {
-                print("Network error: \(error!.localizedDescription)")
-                completion(false)
-                return
-            }
-
-            if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
-                print("Profile successfully updated")
-                completion(true)
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        
+        let body: [String: Any] = [
+            "first_name": userProfile.firstName.trimmingCharacters(in: .whitespaces),
+            "last_name": userProfile.lastName.trimmingCharacters(in: .whitespaces),
+            "store_name": userProfile.storeName.trimmingCharacters(in: .whitespaces),
+            "store_address": userProfile.storeAddress.trimmingCharacters(in: .whitespaces),
+            "store_phone": userProfile.storePhoneNumber.trimmingCharacters(in: .whitespaces)
+        ]
+        
+        request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: [])
+        
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            if let httpResponse = response as? HTTPURLResponse {
+                completion((200...299).contains(httpResponse.statusCode))
             } else {
-                print("Error updating profile")
                 completion(false)
             }
-        }.resume()
+        }
+        task.resume()
     }
-    
+
     // MARK: - Editing
     func toggleEditing() {
         isEditing.toggle()

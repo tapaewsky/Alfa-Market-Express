@@ -17,7 +17,7 @@ struct EditProfile: View {
                 navBar
                 imagePickerButton
                 formFields
-//                saveButton
+                saveButton
             }
             .padding(.horizontal, 30)
         }
@@ -67,28 +67,28 @@ struct EditProfile: View {
             .background(RoundedRectangle(cornerRadius: 15).stroke(Color.green, lineWidth: 1))
     }
 
-//    private var saveButton: some View {
-//        Button(action: {
-//            Task {
-//                await viewModel.profileViewModel.updateProfile { success in
-//                    if success {
-//                        print("Профиль успешно сохранен")
-//                    } else {
-//                        print("Ошибка при сохранении профиля")
-//                    }
-//                }
-//            }
-//        }) {
-//            Text("Сохранить")
-//                .bold()
-//                .frame(maxWidth: .infinity)
-//                .padding()
-//                .background(Color.green)
-//                .foregroundColor(.white)
-//                .cornerRadius(15)
-//        }
-//        .padding(.top, 20)
-//    }
+    private var saveButton: some View {
+        Button(action: {
+            Task {
+                await viewModel.profileViewModel.updateProfile { success in
+                    if success {
+                        print("Профиль успешно сохранен")
+                    } else {
+                        print("Ошибка при сохранении профиля")
+                    }
+                }
+            }
+        }) {
+            Text("Сохранить")
+                .bold()
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background(Color.green)
+                .foregroundColor(.white)
+                .cornerRadius(15)
+        }
+        .padding(.top, 20)
+    }
 
 
 }
