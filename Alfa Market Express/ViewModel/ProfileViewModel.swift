@@ -15,6 +15,7 @@ class ProfileViewModel: ObservableObject {
     @Published var isError = false
     private let baseURL = "http://95.174.90.162:60/api"
     private let authManager = AuthManager.shared
+    @Published  var selectedImage: UIImage? = nil
     
     // MARK: - Initializer
     init() {
@@ -98,27 +99,45 @@ class ProfileViewModel: ObservableObject {
         
         var request = URLRequest(url: url)
         request.httpMethod = "PATCH"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
         
-        let body: [String: Any] = [
-            "first_name": userProfile.firstName.trimmingCharacters(in: .whitespaces),
-            "last_name": userProfile.lastName.trimmingCharacters(in: .whitespaces),
-            "store_name": userProfile.storeName.trimmingCharacters(in: .whitespaces),
-            "store_address": userProfile.storeAddress.trimmingCharacters(in: .whitespaces),
-            "store_phone": userProfile.storePhoneNumber.trimmingCharacters(in: .whitespaces)
+        let boundary = UUID().uuidString
+        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+        
+        var body = Data()
+        if let selectedImage = selectedImage {
+            let imageData = selectedImage.jpegData(compressionQuality: 0.8)
+            body.append("--\(boundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"store_image\"; filename=\"image.jpg\"\r\n".data(using: .utf8)!)
+            body.append("Content-Type: image/jpeg\r\n\r\n".data(using: .utf8)!)
+            body.append(imageData!)
+            body.append("\r\n".data(using: .utf8)!)
+        }
+        
+        let textFields: [String: String] = [
+            "first_name": userProfile.firstName,
+            "last_name": userProfile.lastName,
+            "store_name": userProfile.storeName,
+            "store_address": userProfile.storeAddress,
+            "store_phone": userProfile.storePhoneNumber
         ]
         
-        request.httpBody = try? JSONSerialization.data(withJSONObject: body, options: [])
+        for (key, value) in textFields {
+            body.append("--\(boundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"\(key)\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(value)\r\n".data(using: .utf8)!)
+        }
         
-        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+        body.append("--\(boundary)--\r\n".data(using: .utf8)!)
+        request.httpBody = body
+        
+        URLSession.shared.dataTask(with: request) { data, response, error in
             if let httpResponse = response as? HTTPURLResponse {
                 completion((200...299).contains(httpResponse.statusCode))
             } else {
                 completion(false)
             }
-        }
-        task.resume()
+        }.resume()
     }
 
     // MARK: - Editing
