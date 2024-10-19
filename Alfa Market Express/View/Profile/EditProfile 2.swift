@@ -1,9 +1,11 @@
 //
-//  EditProfile.swift
+//  EditProfile 2.swift
 //  Alfa Market Express
 //
-//  Created by Said Tapaev on 25.09.2024.
+//  Created by Said Tapaev on 19.10.2024.
 //
+
+
 import SwiftUI
 
 struct EditProfile: View {
@@ -22,8 +24,9 @@ struct EditProfile: View {
             .padding(.horizontal, 30)
         }
         .sheet(isPresented: $showImagePicker) {
-            ImagePicker(selectedImage: $selectedImage)
+            ImagePicker(selectedImage: $selectedImage) // Подразумевается, что у вас есть ImagePicker
         }
+        .ignoresSafeArea(.keyboard, edges: .bottom) // Убираем safe area для клавиатуры и нижней части экрана
     }
 
     private var navBar: some View {
@@ -36,7 +39,7 @@ struct EditProfile: View {
 
     private var imagePickerButton: some View {
         Button(action: {
-            showImagePicker = true
+            showImagePicker = true // Открываем окно выбора изображения
         }) {
             Text("Выбрать изображение")
                 .bold()
@@ -60,7 +63,6 @@ struct EditProfile: View {
         }
     }
 
-
     private func editTextField(placeholder: String, text: Binding<String>) -> some View {
         TextField(placeholder, text: text)
             .padding()
@@ -70,12 +72,11 @@ struct EditProfile: View {
     private var saveButton: some View {
         Button(action: {
             Task {
-                await viewModel.profileViewModel.updateProfile { success in
-                    if success {
-                        print("Профиль успешно сохранен")
-                    } else {
-                        print("Ошибка при сохранении профиля")
-                    }
+                let success = await viewModel.profileViewModel.saveProfile(image: selectedImage)
+                if success {
+                    print("Профиль успешно сохранен")
+                } else {
+                    print("Ошибка при сохранении профиля")
                 }
             }
         }) {
@@ -89,6 +90,4 @@ struct EditProfile: View {
         }
         .padding(.top, 20)
     }
-
-
 }

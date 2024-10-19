@@ -11,7 +11,7 @@ struct AlfaMarketExpress: App {
     
     var body: some Scene {
         WindowGroup {
-            SplashScreen()
+            AuthenticatedView()
                 .preferredColorScheme(.light)
         }
     }

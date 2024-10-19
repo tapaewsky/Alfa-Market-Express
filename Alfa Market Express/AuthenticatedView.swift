@@ -9,23 +9,39 @@ import SwiftUI
 
 struct AuthenticatedView: View {
     @StateObject private var authManager = AuthManager.shared
-    @StateObject private var mainViewModel = MainViewModel()
+    @ObservedObject private var viewModel = MainViewModel()
     
     var body: some View {
         Group {
             if authManager.isCheckingAuth {
-                ProgressView()
+                SplashLogoView()
             } else if authManager.isAuthenticated {
                 ContentView()
 //                    .preferredColorScheme(.light)
-                    .environmentObject(mainViewModel)
+                   
             } else {
-                LoginView()
+                LoginView(viewModel: viewModel)
 //                    .preferredColorScheme(.light)
             }
         }
         .onAppear {
             authManager.checkAuthentication()
+        }
+    }
+}
+struct SplashLogoView: View {
+    var body: some View {
+        ZStack {
+            Color.colorGreen
+                .edgesIgnoringSafeArea(.all)
+            GeometryReader { geometry in
+                let logoSize: CGFloat = 250
+                Image("whiteLogo")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: logoSize, height: logoSize)
+                    .position(x: geometry.size.width / 2, y: geometry.size.height / 2 - 110)
+            }
         }
     }
 }

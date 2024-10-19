@@ -7,7 +7,7 @@
 import SwiftUI
 
 struct LoginView: View {
-    @EnvironmentObject var authManager: AuthManager
+    @ObservedObject var viewModel = MainViewModel()
     @State private var username: String = ""
     @State private var password: String = ""
     @State private var showPassword: Bool = false
@@ -37,6 +37,10 @@ struct LoginView: View {
         }
         .onAppear {
             setupKeyboardObservers()
+           
+            if viewModel.authManager.isAuthenticated {
+                navigateToContentView = true
+            }
         }
         .onDisappear {
             removeKeyboardObservers()
@@ -99,7 +103,8 @@ struct LoginView: View {
     private func login() {
         guard !isLoggingIn else { return }
         isLoggingIn = true
-        authManager.authenticateUser(username: username, password: password) { success in
+        loginFailed = false
+        viewModel.authManager.authenticateUser(username: username, password: password) { success in
             isLoggingIn = false
             if success {
                 navigateToContentView = true

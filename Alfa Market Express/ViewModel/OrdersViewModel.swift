@@ -18,14 +18,14 @@ class OrdersViewModel: ObservableObject {
     var authManager = AuthManager.shared
     private let baseURL = "http://95.174.90.162:60/api/orders/"
     private let orderKey = "cashedOrder"
+    
+    
     init(cartViewModel: CartViewModel) {
         self.cartViewModel = cartViewModel
     }
     
     // MARK: - Fetch Orders
     func fetchOrders(completion: @escaping (Bool) -> Void) {
-        print("Запрос продуктов из OrdersViewModel")
-        
         guard let accessToken = authManager.accessToken else {
             print("Access token not found.")
             completion(false)
@@ -41,8 +41,8 @@ class OrdersViewModel: ObservableObject {
         var request = URLRequest(url: url)
         request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
         
-        URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
-            guard let self = self else { return }
+        URLSession.shared.dataTask(with: request) {  data, response, error in
+         
 
             if let error = error {
                 print("Ошибка при получении заказов: \(error.localizedDescription)")
@@ -62,10 +62,8 @@ class OrdersViewModel: ObservableObject {
             
             do {
                 let fetchedOrders: [Order] = try JSONDecoder().decode([Order].self, from: data)
-                print("Fetched orders: \(fetchedOrders)")
                 DispatchQueue.main.async {
                     self.orders = fetchedOrders
-                    // self.saveOrder() // Закомментировано для удаления кэширования
                     completion(true)
                 }
             } catch {
@@ -82,7 +80,7 @@ class OrdersViewModel: ObservableObject {
     func cancelOrder(orderId: Int) async {
         guard let url = URL(string: "\(baseURL)cancel/\(orderId)/") else { return }
         
-        var token = await getToken()
+        var token = await authManager.getToken()
         guard token != nil else { return }
         
         var request = createRequest(url: url, method: "PATCH", token: token!)
@@ -109,11 +107,9 @@ class OrdersViewModel: ObservableObject {
         guard let url = URL(string: "\(baseURL)create/") else {
             throw URLError(.badURL)
         }
-
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        var token = await authManager.getToken()
+        
+        var request = createRequest(url: url, method: "POST", token: token!)
 
         let orderRequest = CreateOrderRequest(items: items, comments: comments)
 
@@ -150,7 +146,7 @@ class OrdersViewModel: ObservableObject {
     func updateOrderComment(orderId: Int, comment: String) async {
         guard let url = URL(string: "\(baseURL)comment/\(orderId)/") else { return }
         
-        var token = await getToken()
+        var token = await authManager.getToken()
         guard token != nil else { return }
         
         var request = createRequest(url: url, method: "PATCH", token: token!)
@@ -170,18 +166,7 @@ class OrdersViewModel: ObservableObject {
             }
         }
     }
-    
-    // MARK: - Helper Methods
-    private func getToken() async -> String? {
-        var token = authManager.accessToken
-        if token == nil {
-            print("Token not found, attempting to refresh...")
-            await refreshAuthToken()
-            token = authManager.accessToken
-        }
-        return token
-    }
-    
+
     private func createRequest(url: URL, method: String, token: String) -> URLRequest {
         var request = URLRequest(url: url)
         request.httpMethod = method
@@ -190,17 +175,11 @@ class OrdersViewModel: ObservableObject {
         return request
     }
     
-    private func refreshAuthToken() async {
-        await withCheckedContinuation { continuation in
-            authManager.refreshAccessToken { success in
-                continuation.resume(returning: success)
-            }
-        }
-    }
-    
-    private func saveOrder() {
-        if let data = try? JSONEncoder().encode(orders) {
-            UserDefaults.standard.set(data, forKey: orderKey)
-        }
-    }
+//    private func refreshAuthToken() async {
+//        await withCheckedContinuation { continuation in
+//            authManager.refreshAccessToken { success in
+//                continuation.resume(returning: success)
+//            }
+//        }
+//    }
 }

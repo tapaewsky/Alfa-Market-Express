@@ -9,20 +9,29 @@ import Kingfisher
 
 struct ProfileInfo: View {
     @ObservedObject var viewModel: MainViewModel
+    @State var isFetching: Bool = false
     
     var body: some View {
         NavigationView {
             VStack {
                 ScrollView {
-                    profileImage
-                    shopOwner
-                    displayStoreInfo
-                    
+                    if isFetching {
+                    } else if viewModel.profileViewModel.userProfile == nil {
+                        Text("Нет данных о профиле")
+                            .padding()
+                    } else {
+                        profileImage
+                        shopOwner
+                        displayStoreInfo
+                    }
+
                     Spacer()
                 }
             }
             .padding()
-            
+            .onAppear() {
+                loadProfile()
+            }
             .navigationBarTitleDisplayMode(.inline)
         }
     }
@@ -34,10 +43,10 @@ struct ProfileInfo: View {
                     .placeholder { ProgressView() }
                     .resizable()
                     .aspectRatio(contentMode: .fill)
-                    .frame( height: 200)  // Установите только высоту, чтобы автоматически подстраивать ширину
+                    .frame( height: 200)
                     .cornerRadius(20)
-                    .padding(.horizontal,5)  // Добавляем одинаковые отступы слева и справа
-                    .frame(maxWidth: .infinity)  // Занимаем всю доступную ширину
+                    .padding(.horizontal,5)
+                    .frame(maxWidth: .infinity) 
                    
             )
         }
@@ -65,9 +74,16 @@ struct ProfileInfo: View {
     
     private var displayStoreInfo: some View {
         VStack(alignment: .leading, spacing: 15) {
-            Text("\(viewModel.profileViewModel.userProfile.username)")
+            HStack {
+                Text("\(viewModel.profileViewModel.userProfile.firstName)")
+                Text("\(viewModel.profileViewModel.userProfile.lastName)")
+            }
                 .foregroundColor(.gray)
                 .bold()
+            
+//            Text("\(viewModel.profileViewModel.userProfile.username)")
+//                .foregroundColor(.gray)
+//                .bold()
             
             Text("\(viewModel.profileViewModel.userProfile.storeName)")
                 .foregroundColor(.black)
@@ -98,7 +114,7 @@ struct ProfileInfo: View {
                 .foregroundColor(.black)
                 .bold()
             
-            Text(viewModel.profileViewModel.userProfile.storePhoneNumber)
+            Text(viewModel.profileViewModel.userProfile.managerPhoneNumber)
                 .foregroundColor(.colorGreen)
                 .bold()
                 
@@ -108,5 +124,17 @@ struct ProfileInfo: View {
         .frame(maxWidth: .infinity, alignment: .leading)
     }
     
-    
+    private func loadProfile() {
+        isFetching = true
+        viewModel.profileViewModel.fetchUserProfile { success in
+            DispatchQueue.main.async {
+                isFetching = false
+                if success {
+                    print("Профиль успешно загружен")
+                } else {
+                    print("Не удалось загрузить профиль")
+                }
+            }
+        }
+    }
 }

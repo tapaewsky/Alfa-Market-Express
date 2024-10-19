@@ -126,6 +126,25 @@ class AuthManager: ObservableObject {
             }
         }.resume()
     }
+    
+    func getToken() async -> String? {
+        var token = accessToken
+        if token == nil {
+            print("Токен не найден, попытка обновить токен...")
+            let success = await withCheckedContinuation { continuation in
+                refreshAccessToken { success in
+                    continuation.resume(returning: success)
+                }
+            }
+            if success {
+                token = accessToken
+            } else {
+                token = nil
+            }
+        }
+
+        return token
+    }
 
     
     // MARK: - Token Management

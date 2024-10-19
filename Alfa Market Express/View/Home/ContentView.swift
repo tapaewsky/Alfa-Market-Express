@@ -4,15 +4,17 @@
 //
 //  Created by Said Tapaev on 06.07.2024.
 //
+
 import SwiftUI
 
 struct ContentView: View {
     var body: some View {
         TabView {
+            
             HomeView(viewModel: MainViewModel())
-                .tabItem {
-                    Image(systemName: "house")
-                }
+            .tabItem {
+                Image(systemName: "house")
+            }
 
             NavigationView {
                 CategoryView(viewModel: MainViewModel())

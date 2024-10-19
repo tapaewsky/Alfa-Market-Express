@@ -11,7 +11,7 @@ struct CartView: View {
 
     var body: some View {
             CartMainView(viewModel: viewModel)
-                .environmentObject(viewModel)
+//                .environmentObject(viewModel)
     }
 }
 

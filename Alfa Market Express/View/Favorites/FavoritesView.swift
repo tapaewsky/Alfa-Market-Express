@@ -10,7 +10,6 @@ import Combine
 
 struct FavoritesView: View {
     @ObservedObject var viewModel: MainViewModel
-    @State private var searchText = ""
     @State private var isFetching: Bool = false
 
     var body: some View {
@@ -19,39 +18,36 @@ struct FavoritesView: View {
                 SearchBar(viewModel: viewModel)
                     .padding(.horizontal)
             }
+
             ScrollView {
-                if viewModel.favoritesViewModel.favorites.isEmpty {
+                if viewModel.favoritesViewModel.favorites.isEmpty && !isFetching {
                     Text("Нет избранных товаров")
                         .padding()
                         .foregroundColor(.gray)
                 } else {
-                    ForEach(viewModel.favoritesViewModel.favorites.filter { searchText.isEmpty || $0.name.contains(searchText) }, id: \.id) { product in
-                        NavigationLink(destination: ProductDetailView(viewModel: viewModel, product: product)) {
-                            FavoritesCardView(product: product, viewModel: viewModel)
-                             
+                    VStack {
+                        ForEach(viewModel.favoritesViewModel.favorites, id: \.id) { product in
+                            NavigationLink(destination: ProductDetailView(viewModel: viewModel, product: product)) {
+                                FavoritesCardView(product: product, viewModel: viewModel)
+                            }
+                            .buttonStyle(PlainButtonStyle())
                         }
                     }
                 }
-                   
             }
             .onAppear {
-                loadCart()
-                print("Избранные товары: \(self.viewModel.favoritesViewModel.favorites)")
+                loadFavorites()
             }
         }
-        
-//        .onAppear {
-//            loadCart()
-//        }
     }
-    
-    private func loadCart() {
+
+    private func loadFavorites() {
         isFetching = true
         viewModel.favoritesViewModel.fetchFavorites { success in
             DispatchQueue.main.async {
                 isFetching = false
                 if success {
-                    print("Избранное успешно загружена")
+                    print("Избранное успешно загружено")
                 } else {
                     print("Не удалось загрузить избранное")
                 }

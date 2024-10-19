@@ -9,7 +9,7 @@ import SwiftUI
 struct ProfileView: View {
     @State private var selectedTab: Int = 0
     @ObservedObject var viewModel: MainViewModel
-    @State var isFetching: Bool = false
+    
     
     
     var body: some View {
@@ -30,23 +30,7 @@ struct ProfileView: View {
                     .tag(2)
             }
         }
-        .onAppear {
-            loadCart()
-        }
         
-        }
-    private func loadCart() {
-        isFetching = true
-        viewModel.profileViewModel.fetchUserProfile { success in
-            DispatchQueue.main.async {
-                isFetching = false
-                if success {
-                    print("Избранное успешно загружена")
-                } else {
-                    print("Не удалось загрузить избранное")
-                }
-            }
-        }
     }
 }
 

@@ -9,15 +9,12 @@ import SwiftUI
 
 struct OrdersView: View {
     @ObservedObject var viewModel: MainViewModel
-    @State private var isFetching = false
+    @State private var isFetching: Bool = false
     
     var body: some View {
         ScrollView {
             VStack {
-                if isFetching {
-                    ProgressView("Загрузка заказов...")
-                } else {
-                    if viewModel.ordersViewModel.orders.isEmpty {
+                    if viewModel.ordersViewModel.orders.isEmpty  && !isFetching {
                         Text("Заказы отсутствуют")
                             .font(.headline)
                             .padding()
@@ -30,25 +27,25 @@ struct OrdersView: View {
                                     .padding(.vertical, 2)
                                     .padding(.horizontal, 15)
                             }
-                        }
+                        
                     }
                 }
             }
             .onAppear {
-                loadCart()
+               loadProfile()
             }
         }
     }
     
-    private func loadCart() {
+    private func loadProfile() {
         isFetching = true
         viewModel.ordersViewModel.fetchOrders { success in
             DispatchQueue.main.async {
                 isFetching = false
                 if success {
-                    print("Избранное успешно загружена")
+                    print("Заказы успешно загружены")
                 } else {
-                    print("Не удалось загрузить избранное")
+                    print("Не удалось загрузить заказы")
                 }
             }
         }

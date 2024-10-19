@@ -8,10 +8,10 @@ import SwiftUI
 import Combine
 
 struct HomeView: View {
-    @ObservedObject var viewModel: MainViewModel
+    @StateObject var viewModel: MainViewModel
     @StateObject private var networkMonitor = NetworkMonitor()
     @State private var shuffledProducts: [Product] = []
-    @State var isFetching: Bool = false
+    @State var isFetching = false
 
     var body: some View {
         NavigationView {
@@ -19,33 +19,50 @@ struct HomeView: View {
                 ScrollView {
                     RecommendationCardView(viewModel: viewModel)
                     SearchBar(viewModel: viewModel)
-                       
-                    
                     ProductGridView(viewModel: viewModel, products: shuffledProducts, onFavoriteToggle: { _ in })
-                       
                         .padding(.vertical)
                 }
             }
         }
         .onAppear {
-            loadCart()
-            updateShuffledProducts()
+            loadData()
         }
     }
-    private func loadCart() {
+    
+    private func loadData() {
         isFetching = true
+        
+     
+        let productFetchGroup = DispatchGroup()
+        
+        productFetchGroup.enter()
         viewModel.productViewModel.fetchProducts { success in
             DispatchQueue.main.async {
-                isFetching = false
                 if success {
-                    print("Избранное успешно загружена")
+                    self.updateShuffledProducts()
+                    print("Главное успешно загружено")
                 } else {
-                    print("Не удалось загрузить избранное")
+                    print("Не удалось загрузить главное")
                 }
+                productFetchGroup.leave()
+            }
+        }
+        
+        productFetchGroup.enter()
+        viewModel.slideViewModel.fetchSlides { success in
+            DispatchQueue.main.async {
+                if success {
+                    print("Слайды успешно загружены")
+                } else {
+                    print("Не удалось загрузить слайды")
+                }
+                productFetchGroup.leave()
             }
         }
     }
+
     private func updateShuffledProducts() {
         shuffledProducts = viewModel.productViewModel.products.shuffled()
     }
 }
+        

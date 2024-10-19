@@ -27,15 +27,9 @@ class CartViewModel: ObservableObject {
     private let baseURL = "http://95.174.90.162:60/api/cart/"
     private var authManager = AuthManager.shared
 
-    // MARK: - Initializer
-//    init(favoritesViewModel: FavoritesViewModel) {
-//        self.favoritesViewModel = favoritesViewModel
-//        // loadCart() // Закомментировано для удаления кэширования
-//    }
     
     // MARK: - API Calls
     func fetchCart(completion: @escaping (Bool) -> Void) {
-        print("Запрос продуктов из CartViewModel")
         guard let accessToken = authManager.accessToken else {
             print("Access token not found.")
             completion(false)
@@ -52,8 +46,10 @@ class CartViewModel: ObservableObject {
         request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
         
         URLSession.shared.dataTask(with: request) { data, response, error in
+            
+            
             if let error = error {
-                print("Error fetching cart: \(error.localizedDescription)")
+                print("Ошибка при получении коризины: \(error.localizedDescription)")
                 DispatchQueue.main.async {
                     completion(false)
                 }
@@ -61,7 +57,7 @@ class CartViewModel: ObservableObject {
             }
             
             guard let data = data else {
-                print("No data in response")
+                print("Нет данных в ответе")
                 DispatchQueue.main.async {
                     completion(false)
                 }
@@ -72,11 +68,10 @@ class CartViewModel: ObservableObject {
                 let cartProducts = try JSONDecoder().decode([CartProduct].self, from: data)
                 DispatchQueue.main.async {
                     self.cartProduct = cartProducts
-                    // self.saveCart() // Закомментировано для удаления кэширования
                     completion(true)
                 }
             } catch {
-                print("Error decoding cart: \(error.localizedDescription)")
+                print("Ошибка декодирования корзины: \(error.localizedDescription)")
                 DispatchQueue.main.async {
                     completion(false)
                 }

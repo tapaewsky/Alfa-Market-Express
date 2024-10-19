@@ -10,7 +10,7 @@ import SwiftUI
 struct CheckoutView: View {
     @ObservedObject var viewModel: MainViewModel
     
-    @State private var comment: String = "" // Переменная для хранения комментария
+    @State private var comment: String = "" 
     
     var body: some View {
         ZStack {

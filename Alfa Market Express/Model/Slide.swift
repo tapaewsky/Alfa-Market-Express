@@ -4,6 +4,7 @@
 //
 //  Created by Said Tapaev on 16.10.2024.
 //
+import Foundation
 
 struct Slide: Codable, Identifiable {
     let id: Int

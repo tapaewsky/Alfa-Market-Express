@@ -7,7 +7,7 @@
 import SwiftUI
 
 struct CategoryProductsView: View {
-    @ObservedObject var viewModel: MainViewModel
+    @StateObject var viewModel: MainViewModel
     let category: Category
 
     var body: some View {

@@ -34,48 +34,49 @@ class ProductViewModel: ObservableObject {
 
     // MARK: - Data Fetching
     func fetchProducts(completion: @escaping (Bool) -> Void) {
-        print("Запрос продуктов из ProductViewModel")
-
-        isLoading = true
-        isError = false
-
-        guard let url = URL(string: baseURL) else {
-            isLoading = false
-            isError = true
-            completion(false)
-            return
-        }
-
-        URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
-            defer { self?.isLoading = false }
-
-            if let error = error {
-                print("Ошибка при получении продуктов: \(error.localizedDescription)")
-                self?.isError = true
+            guard let url = URL(string: baseURL) else {
+                print("Неверный URL")
                 completion(false)
                 return
             }
 
-            guard let data = data else {
-                print("Нет данных в ответе")
-                self?.isError = true
-                completion(false)
-                return
-            }
+            var request = URLRequest(url: url)
+           
 
-            do {
-                let products = try JSONDecoder().decode([Product].self, from: data)
-                DispatchQueue.main.async {
-                    self?.products = products // Обновление локального массива
-                    completion(true)
+            isLoading = true
+            isError = false
+
+            URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+                defer { self?.isLoading = false }
+
+                if let error = error {
+                    print("Ошибка при получении продуктов: \(error.localizedDescription)")
+                    self?.isError = true
+                    completion(false)
+                    return
                 }
-            } catch {
-                print("Ошибка декодирования продуктов: \(error.localizedDescription)")
-                self?.isError = true
-                completion(false)
-            }
-        }.resume()
-    }
+
+                guard let data = data else {
+                    print("Нет данных в ответе")
+                    self?.isError = true
+                    completion(false)
+                    return
+                }
+
+                do {
+                    let products = try JSONDecoder().decode([Product].self, from: data)
+                    DispatchQueue.main.async {
+                        self?.products = products
+                        completion(true)
+                    }
+                } catch {
+                    print("Ошибка декодирования продуктов: \(error.localizedDescription)")
+                    self?.isError = true
+                    completion(false)
+                }
+            }.resume()
+        }
+    
 
 
     func searchProducts(query: String) {

@@ -15,11 +15,10 @@ class SlideViewModel: ObservableObject {
     
     init(authManager: AuthManager) {
         self.authManager = authManager
-//        fetchSlides()
+//        fetchSlides(completion: { _ in }) 
     }
     
     func fetchSlides(completion: @escaping (Bool) -> Void) {
-        print("Запрос продуктов из SlidesViewModel")
         guard let accessToken = authManager.accessToken else {
             print("Access token not found.")
             completion(false)

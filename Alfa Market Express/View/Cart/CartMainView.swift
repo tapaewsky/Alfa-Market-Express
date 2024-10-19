@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CartMainView: View {
-    @ObservedObject var viewModel: MainViewModel
+    @StateObject var viewModel: MainViewModel
     @State private var selectAll: Bool = false
     @State private var isFetching = false
     @State private var isSelectionMode: Bool = false

@@ -13,8 +13,9 @@ class CategoryViewModel: ObservableObject {
     @Published var categories: [Category] = []
     @Published var isLoading = false
     @Published var isError = false
-
-    private let categoriesKey = "cachedCategories"
+    private let baseURL = "http://95.174.90.162:60/api/categories/"
+    private var authManager = AuthManager.shared
+//    private let categoriesKey = "cachedCategories"
 
     // MARK: - Initializer
 //    init() {
@@ -28,58 +29,57 @@ class CategoryViewModel: ObservableObject {
 
     // MARK: - Data Fetching
     func fetchCategory(completion: @escaping (Bool) -> Void) {
-        print("Запрос категорий из CategoryViewModel")
-        isLoading = true
-        isError = false
-
-        guard let url = URL(string: "http://95.174.90.162:60/api/categories/") else {
-            print("Неверный URL")
-            isLoading = false
-            isError = true
+        guard let accessToken = authManager.accessToken else {
+            print("Access token не найден.")
             completion(false)
             return
         }
         
-        URLSession.shared.dataTask(with: url) { [weak self] data, response, error in
+        guard let url = URL(string: baseURL) else {
+            print("Некорректный URL")
+            completion(false)
+            return
+        }
+        
+        
+        var request = URLRequest(url: url)
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        
+        URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
-                print("Ошибка при получении категорий: \(error.localizedDescription)")
+                print("Ошибка при загрузке категорий: \(error.localizedDescription)")
                 DispatchQueue.main.async {
-                    self?.isLoading = false
-                    self?.isError = true
                     completion(false)
                 }
                 return
             }
-
+            
             guard let data = data else {
-                print("Нет данных в ответе")
+                print("Ответ не содержит данных")
                 DispatchQueue.main.async {
-                    self?.isLoading = false
-                    self?.isError = true
                     completion(false)
                 }
                 return
             }
-
+            
             do {
                 let categories = try JSONDecoder().decode([Category].self, from: data)
+                
                 DispatchQueue.main.async {
-                    self?.categories = categories
-                    self?.saveCategories() // Кэширование категорий, если нужно
-                    self?.isLoading = false
+                    self.categories = categories
                     completion(true)
                 }
             } catch {
-                print("Ошибка декодирования категорий: \(error.localizedDescription)")
+                print("Ошибка при декодировании категорий: \(error.localizedDescription)")
                 DispatchQueue.main.async {
-                    self?.isLoading = false
-                    self?.isError = true
                     completion(false)
                 }
             }
         }.resume()
     }
+    
 
+   
 
 //    // MARK: - Caching
 //    private func loadCachedData() {
@@ -89,9 +89,9 @@ class CategoryViewModel: ObservableObject {
 //        }
 //    }
 
-    private func saveCategories() {
-        if let data = try? JSONEncoder().encode(categories) {
-            UserDefaults.standard.set(data, forKey: categoriesKey)
-        }
-    }
+//    private func saveCategories() {
+//        if let data = try? JSONEncoder().encode(categories) {
+//            UserDefaults.standard.set(data, forKey: categoriesKey)
+//        }
+//    }
 }

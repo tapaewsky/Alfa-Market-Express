@@ -15,43 +15,10 @@ class FavoritesViewModel: ObservableObject {
     private let authManager = AuthManager.shared
     private let baseUrl = "http://95.174.90.162:60/api"
 
-//    init() {
-//        Task {
-//            await fetchFavorites()
-//        }
-//    }
-
-//    func fetchFavorites() async {
-//        guard let accessToken = authManager.accessToken else {
-//            errorMessage = "Access token not found."
-//            return
-//        }
-//
-//        guard let url = URL(string: "\(baseUrl)/favorites/") else {
-//            print("Неверный URL")
-//            return
-//        }
-//
-//        var request = URLRequest(url: url)
-//        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
-//
-//        do {
-//            let (data, response) = try await URLSession.shared.data(for: request)
-//            if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
-//                let favorites = try JSONDecoder().decode([Product].self, from: data)
-//                DispatchQueue.main.async {
-//                    self.favorites = favorites // Обновление локального массива
-//                }
-//            } else {
-//                errorMessage = "Ошибка при получении избранного"
-//            }
-//        } catch {
-//            errorMessage = "Ошибка при получении избранного: \(error.localizedDescription)"
-//        }
-//    }
     func fetchFavorites(completion: @escaping (Bool) -> Void) {
+       
         guard let accessToken = authManager.accessToken else {
-            errorMessage = "Access token not found."
+            print("Access token не найден.")
             completion(false)
             return
         }
@@ -61,6 +28,8 @@ class FavoritesViewModel: ObservableObject {
             completion(false)
             return
         }
+
+      
 
         var request = URLRequest(url: url)
         request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
@@ -84,8 +53,10 @@ class FavoritesViewModel: ObservableObject {
 
             do {
                 let favorites = try JSONDecoder().decode([Product].self, from: data)
+              
                 DispatchQueue.main.async {
-                    self.favorites = favorites // Обновление локального массива
+                    self.favorites = favorites
+                   
                     completion(true)
                 }
             } catch {
@@ -94,9 +65,9 @@ class FavoritesViewModel: ObservableObject {
                     completion(false)
                 }
             }
+
         }.resume()
     }
-
 
     func toggleFavorite(for product: Product) async {
         guard let accessToken = authManager.accessToken else {
