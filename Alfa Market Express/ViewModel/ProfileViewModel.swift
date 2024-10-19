@@ -15,7 +15,8 @@ class ProfileViewModel: ObservableObject {
     @Published var isError = false
     private let baseURL = "http://95.174.90.162:60/api"
     private let authManager = AuthManager.shared
-    @Published  var selectedImage: UIImage? = nil
+    @Published var selectedImage: UIImage? = nil
+
     
     // MARK: - Initializer
     init() {

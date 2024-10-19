@@ -12,7 +12,7 @@ struct UserProfile: Codable {
     var firstName: String
     var lastName: String
     var storeName: String
-    var storeImageUrl: String
+    var storeImageUrl: String?
     var storeAddress: String
     var storePhoneNumber: String
     var storeCode: String

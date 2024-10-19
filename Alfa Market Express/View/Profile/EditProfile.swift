@@ -16,13 +16,13 @@ struct EditProfile: View {
             VStack {
                 navBar
                 imagePickerButton
+                .padding(.bottom)
                 formFields
                 saveButton
             }
-            .padding(.horizontal, 30)
+            .padding()
         }
         .sheet(isPresented: $showImagePicker) {
-            // Передаем привязку к selectedImage
             ImagePicker(selectedImage: $viewModel.profileViewModel.selectedImage)
         }
     }
@@ -32,66 +32,71 @@ struct EditProfile: View {
             .font(.title2)
             .bold()
             .foregroundColor(.black)
-            .padding(.bottom, 20)
+           
     }
 
     private var imagePickerButton: some View {
         VStack {
-            if let selectedImage = viewModel.profileViewModel.selectedImage {  // Проверяем, если изображение выбрано
+            if let selectedImage = viewModel.profileViewModel.selectedImage {
                 Image(uiImage: selectedImage)
                     .resizable()
-                    .scaledToFill()
-                    .frame(width: 150, height: 150)
-                    .clipShape(Circle())
+                    .aspectRatio(contentMode: .fill)
+                    .frame(height: 200)
+                    .cornerRadius(20)
+                    .padding(.horizontal, 5)
+                    .frame(maxWidth: .infinity)
             } else {
-                // Отображаем фото магазина по умолчанию, если фото не выбрано
-                KFImage(URL(string: viewModel.profileViewModel.userProfile.storeImageUrl))
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 150, height: 150)
-                    .clipShape(Circle())
+                if let storeImageUrl = viewModel.profileViewModel.userProfile.storeImageUrl,
+                   let url = URL(string: storeImageUrl) {
+                    KFImage(url)
+                        .placeholder { ProgressView() }
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .frame(height: 200)
+                        .cornerRadius(20)
+                        .padding(.horizontal, 5)
+                        .frame(maxWidth: .infinity)
+                } else {
+                    Color.gray
+                        .frame(height: 200)
+                        .cornerRadius(20)
+                        .padding(.horizontal, 5)
+                        .frame(maxWidth: .infinity)
+                }
             }
-            
-            Button(action: {
-                showImagePicker = true  // Открываем ImagePicker
-            }) {
+
+            Button(action: { showImagePicker = true }) {
                 Text("Изменить фото магазина")
                     .bold()
                     .frame(maxWidth: .infinity)
-                    .padding()
-                    .background(Color.green)
-                    .foregroundColor(.white)
-                    .cornerRadius(15)
+                    .foregroundColor(.colorGreen)
             }
-            .padding(.top, 20)
         }
     }
 
     private var formFields: some View {
-        VStack(spacing: 10) {
+        VStack/*(spacing: 10)*/ {
             editTextField(placeholder: viewModel.profileViewModel.userProfile.firstName, text: $viewModel.profileViewModel.userProfile.firstName)
             editTextField(placeholder: viewModel.profileViewModel.userProfile.lastName, text: $viewModel.profileViewModel.userProfile.lastName)
             editTextField(placeholder: viewModel.profileViewModel.userProfile.storeName, text: $viewModel.profileViewModel.userProfile.storeName)
             editTextField(placeholder: viewModel.profileViewModel.userProfile.storeAddress, text: $viewModel.profileViewModel.userProfile.storeAddress)
             editTextField(placeholder: viewModel.profileViewModel.userProfile.storePhoneNumber, text: $viewModel.profileViewModel.userProfile.storePhoneNumber)
         }
+        .padding()
+        
     }
 
     private func editTextField(placeholder: String, text: Binding<String>) -> some View {
         TextField(placeholder, text: text)
             .padding()
-            .background(RoundedRectangle(cornerRadius: 15).stroke(Color.green, lineWidth: 1))
+            .background(RoundedRectangle(cornerRadius: 15).stroke(.colorGreen, lineWidth: 1))
     }
 
     private var saveButton: some View {
         Button(action: {
             Task {
                 viewModel.profileViewModel.updateProfile { success in
-                    if success {
-                        print("Профиль успешно сохранен")
-                    } else {
-                        print("Ошибка при сохранении профиля")
-                    }
+                    print(success ? "Профиль успешно сохранен" : "Ошибка при сохранении профиля")
                 }
             }
         }) {
@@ -99,10 +104,10 @@ struct EditProfile: View {
                 .bold()
                 .frame(maxWidth: .infinity)
                 .padding()
-                .background(Color.green)
+                .background(.colorGreen)
                 .foregroundColor(.white)
                 .cornerRadius(15)
         }
-        .padding(.top, 20)
+        .padding()
     }
 }

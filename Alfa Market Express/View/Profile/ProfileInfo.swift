@@ -37,21 +37,20 @@ struct ProfileInfo: View {
     }
     
     private var profileImage: some View {
-        if let url = URL(string: viewModel.profileViewModel.userProfile.storeImageUrl) {
-            return AnyView(
+        Group {
+            if let storeImageUrl = viewModel.profileViewModel.userProfile.storeImageUrl,
+               let url = URL(string: storeImageUrl) {
                 KFImage(url)
                     .placeholder { ProgressView() }
                     .resizable()
                     .aspectRatio(contentMode: .fill)
-                    .frame( height: 200)
+                    .frame(height: 200)
                     .cornerRadius(20)
-                    .padding(.horizontal,5)
-                    .frame(maxWidth: .infinity) 
-                   
-            )
+                    .frame(maxWidth: .infinity)
+            } else {
+                EmptyView()
+            }
         }
-        
-        return AnyView(EmptyView())
     }
     
     
