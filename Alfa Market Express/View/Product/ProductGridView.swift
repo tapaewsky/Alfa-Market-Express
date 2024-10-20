@@ -12,22 +12,24 @@ struct ProductGridView: View {
     var onFavoriteToggle: (Product) -> Void
     
     var body: some View {
-        LazyVGrid(columns: [GridItem(.flexible(), spacing: 1), GridItem(.flexible(), spacing: 1)], spacing: 1) {
-            ForEach(products) { product in
-                NavigationLink(destination: ProductDetailView(
-                    viewModel: viewModel,
-                    product: product)) {
-                    
-                    ProductCardView(
-                        product: product,
+        
+            LazyVGrid(columns: [GridItem(.flexible(), spacing: 1), GridItem(.flexible(), spacing: 1)], spacing: 1) {
+                ForEach(products) { product in
+                    NavigationLink(destination: ProductDetailView(
                         viewModel: viewModel,
-                        onFavoriteToggle: {
-                            onFavoriteToggle(product)
+                        product: product)) {
+                            
+                            ProductCardView(
+                                product: product,
+                                viewModel: viewModel,
+                                onFavoriteToggle: {
+                                    onFavoriteToggle(product)
+                                }
+                            )
+                            .padding(5)
                         }
-                    )
-                    .padding(5)
                 }
-            }
+            
         }
         .padding(.horizontal, 10)
     }

@@ -5,6 +5,7 @@
 //  Created by Said Tapaev on 15.08.2024.
 //
 
+
 import SwiftUI
 
 class ProfileViewModel: ObservableObject {
@@ -13,11 +14,11 @@ class ProfileViewModel: ObservableObject {
     @Published var isEditing: Bool = false
     @Published var isLoading = false
     @Published var isError = false
+    @Published var selectedImage: UIImage? = nil
+    
     private let baseURL = "http://95.174.90.162:60/api"
     private let authManager = AuthManager.shared
-    @Published var selectedImage: UIImage? = nil
 
-    
     // MARK: - Initializer
     init() {
         self.userProfile = UserProfile(
@@ -36,21 +37,27 @@ class ProfileViewModel: ObservableObject {
             favoriteProducts: []
         )
     }
-    
-    private func refreshTokenAndRetry() {
-        AuthManager.shared.refreshAccessToken { [weak self] refreshed in
-            if refreshed {
-                self?.fetchUserProfile(completion: { _ in })
-            }
-        }
-    }
-    
+
+    // MARK: - Получение профиля пользователя
     func fetchUserProfile(completion: @escaping (Bool) -> Void) {
         isLoading = true
         isError = false
-        
-        guard let url = URL(string: "\(baseURL)/me/"),
-              let token = AuthManager.shared.accessToken else {
+
+        guard let token = authManager.accessToken else {
+            print("Токен доступа не найден, обновляем токен")
+            authManager.refreshAccessToken { [weak self] success in
+                if success {
+                    self?.fetchUserProfile(completion: completion)
+                } else {
+                    self?.isLoading = false
+                    self?.isError = true
+                    completion(false)
+                }
+            }
+            return
+        }
+
+        guard let url = URL(string: "\(baseURL)/me/") else {
             isLoading = false
             isError = true
             completion(false)
@@ -63,8 +70,42 @@ class ProfileViewModel: ObservableObject {
 
         URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
             guard let self = self else { return }
-            
-            if error != nil || data == nil {
+
+            if let error = error {
+                DispatchQueue.main.async {
+                    self.isLoading = false
+                    self.isError = true
+                    print("Ошибка сети: \(error.localizedDescription)")
+                    completion(false)
+                }
+                return
+            }
+
+            guard let httpResponse = response as? HTTPURLResponse else {
+                DispatchQueue.main.async {
+                    self.isLoading = false
+                    self.isError = true
+                    completion(false)
+                }
+                return
+            }
+
+            if httpResponse.statusCode == 401 {
+                self.authManager.refreshAccessToken { success in
+                    if success {
+                        self.fetchUserProfile(completion: completion)
+                    } else {
+                        DispatchQueue.main.async {
+                            self.isLoading = false
+                            self.isError = true
+                            completion(false)
+                        }
+                    }
+                }
+                return
+            }
+
+            guard let data = data else {
                 DispatchQueue.main.async {
                     self.isLoading = false
                     self.isError = true
@@ -74,7 +115,7 @@ class ProfileViewModel: ObservableObject {
             }
 
             do {
-                let userProfile = try JSONDecoder().decode(UserProfile.self, from: data!)
+                let userProfile = try JSONDecoder().decode(UserProfile.self, from: data)
                 DispatchQueue.main.async {
                     self.userProfile = userProfile
                     self.isLoading = false
@@ -90,7 +131,7 @@ class ProfileViewModel: ObservableObject {
         }.resume()
     }
 
-    // MARK: - Profile Saving
+    // MARK: - Обновление профиля
     func updateProfile(completion: @escaping (Bool) -> Void) {
         guard let url = URL(string: "\(baseURL)/me/update/"),
               let accessToken = authManager.accessToken else {
@@ -141,7 +182,7 @@ class ProfileViewModel: ObservableObject {
         }.resume()
     }
 
-    // MARK: - Editing
+    // MARK: - Переключение режима редактирования
     func toggleEditing() {
         isEditing.toggle()
     }

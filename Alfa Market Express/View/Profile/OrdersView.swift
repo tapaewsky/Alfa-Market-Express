@@ -23,7 +23,7 @@ struct OrdersView: View {
                                 if let firstItem = order.items.first {
                                     OrdersCard(orderItem: firstItem,
                                                createdAt: order.createdAt,
-                                               status: order.status)
+                                               status: order.status, orderId: order.id)
                                     .padding(.vertical, 2)
                                     .padding(.horizontal, 15)
                                 }

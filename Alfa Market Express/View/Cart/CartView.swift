@@ -8,10 +8,9 @@ import SwiftUI
 
 struct CartView: View {
     @StateObject var viewModel: MainViewModel
-
     var body: some View {
         CartMainView(viewModel: viewModel)
-//                .environmentObject(viewModel)
+
     }
 }
 

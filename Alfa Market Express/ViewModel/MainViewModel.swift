@@ -25,7 +25,7 @@ class MainViewModel: ObservableObject {
         cartViewModel = CartViewModel()
         profileViewModel = ProfileViewModel()
         ordersViewModel = OrdersViewModel(cartViewModel: CartViewModel())
-        slideViewModel = SlideViewModel(authManager:   AuthManager())
+        slideViewModel = SlideViewModel()
         searchViewModel = SearchViewModel()
       
     } 

@@ -9,21 +9,19 @@ import Kingfisher
 
 struct CartItemView: View {
     @ObservedObject var viewModel: MainViewModel
-    var product: Product
+    var cartProduct: CartProduct
     @State private var quantity: Int
     @State private var totalPriceForProduct: Double
-    var cartProduct: CartProduct
-    @State var isSelected: Bool = false
+    @Binding var isSelected: Bool
     
     @Environment(\.isSelectionMode) var isSelectionMode
     
-    init(cartProduct: CartProduct, viewModel: MainViewModel, product: Product, isSelected: Binding<Bool>) {
+    init(cartProduct: CartProduct, viewModel: MainViewModel, isSelected: Binding<Bool>) {
         self.cartProduct = cartProduct
+        self.viewModel = viewModel
         self._quantity = State(initialValue: cartProduct.quantity)
         self._totalPriceForProduct = State(initialValue: cartProduct.getTotalPrice)
-        self.viewModel = viewModel
-        self.product = product
-//        self._isSelected = isSelected
+        self._isSelected = isSelected
     }
     
     var body: some View {
@@ -31,7 +29,7 @@ struct CartItemView: View {
             background
             HStack {
                 productImage
-                NavigationLink(destination: ProductDetailView(viewModel: viewModel, product: product)) {
+                NavigationLink(destination: ProductDetailView(viewModel: viewModel, product: cartProduct.product)) {
                     productDetails
                 }
                 Spacer()
@@ -40,24 +38,19 @@ struct CartItemView: View {
         }
         .onChange(of: quantity) { _ in updateQuantity() }
         .onAppear { updateSelection() }
-        .onChange(of: viewModel.cartViewModel.selectedProducts[cartProduct.id]) { newValue in
-            isSelected = newValue ?? false
-        }
     }
     
-    // Background для карточки
     private var background: some View {
         RoundedRectangle(cornerRadius: 15)
             .fill(Color.white)
             .shadow(radius: 2)
     }
     
-    // Изображение продукта
     private var productImage: some View {
         ZStack(alignment: .topLeading) {
             if let imageUrl = URL(string: cartProduct.product.imageUrl ?? "") {
                 KFImage(imageUrl)
-                    .placeholder { ProgressView()}
+                    .placeholder { ProgressView() }
                     .resizable()
                     .scaledToFill()
                     .frame(maxWidth: 115, maxHeight: 150)
@@ -75,7 +68,6 @@ struct CartItemView: View {
         }
     }
     
-    // Детали продукта
     private var productDetails: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(cartProduct.product.name)
@@ -97,19 +89,35 @@ struct CartItemView: View {
         .frame(maxWidth: .infinity, alignment: .leading)
     }
     
-    // Контроллер количества
     private var quantityControl: some View {
         HStack {
             controlButton(systemName: "minus", action: decreaseQuantity)
-            Text("\(quantity)").padding(.horizontal, 5).foregroundColor(.black)
+                .frame(width: 30, height: 30)
+
+            TextField("", value: $quantity, formatter: NumberFormatter())
+                .keyboardType(.numberPad)
+                .multilineTextAlignment(.center)
+                .frame(width: 40)
+                .padding(5)
+                .cornerRadius(5)
+                .onChange(of: quantity) { newValue in
+                   
+                    if newValue < 1 {
+                        quantity = 1
+                    } else if newValue > 1000 {
+                        quantity = 1000
+                    }
+                    updateQuantity()
+                }
+
             controlButton(systemName: "plus", action: increaseQuantity)
+                .frame(width: 30, height: 30)
         }
-        .padding(7)
+        .padding(5)
         .background(Color.gray.opacity(0.2))
         .cornerRadius(15)
     }
     
-    // Кнопка удаления
     private var deleteButton: some View {
         Button(action: { Task { await toggleCart() } }) {
             Image(systemName: "trash")
@@ -118,14 +126,8 @@ struct CartItemView: View {
         }
     }
     
-    // Кнопка выбора
     private var selectButton: some View {
-        Button(action: {
-            Task {
-                await toggleSelection() // Асинхронная функция для обновления логики выбора
-                isSelected.toggle() // Переключение состояния вручную
-            }
-        }) {
+        Button(action: { toggleSelection() }) {
             Image(systemName: isSelected ? "checkmark.square" : "square")
                 .foregroundColor(isSelected ? .colorGreen : .gray)
                 .padding(8)
@@ -133,32 +135,26 @@ struct CartItemView: View {
         .buttonStyle(PlainButtonStyle())
     }
     
-    // Универсальная кнопка контроллера
     private func controlButton(systemName: String, action: @escaping () -> Void) -> some View {
         Button(action: action) {
-            Image(systemName: systemName).foregroundColor(.black)
+            Image(systemName: systemName)
+                .foregroundColor(.black)
+                .frame(width: 30, height: 30)
+                .contentShape(Circle())
         }
         .buttonStyle(PlainButtonStyle())
-        .contentShape(Circle())
     }
     
-    // Увеличение количества
     private func increaseQuantity() {
         quantity += 1
         updateQuantity()
     }
     
-    // Уменьшение количества
     private func decreaseQuantity() {
         if quantity > 1 {
             quantity -= 1
             updateQuantity()
         }
-    }
-    
-    // Методы управления логикой
-    private func calculateTotalPrice() {
-        totalPriceForProduct = (Double(cartProduct.product.price) ?? 0) * Double(quantity)
     }
     
     private func updateQuantity() {
@@ -168,7 +164,11 @@ struct CartItemView: View {
         }
     }
     
-    private func toggleSelection() async {
+    private func calculateTotalPrice() {
+        totalPriceForProduct = (Double(cartProduct.product.price) ?? 0) * Double(quantity)
+    }
+    
+    private func toggleSelection() {
         isSelected.toggle()
         viewModel.cartViewModel.selectedProducts[cartProduct.id] = isSelected
         if isSelected {
@@ -184,39 +184,6 @@ struct CartItemView: View {
     }
     
     private func toggleCart() async {
-        await viewModel.cartViewModel.removeFromCart(product)
+        await viewModel.cartViewModel.removeFromCart(cartProduct.product)
     }
 }
-
-//struct CartItemViewPreview_Previews: PreviewProvider {
-//    static var previews: some View {
-//        let mainViewModel = MainViewModel()
-//        
-//        let previewProduct = Product(
-//            id: 1,
-//            name: "Gorilla Mango",
-//            description: "A delicious tropical fruit drink.",
-//            price: "150",
-//            imageUrl: "https://avatars.mds.yandex.net/i?id=04b02b669571a1111bd5ed7cb534b33956285d63-12714990-images-thumbs&n=13",
-//            category: 2,
-//            isFavorite: false,
-//            isInCart: true,
-//            quantity: 1
-//        )
-//        
-//        let previewCartProduct = CartProduct(
-//            id: 1,
-//            product: previewProduct,
-//            quantity: 1, getTotalPrice: 12
-//        )
-//        
-//        return CartItemView(
-//            cartProduct: previewCartProduct,
-//            viewModel: mainViewModel,
-//            product: previewProduct,
-//            isSelected: .constant(false) // Пример привязки
-//        )
-//        .previewLayout(.sizeThatFits)
-//        .padding()
-//    }
-//}

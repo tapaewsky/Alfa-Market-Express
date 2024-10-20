@@ -18,11 +18,7 @@ class CategoryViewModel: ObservableObject {
 
     // MARK: - Data Fetching
     func fetchCategory(completion: @escaping (Bool) -> Void) {
-        guard let accessToken = authManager.accessToken else {
-            print("Access token не найден.")
-            completion(false)
-            return
-        }
+    
         
         guard let url = URL(string: baseURL) else {
             print("Некорректный URL")
@@ -32,7 +28,7 @@ class CategoryViewModel: ObservableObject {
         
         
         var request = URLRequest(url: url)
-        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+       
         
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {

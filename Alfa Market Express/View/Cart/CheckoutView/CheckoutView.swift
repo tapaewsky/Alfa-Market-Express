@@ -11,17 +11,16 @@ struct CheckoutView: View {
     @ObservedObject var viewModel: MainViewModel
     @State private var showSuccessView = false
     @State private var comment: String = ""
+    var products: [Product]
     @Environment(\.presentationMode) var presentationMode
-    
+    @State private var showAlert = false
+    @State private var navigateToCart = false
+
     var body: some View {
         ZStack {
             Color.white.ignoresSafeArea()
-            
             VStack {
                 selectedProductsList
-                    .padding(0)
-                
-               
                 VStack {
                     title
                     storeInfo
@@ -31,7 +30,7 @@ struct CheckoutView: View {
                     orderButton
                     Spacer()
                 }
-                .padding() 
+                .padding()
             }
             .navigationBarItems(leading: CustomBackButton(label: "Назад", color: .colorGreen) {
                 self.presentationMode.wrappedValue.dismiss()
@@ -40,11 +39,13 @@ struct CheckoutView: View {
         .navigationBarBackButtonHidden(true)
     }
 
-    
     private var selectedProductsList: some View {
         ScrollView {
             VStack {
-                ForEach(viewModel.cartViewModel.cartProduct.filter { viewModel.cartViewModel.selectedProducts[$0.id] == true }, id: \.id) { cartProduct in
+                let selectedProducts = viewModel.cartViewModel.cartProduct.filter { viewModel.cartViewModel.selectedProducts[$0.id] == true }
+                let productsToShow = selectedProducts.isEmpty ? viewModel.cartViewModel.cartProduct : selectedProducts
+                
+                ForEach(productsToShow, id: \.id) { cartProduct in
                     let isSelected = Binding<Bool>(
                         get: {
                             viewModel.cartViewModel.selectedProducts[cartProduct.id] ?? false
@@ -58,17 +59,16 @@ struct CheckoutView: View {
                     CartItemView(
                         cartProduct: cartProduct,
                         viewModel: viewModel,
-                        product: cartProduct.product,
+                      
                         isSelected: isSelected
                     )
-                    .padding(.vertical, 2 )
+                    .padding(.vertical, 2)
                     .padding(.horizontal, 15)
                 }
             }
         }
-//        .frame(maxHeight: 400)
     }
-    
+
     private var title: some View {
         VStack {
             Text("Оформление заказа")
@@ -76,41 +76,44 @@ struct CheckoutView: View {
                 .font(.title3)
         }
     }
-    
+
     private var storeInfo: some View {
         VStack(alignment: .leading, spacing: 12) {
             Text(viewModel.profileViewModel.userProfile.storeName)
                 .foregroundColor(.black)
-                .font(.system(size: 15, weight: .light, design: .default))
-            
+                .font(.system(size: 15, weight: .light))
+                .lineLimit(1)
+
             Text("Код магазина: \(viewModel.profileViewModel.userProfile.storeCode)")
                 .foregroundColor(.black)
-                .font(.system(size: 15, weight: .light, design: .default))
-            
+                .font(.system(size: 15, weight: .light))
+                .lineLimit(1)
+
             HStack {
                 Text("Адрес: ")
                     .foregroundColor(.black)
-                    .font(.system(size: 15, weight: .light, design: .default))
+                    .font(.system(size: 15, weight: .light))
                 +
                 Text(viewModel.profileViewModel.userProfile.storeAddress)
                     .foregroundColor(.black)
-                    .font(.system(size: 15, weight: .light, design: .default))
+                    .font(.system(size: 15, weight: .light))
             }
-            
+
             HStack {
                 Text("Телефон: \(viewModel.profileViewModel.userProfile.storePhoneNumber)")
                     .foregroundColor(.black)
-                    .font(.system(size: 15, weight: .light, design: .default))
+                    .font(.system(size: 15, weight: .light))
+                    .lineLimit(1)
             }
-            
+
             HStack {
                 Text("\(selectedProductCount) товара")
                     .font(.title3)
                     .bold()
                     .foregroundColor(.black)
-                
+
                 Spacer()
-                
+
                 Text("\(Int(selectedTotalPrice)) ₽")
                     .foregroundColor(.colorRed)
                     .font(.title3)
@@ -124,41 +127,45 @@ struct CheckoutView: View {
         .cornerRadius(15)
         .shadow(radius: 1)
     }
-    
+
     private var commentSection: some View {
         VStack(alignment: .leading) {
             Text("Комментарий к заказу")
                 .foregroundColor(.black)
-                .font(.system(size: 20, weight: .regular, design: .default))
-            
+                .font(.system(size: 20, weight: .regular))
+
             TextField("Ваш комментарий", text: $comment)
                 .padding()
                 .background(Color.white)
-                .overlay(RoundedRectangle(cornerRadius: 15).stroke(.colorGreen, lineWidth: 1))
+                .overlay(RoundedRectangle(cornerRadius: 15).stroke(Color.colorGreen, lineWidth: 1))
         }
     }
-    
+
     private var orderButton: some View {
-        NavigationLink(destination: SuccessfullOrderView(viewModel: viewModel), isActive: $showSuccessView) {
+        NavigationLink(destination: CartView(viewModel: viewModel).navigationBarHidden(true), isActive: $navigateToCart) {
             Button(action: {
                 Task {
-                    let selectedProducts = viewModel.cartViewModel.cartProduct.filter {
+                    var selectedProducts = viewModel.cartViewModel.cartProduct.filter {
                         viewModel.cartViewModel.selectedProducts[$0.id] == true
                     }
-                    
+
+                    if selectedProducts.isEmpty {
+                        selectedProducts = viewModel.cartViewModel.cartProduct
+                    }
+
                     guard !selectedProducts.isEmpty else {
-                        print("Нет выбранных продуктов для заказа.")
+                        print("Нет продуктов для заказа.")
                         return
                     }
 
                     var orderItems: [OrderItem] = []
-                    
+
                     do {
                         for product in selectedProducts {
                             let orderItem = viewModel.ordersViewModel.orderItemFromCartProduct(product)
                             orderItems.append(orderItem)
                         }
-                        
+
                         if orderItems.isEmpty {
                             print("Ошибка: нет конвертированных товаров для заказа.")
                             return
@@ -169,10 +176,11 @@ struct CheckoutView: View {
                             comments: comment,
                             accessToken: viewModel.ordersViewModel.authManager.accessToken ?? ""
                         )
-                        
+
                         print("Заказ успешно создан: \(order)")
-                        showSuccessView = true  // Устанавливаем true, чтобы перейти на SuccessfullOrderView
-                        
+                        showSuccessView = true
+                        showAlert = true
+
                     } catch {
                         print("Ошибка при создании заказа: \(error.localizedDescription)")
                     }
@@ -186,12 +194,21 @@ struct CheckoutView: View {
                     .foregroundColor(.white)
             }
         }
+        .alert(isPresented: $showAlert) {
+            Alert(
+                title: Text("Вы успешно сделали заказ"),
+                message: Text("Вы можете просмотреть свои заказы в профиле."),
+                dismissButton: .default(Text("Перейти в корзину"), action: {
+                    navigateToCart = true
+                })
+            )
+        }
     }
-    
+
     private var selectedProductCount: Int {
         viewModel.cartViewModel.cartProduct.filter { viewModel.cartViewModel.selectedProducts[$0.id] == true }.count
     }
-    
+
     private var selectedTotalPrice: Double {
         viewModel.cartViewModel.cartProduct
             .filter { viewModel.cartViewModel.selectedProducts[$0.id] == true }
@@ -201,8 +218,8 @@ struct CheckoutView: View {
     }
 }
 
-struct CheckoutView_Previews: PreviewProvider {
-    static var previews: some View {
-        CheckoutView(viewModel: MainViewModel())
-    }
-}
+//struct CheckoutView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        CheckoutView(viewModel: MainViewModel(), products: product)
+//    }
+//}

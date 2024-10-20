@@ -9,21 +9,22 @@ import SwiftUI
 
 struct SuccessfullOrderView: View {
     @State private var showOrders = false
+    @State private var showCart = false
     @StateObject var viewModel: MainViewModel
-
+    
     var body: some View {
-        HStack {
+        VStack {
             VStack(spacing: 16) {
                 Image(systemName: "checkmark.circle.fill")
                     .font(.title)
                     .foregroundColor(.colorGreen)
                 Text("Вы успешно сделали заказ!")
                     .font(.headline)
-                    .foregroundColor(.colorGreen)
+                    .foregroundColor(.black)
                 Text("Вы можете просмотреть свои заказы.")
                     .font(.headline)
                     .foregroundColor(.black)
-
+                
                 Button(action: {
                     showOrders = true
                 }) {
@@ -33,6 +34,7 @@ struct SuccessfullOrderView: View {
                         .font(.headline)
                         .foregroundColor(.black)
                         .cornerRadius(20)
+                        .bold()
                 }
                 .background(Color.white)
                 .cornerRadius(20)
@@ -44,19 +46,22 @@ struct SuccessfullOrderView: View {
                     NavigationLink(destination: OrdersView(viewModel: viewModel), isActive: $showOrders) {
                         EmptyView()
                     }
+                       
+                    
+                    
                 )
             }
             .padding()
             .background(Color.white)
             .cornerRadius(12)
             .shadow(radius: 2)
+            
+            
         }
-       
         .navigationBarBackButtonHidden(true)
-
     }
+    
 }
-
 struct SuccessfullOrderView_Preview: PreviewProvider {
     static var previews: some View {
         SuccessfullOrderView(viewModel: MainViewModel())

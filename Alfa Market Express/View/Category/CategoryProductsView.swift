@@ -15,18 +15,18 @@ struct CategoryProductsView: View {
     var body: some View {
         VStack {
             if let category = selectedCategory {
-                // Кнопка "Назад" с иконкой стрелки
+               
                 HStack {
                     Button(action: {
-                        selectedCategory = nil  // Возврат к категориям
+                        selectedCategory = nil
                     }) {
                         HStack {
-                            Image(systemName: "chevron.left")  // Стрелочка
+                            Image(systemName: "chevron.left")
                             Text("Назад")
                         }
                     }
                     .padding()
-                    .foregroundColor(.colorGreen)  // Цвет кнопки
+                    .foregroundColor(.colorGreen)
                     Spacer()
                 }
                 

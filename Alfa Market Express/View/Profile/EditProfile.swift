@@ -91,7 +91,7 @@ struct EditProfile: View {
     private var saveButton: some View {
         Button(action: {
             Task {
-                viewModel.profileViewModel.updateProfile { success in
+                await viewModel.profileViewModel.updateProfile { success in
                     print(success ? "Профиль успешно сохранен" : "Ошибка при сохранении профиля")
                 }
             }
