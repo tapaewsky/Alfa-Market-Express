@@ -19,9 +19,9 @@ struct SearchBar: View {
                     .padding(11)
 
                 TextField("Поиск", text: $viewModel.searchViewModel.searchText, onCommit: {
-                    // Переход на новое представление по нажатию клавиши Return
+                   
                     if !viewModel.searchViewModel.searchText.isEmpty {
-                        viewModel.searchViewModel.filteredProducts // Фильтрация продуктов
+                        viewModel.searchViewModel.filteredProducts
                         showSearchResults = true
                     }
                 })
@@ -29,7 +29,7 @@ struct SearchBar: View {
                 .onChange(of: viewModel.searchViewModel.searchText) { newValue in
                     isSearching = !newValue.isEmpty
                     if !newValue.isEmpty {
-                        viewModel.searchViewModel.searchProducts(query: newValue) // Загружаем продукты при каждом изменении текста
+                        viewModel.searchViewModel.searchProducts(query: newValue)
                     }
                 }
 
@@ -37,7 +37,7 @@ struct SearchBar: View {
                     Button(action: {
                         viewModel.searchViewModel.searchText = ""
                         isSearching = false
-                        viewModel.searchViewModel.filteredProducts // Очистка фильтрованных продуктов
+                        viewModel.searchViewModel.filteredProducts
                     }) {
                         Image(systemName: "xmark.circle.fill")
                             .foregroundColor(.gray)
@@ -50,7 +50,7 @@ struct SearchBar: View {
             .shadow(radius: 1)
             .padding()
 
-            // Переход на новый экран с результатами поиска
+           
             NavigationLink(destination: SearchResultsView(
                 viewModel: viewModel,
                 products: viewModel.searchViewModel.filteredProducts,
@@ -75,7 +75,6 @@ struct SearchResultsView: View {
                 .navigationTitle("Результаты поиска")
                 .navigationBarTitleDisplayMode(.inline)
                 .navigationBarItems(leading: CustomBackButton(label: "Назад", color: .colorGreen) {
-                    // Действие для возврата на предыдущий экран
                     self.presentationMode.wrappedValue.dismiss()
                 })
 

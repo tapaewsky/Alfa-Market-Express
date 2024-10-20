@@ -10,44 +10,59 @@ struct CategoryProductsView: View {
     @StateObject var viewModel: MainViewModel
     @State private var selectedCategory: Category? = nil
     @State private var isFetching: Bool = false
+    @Environment(\.presentationMode) var presentationMode
 
     var body: some View {
-        
-            VStack {
-                if let category = selectedCategory {
-                    ScrollView {
-                        if viewModel.productViewModel.products.isEmpty && !isFetching {
-                            Text("Нет доступных продуктов для категории: \(category.name)")
-                                .padding()
-                        } else {
-                            ProductGridView(
-                                viewModel: viewModel,
-                                products: viewModel.productViewModel.products.filter { $0.category == category.id },
-                                onFavoriteToggle: { _ in }
-                            )
-                            
-                        }
-                    }
-                    .onAppear {
-                        loadProducts(for: category)
-                    }
-                } else { 
-                    LazyVGrid(columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 1)], spacing: 10) {
-                        ForEach(viewModel.categoryViewModel.categories) { category in
-                            Button(action: {
-                                selectedCategory = category
-                            }) {
-                                CategoryCardView(category: category)
-                            }
+        VStack {
+            if let category = selectedCategory {
+                // Кнопка "Назад" с иконкой стрелки
+                HStack {
+                    Button(action: {
+                        selectedCategory = nil  // Возврат к категориям
+                    }) {
+                        HStack {
+                            Image(systemName: "chevron.left")  // Стрелочка
+                            Text("Назад")
                         }
                     }
                     .padding()
-                    
+                    .foregroundColor(.colorGreen)  // Цвет кнопки
+                    Spacer()
                 }
+                
+                ScrollView {
+                    if viewModel.productViewModel.products.isEmpty && !isFetching {
+                        Text("Нет доступных продуктов для категории: \(category.name)")
+                            .padding()
+                    } else {
+                        ProductGridView(
+                            viewModel: viewModel,
+                            products: viewModel.productViewModel.products.filter { $0.category == category.id },
+                            onFavoriteToggle: { _ in }
+                        )
+                    }
+                }
+                .onAppear {
+                    loadProducts(for: category)
+                }
+
+            } else {
+                LazyVGrid(columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 1)], spacing: 10) {
+                    ForEach(viewModel.categoryViewModel.categories) { category in
+                        Button(action: {
+                            selectedCategory = category
+                        }) {
+                            CategoryCardView(category: category)
+                        }
+                    }
+                }
+                .padding()
             }
-       }
+        }
+    }
 
     private func loadProducts(for category: Category) {
+        guard !isFetching else { return }
         isFetching = true
         viewModel.productViewModel.fetchProducts { success in
             DispatchQueue.main.async {

@@ -15,7 +15,7 @@ struct CategoryView: View {
             VStack {
                 HeaderView {
                     SearchBar(viewModel: viewModel)
-                        .padding(.horizontal)
+                        
                 }
                 ScrollView {
                     if viewModel.categoryViewModel.categories.isEmpty && !isFetching {

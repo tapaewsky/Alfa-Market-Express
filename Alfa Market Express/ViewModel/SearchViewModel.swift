@@ -15,9 +15,9 @@ class SearchViewModel: ObservableObject {
     var products: [Product] = []
     
     func searchProducts(query: String) {
-        // Если запрос пустой, не выполняем поиск
+    print("Запрос на searchProducts")
         guard !query.isEmpty else {
-            self.products = []  // Очищаем список продуктов, если нет запроса
+            self.products = []
             return
         }
 

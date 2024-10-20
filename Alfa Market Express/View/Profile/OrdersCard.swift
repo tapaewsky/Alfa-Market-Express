@@ -23,8 +23,6 @@ struct OrdersCard: View {
                 createdAtInfo
                 statusInfo
             }
-           
-//            .padding(.leading)
 
             Spacer()
         }
@@ -107,7 +105,7 @@ struct OrdersCard: View {
     }
 }
 
-// Пример для использования в PreviewProvider с настоящим JSON
+
 
 struct Preview_OrdersCard: PreviewProvider {
     static var previews: some View {

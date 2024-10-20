@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct OrdersView: View {
-    @ObservedObject var viewModel: MainViewModel
+    @StateObject var viewModel: MainViewModel
     @State private var isFetching: Bool = false
     
     var body: some View {
@@ -32,12 +32,12 @@ struct OrdersView: View {
                 }
             }
             .onAppear {
-               loadProfile()
+                loadOrders()
             }
         }
     }
     
-    private func loadProfile() {
+    private func loadOrders() {
         isFetching = true
         viewModel.ordersViewModel.fetchOrders { success in
             DispatchQueue.main.async {

@@ -9,8 +9,8 @@ import SwiftUI
 
 struct CheckoutView: View {
     @ObservedObject var viewModel: MainViewModel
-    
-    @State private var comment: String = "" 
+    @State private var showSuccessView = false
+    @State private var comment: String = ""
     
     var body: some View {
         ZStack {
@@ -127,49 +127,52 @@ struct CheckoutView: View {
     }
     
     private var orderButton: some View {
-        Button(action: {
-            Task {
-                let selectedProducts = viewModel.cartViewModel.cartProduct.filter {
-                    viewModel.cartViewModel.selectedProducts[$0.id] == true
-                }
-                
-                guard !selectedProducts.isEmpty else {
-                    print("Нет выбранных продуктов для заказа.")
-                    return
-                }
-
-                var orderItems: [OrderItem] = []
-                
-                do {
-                    for product in selectedProducts {
-                        let orderItem = viewModel.ordersViewModel.orderItemFromCartProduct(product)
-                        orderItems.append(orderItem)
+        NavigationLink(destination: SuccessfullOrderView(viewModel: viewModel), isActive: $showSuccessView) {
+            Button(action: {
+                Task {
+                    let selectedProducts = viewModel.cartViewModel.cartProduct.filter {
+                        viewModel.cartViewModel.selectedProducts[$0.id] == true
                     }
                     
-                    if orderItems.isEmpty {
-                        print("Ошибка: нет конвертированных товаров для заказа.")
+                    guard !selectedProducts.isEmpty else {
+                        print("Нет выбранных продуктов для заказа.")
                         return
                     }
 
-                    let order = try await viewModel.ordersViewModel.createOrder(
-                        items: orderItems,
-                        comments: comment,
-                        accessToken: viewModel.ordersViewModel.authManager.accessToken ?? ""
-                    )
+                    var orderItems: [OrderItem] = []
                     
-                    print("Заказ успешно создан: \(order)")
-                    
-                } catch {
-                    print("Ошибка при создании заказа: \(error.localizedDescription)")
+                    do {
+                        for product in selectedProducts {
+                            let orderItem = viewModel.ordersViewModel.orderItemFromCartProduct(product)
+                            orderItems.append(orderItem)
+                        }
+                        
+                        if orderItems.isEmpty {
+                            print("Ошибка: нет конвертированных товаров для заказа.")
+                            return
+                        }
+
+                        let order = try await viewModel.ordersViewModel.createOrder(
+                            items: orderItems,
+                            comments: comment,
+                            accessToken: viewModel.ordersViewModel.authManager.accessToken ?? ""
+                        )
+                        
+                        print("Заказ успешно создан: \(order)")
+                        showSuccessView = true  // Устанавливаем true, чтобы перейти на SuccessfullOrderView
+                        
+                    } catch {
+                        print("Ошибка при создании заказа: \(error.localizedDescription)")
+                    }
                 }
+            }) {
+                Text("Заказать")
+                    .padding()
+                    .frame(maxWidth: .infinity)
+                    .background(Color.colorGreen)
+                    .cornerRadius(15)
+                    .foregroundColor(.white)
             }
-        }) {
-            Text("Заказать")
-                .padding()
-                .frame(maxWidth: .infinity)
-                .background(Color.green)
-                .cornerRadius(15)
-                .foregroundColor(.white)
         }
     }
     

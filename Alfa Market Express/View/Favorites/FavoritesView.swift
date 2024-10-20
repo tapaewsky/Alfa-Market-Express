@@ -16,7 +16,7 @@ struct FavoritesView: View {
         VStack {
             HeaderView {
                 SearchBar(viewModel: viewModel)
-                    .padding(.horizontal)
+                    
             }
 
             ScrollView {
@@ -31,6 +31,8 @@ struct FavoritesView: View {
                                 FavoritesCardView(product: product, viewModel: viewModel)
                             }
                             .buttonStyle(PlainButtonStyle())
+                            .padding(.vertical, 2)
+                            .padding(.horizontal, 15)
                         }
                     }
                 }

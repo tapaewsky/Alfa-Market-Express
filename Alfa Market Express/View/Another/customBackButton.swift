@@ -8,19 +8,19 @@
 import SwiftUI
 
 struct CustomBackButton: View {
-    var label: String = "Назад"  // По умолчанию текст "Назад", можно менять
-    var color: Color = .blue     // По умолчанию синий цвет, можно менять
-    var action: () -> Void       // Действие при нажатии на кнопку
+    var label: String = "Назад"
+    var color: Color = .blue
+    var action: (() -> Void)?
     
     var body: some View {
         Button(action: {
-            action()  // Выполняем переданное действие
+            action?()
         }) {
             HStack {
                 Image(systemName: "chevron.left")
-                    .foregroundColor(color) // Цвет иконки
+                    .foregroundColor(color)
                 Text(label)
-                    .foregroundColor(color) // Цвет текста
+                    .foregroundColor(color)
             }
         }
     }
