@@ -11,23 +11,35 @@ struct CheckoutView: View {
     @ObservedObject var viewModel: MainViewModel
     @State private var showSuccessView = false
     @State private var comment: String = ""
+    @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
         ZStack {
             Color.white.ignoresSafeArea()
+            
             VStack {
                 selectedProductsList
-                title
-                storeInfo
-                Spacer()
-                commentSection
-                Spacer()
-                orderButton
-                Spacer()
+                    .padding(0)
+                
+               
+                VStack {
+                    title
+                    storeInfo
+                    Spacer()
+                    commentSection
+                    Spacer()
+                    orderButton
+                    Spacer()
+                }
+                .padding() 
             }
-            .padding()
+            .navigationBarItems(leading: CustomBackButton(label: "Назад", color: .colorGreen) {
+                self.presentationMode.wrappedValue.dismiss()
+            })
         }
+        .navigationBarBackButtonHidden(true)
     }
+
     
     private var selectedProductsList: some View {
         ScrollView {
@@ -49,12 +61,12 @@ struct CheckoutView: View {
                         product: cartProduct.product,
                         isSelected: isSelected
                     )
-                    .padding(.vertical, 1 )
+                    .padding(.vertical, 2 )
                     .padding(.horizontal, 15)
                 }
             }
         }
-        .frame(maxHeight: 400)
+//        .frame(maxHeight: 400)
     }
     
     private var title: some View {
