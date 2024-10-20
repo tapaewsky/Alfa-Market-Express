@@ -3,7 +3,7 @@
 //  WareHouse1
 //
 //  Created by Said Tapaev on 06.07.2024.
-//
+//пака
 
 import SwiftUI
 
