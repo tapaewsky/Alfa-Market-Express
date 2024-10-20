@@ -32,7 +32,7 @@ class OrdersViewModel: ObservableObject {
             return
         }
         
-        guard let url = URL(string: baseURL) else {
+        guard let url = URL(string: baseURL) else { 
             print("Неверный URL")
             completion(false)
             return
@@ -41,9 +41,7 @@ class OrdersViewModel: ObservableObject {
         var request = URLRequest(url: url)
         request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
         
-        URLSession.shared.dataTask(with: request) {  data, response, error in
-         
-
+        URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
                 print("Ошибка при получении заказов: \(error.localizedDescription)")
                 DispatchQueue.main.async {
@@ -61,7 +59,7 @@ class OrdersViewModel: ObservableObject {
             }
             
             do {
-                let fetchedOrders: [Order] = try JSONDecoder().decode([Order].self, from: data)
+                let fetchedOrders = try JSONDecoder().decode([Order].self, from: data)
                 DispatchQueue.main.async {
                     self.orders = fetchedOrders
                     completion(true)
@@ -74,6 +72,7 @@ class OrdersViewModel: ObservableObject {
             }
         }.resume()
     }
+
 
     
     // MARK: - Cancel Order
