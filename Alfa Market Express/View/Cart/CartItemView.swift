@@ -9,7 +9,7 @@ import Kingfisher
 
 struct CartItemView: View {
     @ObservedObject var viewModel: MainViewModel
-    let product: Product
+    var product: Product
     @State private var quantity: Int
     @State private var totalPriceForProduct: Double
     var cartProduct: CartProduct

@@ -18,23 +18,26 @@ struct SearchBar: View {
                     .foregroundColor(.gray)
                     .padding(11)
 
-                TextField("Поиск", text: $viewModel.productViewModel.searchText, onCommit: {
+                TextField("Поиск", text: $viewModel.searchViewModel.searchText, onCommit: {
                     // Переход на новое представление по нажатию клавиши Return
-                    if !viewModel.productViewModel.searchText.isEmpty {
-                        viewModel.productViewModel.filteredProducts // Фильтрация продуктов
+                    if !viewModel.searchViewModel.searchText.isEmpty {
+                        viewModel.searchViewModel.filteredProducts // Фильтрация продуктов
                         showSearchResults = true
                     }
                 })
                 .padding(.vertical, 10)
-                .onChange(of: viewModel.productViewModel.searchText) { newValue in
+                .onChange(of: viewModel.searchViewModel.searchText) { newValue in
                     isSearching = !newValue.isEmpty
+                    if !newValue.isEmpty {
+                        viewModel.searchViewModel.searchProducts(query: newValue) // Загружаем продукты при каждом изменении текста
+                    }
                 }
 
                 if isSearching {
                     Button(action: {
-                        viewModel.productViewModel.searchText = ""
+                        viewModel.searchViewModel.searchText = ""
                         isSearching = false
-                        viewModel.productViewModel.filteredProducts // Очистка фильтрованных продуктов
+                        viewModel.searchViewModel.filteredProducts // Очистка фильтрованных продуктов
                     }) {
                         Image(systemName: "xmark.circle.fill")
                             .foregroundColor(.gray)
@@ -50,7 +53,7 @@ struct SearchBar: View {
             // Переход на новый экран с результатами поиска
             NavigationLink(destination: SearchResultsView(
                 viewModel: viewModel,
-                products: viewModel.productViewModel.filteredProducts, // Передаем отфильтрованные продукты
+                products: viewModel.searchViewModel.filteredProducts,
                 onFavoriteToggle: { product in
                     viewModel.productViewModel
                 }), isActive: $showSearchResults) {
@@ -62,7 +65,7 @@ struct SearchBar: View {
 
 struct SearchResultsView: View {
     @Environment(\.presentationMode) var presentationMode
-    @ObservedObject var viewModel: MainViewModel
+    @StateObject var viewModel: MainViewModel
     var products: [Product]
     var onFavoriteToggle: (Product) -> Void
     

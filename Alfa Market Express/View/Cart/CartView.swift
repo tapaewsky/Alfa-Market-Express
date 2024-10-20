@@ -7,10 +7,10 @@
 import SwiftUI
 
 struct CartView: View {
-    @ObservedObject var viewModel: MainViewModel
+    @StateObject var viewModel: MainViewModel
 
     var body: some View {
-            CartMainView(viewModel: viewModel)
+        CartMainView(viewModel: viewModel)
 //                .environmentObject(viewModel)
     }
 }

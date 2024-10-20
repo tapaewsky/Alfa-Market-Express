@@ -32,7 +32,6 @@ struct EditProfile: View {
             .font(.title2)
             .bold()
             .foregroundColor(.black)
-           
     }
 
     private var imagePickerButton: some View {
@@ -43,7 +42,6 @@ struct EditProfile: View {
                     .aspectRatio(contentMode: .fill)
                     .frame(height: 200)
                     .cornerRadius(20)
-                    .padding(.horizontal, 5)
                     .frame(maxWidth: .infinity)
             } else {
                 if let storeImageUrl = viewModel.profileViewModel.userProfile.storeImageUrl,
@@ -54,13 +52,11 @@ struct EditProfile: View {
                         .aspectRatio(contentMode: .fill)
                         .frame(height: 200)
                         .cornerRadius(20)
-                        .padding(.horizontal, 5)
                         .frame(maxWidth: .infinity)
                 } else {
                     Color.gray
                         .frame(height: 200)
                         .cornerRadius(20)
-                        .padding(.horizontal, 5)
                         .frame(maxWidth: .infinity)
                 }
             }
@@ -75,7 +71,7 @@ struct EditProfile: View {
     }
 
     private var formFields: some View {
-        VStack/*(spacing: 10)*/ {
+        VStack {
             editTextField(placeholder: viewModel.profileViewModel.userProfile.firstName, text: $viewModel.profileViewModel.userProfile.firstName)
             editTextField(placeholder: viewModel.profileViewModel.userProfile.lastName, text: $viewModel.profileViewModel.userProfile.lastName)
             editTextField(placeholder: viewModel.profileViewModel.userProfile.storeName, text: $viewModel.profileViewModel.userProfile.storeName)

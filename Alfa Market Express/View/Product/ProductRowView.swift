@@ -9,7 +9,7 @@ import Kingfisher
 
 struct ProductRowView: View {
     var product: Product
-    @ObservedObject var viewModel: ProductViewModel
+    @StateObject var viewModel: MainViewModel
     var onFavoriteToggle: () -> Void
 
     var body: some View {

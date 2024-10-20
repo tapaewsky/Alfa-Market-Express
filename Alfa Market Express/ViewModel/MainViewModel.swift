@@ -16,6 +16,7 @@ class MainViewModel: ObservableObject {
     @Published var ordersViewModel: OrdersViewModel
     @Published var authManager = AuthManager.shared
     @Published var slideViewModel: SlideViewModel
+    @Published var searchViewModel: SearchViewModel
 
     init() {
         favoritesViewModel = FavoritesViewModel()
@@ -25,6 +26,7 @@ class MainViewModel: ObservableObject {
         profileViewModel = ProfileViewModel()
         ordersViewModel = OrdersViewModel(cartViewModel: CartViewModel())
         slideViewModel = SlideViewModel(authManager:   AuthManager())
+        searchViewModel = SearchViewModel()
       
     } 
 }

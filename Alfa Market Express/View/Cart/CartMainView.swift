@@ -12,6 +12,9 @@ struct CartMainView: View {
     @State private var selectAll: Bool = false
     @State private var isFetching = false
     @State private var isSelectionMode: Bool = false
+//    var product: Product
+    @State private var quantity: Int = 1
+    @State private var isAddedToCart: Bool = false
     
     var body: some View {
         VStack(spacing: 0) {
@@ -45,9 +48,9 @@ struct CartMainView: View {
                 Spacer()
                 selectionButton
             }
-            if isSelectionMode {
-                selectionControls
-            }
+//            if isSelectionMode {
+//                selectionControls
+//            }
         }
         .padding()
     }
@@ -81,15 +84,15 @@ struct CartMainView: View {
         }
     }
     
-    private var selectionControls: some View {
-        HStack {
-            selectAllButton
-            
-            Spacer()
-            
-            removeButton
-        }
-    }
+//    private var selectionControls: some View {
+//        HStack {
+//            selectAllButton
+//            
+//            Spacer()
+//            
+//            removeButton
+//        }
+//    }
     
     private var selectAllButton: some View {
         Button(action: {
@@ -107,14 +110,16 @@ struct CartMainView: View {
         }
     }
     
-    private var removeButton: some View {
-        Button(action: {
-            removeSelectedProduct()
-        }) {
-            Image(systemName: "trash")
-                .foregroundColor(.colorGreen)
-        }
-    }
+//    private var removeButton: some View {
+//        Button(action: {
+//            Task {
+//               await toggleCart()
+//            }
+//        }) {
+//            Image(systemName: "trash")
+//                .foregroundColor(.colorGreen)
+//        }
+//    }
     
     private var emptyCartView: some View {
         Text("Корзина пуста")
@@ -191,20 +196,9 @@ struct CartMainView: View {
         }
     }
     
-    private func removeSelectedProduct() {
-        let selectedProductIds = viewModel.cartViewModel.selectedProducts.compactMap { $0.value ? $0.key : nil }
-        print("ID выбранных продуктов для удаления: \(selectedProductIds)")
-        
-        Task {
-            for productId in selectedProductIds {
-                if let productToRemove = viewModel.cartViewModel.cartProduct.first(where: { $0.product.id == productId }) {
-                    await viewModel.cartViewModel.removeFromCart(productToRemove.product)
-                    print("Продукт с ID: \(productToRemove.product.id) успешно удален из корзины")
-                } else {
-                    print("Продукт с ID \(productId) не найден в корзине")
-                }
-            }
-            viewModel.cartViewModel.clearSelection()
-        }
-    }
+//    private func toggleCart() async {
+//        
+//    await viewModel.cartViewModel.removeFromCart(product)
+//        
+//    }
 }

@@ -15,17 +15,6 @@ class CategoryViewModel: ObservableObject {
     @Published var isError = false
     private let baseURL = "http://95.174.90.162:60/api/categories/"
     private var authManager = AuthManager.shared
-//    private let categoriesKey = "cachedCategories"
-
-    // MARK: - Initializer
-//    init() {
-//        loadCachedData()
-//        fetchData { success in
-//            if !success {
-//                self.loadCachedData()
-//            }
-//        }
-//    }
 
     // MARK: - Data Fetching
     func fetchCategory(completion: @escaping (Bool) -> Void) {
@@ -77,21 +66,4 @@ class CategoryViewModel: ObservableObject {
             }
         }.resume()
     }
-    
-
-   
-
-//    // MARK: - Caching
-//    private func loadCachedData() {
-//        if let categoriesData = UserDefaults.standard.data(forKey: categoriesKey),
-//           let cachedCategories = try? JSONDecoder().decode([Category].self, from: categoriesData) {
-//            categories = cachedCategories
-//        }
-//    }
-
-//    private func saveCategories() {
-//        if let data = try? JSONEncoder().encode(categories) {
-//            UserDefaults.standard.set(data, forKey: categoriesKey)
-//        }
-//    }
 }

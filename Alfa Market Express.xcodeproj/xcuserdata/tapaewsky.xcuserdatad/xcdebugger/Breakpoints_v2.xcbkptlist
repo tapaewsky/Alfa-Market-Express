@@ -30,8 +30,8 @@
             filePath = "Alfa Market Express/View/Cart/CartMainView.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "24"
-            endingLineNumber = "24"
+            startingLineNumber = "27"
+            endingLineNumber = "27"
             landmarkName = "body"
             landmarkType = "24">
          </BreakpointContent>
@@ -65,6 +65,268 @@
             startingLineNumber = "27"
             endingLineNumber = "27"
             landmarkName = "fetchSlides(completion:)"
+            landmarkType = "7">
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "914D6608-305F-4615-AE3B-63419D5CFC74"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Alfa Market Express/ViewModel/CartViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "162"
+            endingLineNumber = "162"
+            landmarkName = "removeFromCart(_:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "914D6608-305F-4615-AE3B-63419D5CFC74 - 85799cd667055e66"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Alfa_Marker_Express.CartViewModel.removeFromCart(Alfa_Marker_Express.Product) async -&gt; ()"
+                  moduleName = "Alfa Marker Express.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tapaewsky/Library/Mobile%20Documents/com~apple~CloudDocs/Xcode/Projects/Alfa-Market-Express/Alfa%20Market%20Express/ViewModel/CartViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "162"
+                  endingLineNumber = "162">
+               </Location>
+               <Location
+                  uuid = "914D6608-305F-4615-AE3B-63419D5CFC74 - 5c8c3de6757faf6a"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(1) suspend resume partial function for Alfa_Marker_Express.CartViewModel.removeFromCart(Alfa_Marker_Express.Product) async -&gt; ()"
+                  moduleName = "Alfa Marker Express.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tapaewsky/Library/Mobile%20Documents/com~apple~CloudDocs/Xcode/Projects/Alfa-Market-Express/Alfa%20Market%20Express/ViewModel/CartViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "162"
+                  endingLineNumber = "162">
+               </Location>
+               <Location
+                  uuid = "914D6608-305F-4615-AE3B-63419D5CFC74 - 11b68ac81dc4921a"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(2) await resume partial function for Alfa_Marker_Express.CartViewModel.removeFromCart(Alfa_Marker_Express.Product) async -&gt; ()"
+                  moduleName = "Alfa Marker Express.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tapaewsky/Library/Mobile%20Documents/com~apple~CloudDocs/Xcode/Projects/Alfa-Market-Express/Alfa%20Market%20Express/ViewModel/CartViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "162"
+                  endingLineNumber = "162">
+               </Location>
+               <Location
+                  uuid = "914D6608-305F-4615-AE3B-63419D5CFC74 - d5b1298c43ebf36c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for Alfa_Marker_Express.CartViewModel.removeFromCart(Alfa_Marker_Express.Product) async -&gt; ()"
+                  moduleName = "Alfa Marker Express.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tapaewsky/Library/Mobile%20Documents/com~apple~CloudDocs/Xcode/Projects/Alfa-Market-Express/Alfa%20Market%20Express/ViewModel/CartViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "162"
+                  endingLineNumber = "162">
+               </Location>
+               <Location
+                  uuid = "914D6608-305F-4615-AE3B-63419D5CFC74 - d5b1298c43ebf36c"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for Alfa_Marker_Express.CartViewModel.removeFromCart(Alfa_Marker_Express.Product) async -&gt; ()"
+                  moduleName = "Alfa Marker Express.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tapaewsky/Library/Mobile%20Documents/com~apple~CloudDocs/Xcode/Projects/Alfa-Market-Express/Alfa%20Market%20Express/ViewModel/CartViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "162"
+                  endingLineNumber = "162">
+               </Location>
+               <Location
+                  uuid = "914D6608-305F-4615-AE3B-63419D5CFC74 - ee5a60aca6225e18"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(4) await resume partial function for Alfa_Marker_Express.CartViewModel.removeFromCart(Alfa_Marker_Express.Product) async -&gt; ()"
+                  moduleName = "Alfa Marker Express.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tapaewsky/Library/Mobile%20Documents/com~apple~CloudDocs/Xcode/Projects/Alfa-Market-Express/Alfa%20Market%20Express/ViewModel/CartViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "162"
+                  endingLineNumber = "162">
+               </Location>
+               <Location
+                  uuid = "914D6608-305F-4615-AE3B-63419D5CFC74 - 4eda253a5017c766"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(5) suspend resume partial function for Alfa_Marker_Express.CartViewModel.removeFromCart(Alfa_Marker_Express.Product) async -&gt; ()"
+                  moduleName = "Alfa Marker Express.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tapaewsky/Library/Mobile%20Documents/com~apple~CloudDocs/Xcode/Projects/Alfa-Market-Express/Alfa%20Market%20Express/ViewModel/CartViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "162"
+                  endingLineNumber = "162">
+               </Location>
+               <Location
+                  uuid = "914D6608-305F-4615-AE3B-63419D5CFC74 - 82689aefa9592d7b"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(6) suspend resume partial function for Alfa_Marker_Express.CartViewModel.removeFromCart(Alfa_Marker_Express.Product) async -&gt; ()"
+                  moduleName = "Alfa Marker Express.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tapaewsky/Library/Mobile%20Documents/com~apple~CloudDocs/Xcode/Projects/Alfa-Market-Express/Alfa%20Market%20Express/ViewModel/CartViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "162"
+                  endingLineNumber = "162">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "4D716059-D6E7-4234-9D20-86DCF1A99154"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Alfa Market Express/ViewModel/CartViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "165"
+            endingLineNumber = "165"
+            landmarkName = "removeFromCart(_:)"
+            landmarkType = "7">
+            <Locations>
+               <Location
+                  uuid = "4D716059-D6E7-4234-9D20-86DCF1A99154 - d5b1298c43ebf0f1"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(3) suspend resume partial function for Alfa_Marker_Express.CartViewModel.removeFromCart(Alfa_Marker_Express.Product) async -&gt; ()"
+                  moduleName = "Alfa Marker Express.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tapaewsky/Library/Mobile%20Documents/com~apple~CloudDocs/Xcode/Projects/Alfa-Market-Express/Alfa%20Market%20Express/ViewModel/CartViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "165"
+                  endingLineNumber = "165">
+               </Location>
+               <Location
+                  uuid = "4D716059-D6E7-4234-9D20-86DCF1A99154 - ee5a60aca6225e18"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(4) await resume partial function for Alfa_Marker_Express.CartViewModel.removeFromCart(Alfa_Marker_Express.Product) async -&gt; ()"
+                  moduleName = "Alfa Marker Express.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tapaewsky/Library/Mobile%20Documents/com~apple~CloudDocs/Xcode/Projects/Alfa-Market-Express/Alfa%20Market%20Express/ViewModel/CartViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "162"
+                  endingLineNumber = "162">
+               </Location>
+               <Location
+                  uuid = "4D716059-D6E7-4234-9D20-86DCF1A99154 - ee5a60aca6225d85"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(4) await resume partial function for Alfa_Marker_Express.CartViewModel.removeFromCart(Alfa_Marker_Express.Product) async -&gt; ()"
+                  moduleName = "Alfa Marker Express.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tapaewsky/Library/Mobile%20Documents/com~apple~CloudDocs/Xcode/Projects/Alfa-Market-Express/Alfa%20Market%20Express/ViewModel/CartViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "165"
+                  endingLineNumber = "165">
+               </Location>
+               <Location
+                  uuid = "4D716059-D6E7-4234-9D20-86DCF1A99154 - 4eda253a5017c766"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(5) suspend resume partial function for Alfa_Marker_Express.CartViewModel.removeFromCart(Alfa_Marker_Express.Product) async -&gt; ()"
+                  moduleName = "Alfa Marker Express.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tapaewsky/Library/Mobile%20Documents/com~apple~CloudDocs/Xcode/Projects/Alfa-Market-Express/Alfa%20Market%20Express/ViewModel/CartViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "162"
+                  endingLineNumber = "162">
+               </Location>
+               <Location
+                  uuid = "4D716059-D6E7-4234-9D20-86DCF1A99154 - 4eda253a5017c4fb"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(5) suspend resume partial function for Alfa_Marker_Express.CartViewModel.removeFromCart(Alfa_Marker_Express.Product) async -&gt; ()"
+                  moduleName = "Alfa Marker Express.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tapaewsky/Library/Mobile%20Documents/com~apple~CloudDocs/Xcode/Projects/Alfa-Market-Express/Alfa%20Market%20Express/ViewModel/CartViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "165"
+                  endingLineNumber = "165">
+               </Location>
+               <Location
+                  uuid = "4D716059-D6E7-4234-9D20-86DCF1A99154 - 82689aefa9592d7b"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(6) suspend resume partial function for Alfa_Marker_Express.CartViewModel.removeFromCart(Alfa_Marker_Express.Product) async -&gt; ()"
+                  moduleName = "Alfa Marker Express.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tapaewsky/Library/Mobile%20Documents/com~apple~CloudDocs/Xcode/Projects/Alfa-Market-Express/Alfa%20Market%20Express/ViewModel/CartViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "162"
+                  endingLineNumber = "162">
+               </Location>
+               <Location
+                  uuid = "4D716059-D6E7-4234-9D20-86DCF1A99154 - 82689aefa9592ee6"
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "(6) suspend resume partial function for Alfa_Marker_Express.CartViewModel.removeFromCart(Alfa_Marker_Express.Product) async -&gt; ()"
+                  moduleName = "Alfa Marker Express.debug.dylib"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/tapaewsky/Library/Mobile%20Documents/com~apple~CloudDocs/Xcode/Projects/Alfa-Market-Express/Alfa%20Market%20Express/ViewModel/CartViewModel.swift"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "165"
+                  endingLineNumber = "165">
+               </Location>
+            </Locations>
+         </BreakpointContent>
+      </BreakpointProxy>
+      <BreakpointProxy
+         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
+         <BreakpointContent
+            uuid = "42ED93F3-2ACF-47C3-82C7-2079D9DAE6EA"
+            shouldBeEnabled = "Yes"
+            ignoreCount = "0"
+            continueAfterRunningActions = "No"
+            filePath = "Alfa Market Express/ViewModel/CartViewModel.swift"
+            startingColumnNumber = "9223372036854775807"
+            endingColumnNumber = "9223372036854775807"
+            startingLineNumber = "167"
+            endingLineNumber = "167"
+            landmarkName = "removeFromCart(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

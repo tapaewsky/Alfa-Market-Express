@@ -22,8 +22,8 @@ struct CategoryView: View {
                         Text("Нет доступных категорий")
                             .padding()
                     } else {
-                        CategoryGridView(viewModel: viewModel)
-                            .padding()
+                        CategoryProductsView(viewModel: viewModel)
+                            
                     }
                 }
             }

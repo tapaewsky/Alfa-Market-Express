@@ -8,7 +8,7 @@ import SwiftUI
 import Kingfisher
 
 struct ProductDetailView: View {
-    @ObservedObject var viewModel: MainViewModel
+    @StateObject var viewModel: MainViewModel
     var product: Product
     @State private var quantity: Int = 1
     @State private var isFavorite: Bool = false
@@ -76,20 +76,6 @@ struct ProductDetailView: View {
                 .font(.title)
                 .padding(.horizontal)
             
-            
-            
-//            Button(action: {
-//                Task {
-//                    await viewModel.favoritesViewModel.toggleFavorite(for: product)
-//                }
-//            }) {
-//                Image(systemName: viewModel.favoritesViewModel.isFavorite(product) ? "heart.fill" : "heart")
-//                    .foregroundColor(viewModel.favoritesViewModel.isFavorite(product) ? .red : .gray)
-//                    .padding(5)
-//                    .background(Color.gray.opacity(0.7))
-//                    .cornerRadius(10)
-//            }
-            
         }
     }
     
@@ -144,7 +130,7 @@ struct ProductDetailView: View {
                 .bold()
             
             LazyVGrid(columns: [GridItem(.flexible(), spacing: 1), GridItem(.flexible(), spacing: 10)], spacing: 5) {
-                ForEach(viewModel.productViewModel.filteredProducts) { product in
+                ForEach(viewModel.searchViewModel.filteredProducts) { product in
                     NavigationLink(destination: ProductDetailView(viewModel: viewModel, product: product)) {
                         ProductCardView(product: product, viewModel: viewModel, onFavoriteToggle: {
                             Task {
