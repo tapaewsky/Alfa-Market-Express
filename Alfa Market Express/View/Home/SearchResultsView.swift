@@ -10,7 +10,8 @@ struct SearchBar: View {
     @ObservedObject var viewModel: MainViewModel
     @State private var isSearching: Bool = false
     @State private var showSearchResults: Bool = false // Для показа нового экрана
-
+   
+    
     var body: some View {
         VStack {
             HStack {

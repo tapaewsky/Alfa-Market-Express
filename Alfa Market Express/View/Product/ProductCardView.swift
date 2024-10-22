@@ -143,7 +143,7 @@ struct ProductCardView: View {
         if isAddedToCart {
             print("Product to remove: \(product.id), name: \(product.name)")
 
-            await viewModel.cartViewModel.removeFromCart(product)
+            await viewModel.cartViewModel.removeFromCard(product)
         } else {
             await viewModel.cartViewModel.addToCart(product, quantity: quantity)
         }

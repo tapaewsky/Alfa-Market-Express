@@ -11,7 +11,6 @@ struct OrdersView: View {
     @StateObject var viewModel: MainViewModel
     @State private var isFetching: Bool = false
     var body: some View {
-       
             VStack {
                     if viewModel.ordersViewModel.orders.isEmpty  && !isFetching {
                         Text("Заказы отсутствуют")

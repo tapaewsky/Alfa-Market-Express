@@ -121,7 +121,7 @@ struct FavoritesCardView: View {
     
     private func toggleCart() async {
         if isAddedToCart {
-            await viewModel.cartViewModel.removeFromCart(product)
+            await viewModel.cartViewModel.removeFromCard(product)
         } else {
             await viewModel.cartViewModel.addToCart(product, quantity: quantity)
         }

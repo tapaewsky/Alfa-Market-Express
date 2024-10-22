@@ -10,6 +10,7 @@ import Kingfisher
 struct CategoryView: View {
     @StateObject var viewModel: MainViewModel
     @State var isFetching: Bool = false
+    
 
     var body: some View {
             VStack {

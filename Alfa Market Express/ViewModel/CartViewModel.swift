@@ -9,7 +9,6 @@ import Combine
 
 class CartViewModel: ObservableObject {
     // MARK: - Properties
-//    @Published var favoritesViewModel: FavoritesViewModel
     @Published var cartProduct: [CartProduct] = []
     @Published var cart: [Product] = [] {
         didSet {
@@ -23,11 +22,10 @@ class CartViewModel: ObservableObject {
     @Published var isError = false
     @Published var selectedProducts: [Int: Bool] = [:]
     @Published var selectedProduct: Product?
-    private var dataId: Int = 0
+    @Published var dataId: Int = 0
     private let baseURL = "http://95.174.90.162:60/api/cart/"
     private var authManager = AuthManager.shared
 
-    
     // MARK: - API Calls
     func fetchCart(completion: @escaping (Bool) -> Void) {
         guard let accessToken = authManager.accessToken else {
@@ -37,7 +35,7 @@ class CartViewModel: ObservableObject {
         }
         
         guard let url = URL(string: baseURL) else {
-            print("Неверный URL")
+            print("Invalid URL")
             completion(false)
             return
         }
@@ -47,9 +45,8 @@ class CartViewModel: ObservableObject {
         
         URLSession.shared.dataTask(with: request) { data, response, error in
             
-            
             if let error = error {
-                print("Ошибка при получении коризины: \(error.localizedDescription)")
+                print("Error fetching cart: \(error.localizedDescription)")
                 DispatchQueue.main.async {
                     completion(false)
                 }
@@ -57,7 +54,7 @@ class CartViewModel: ObservableObject {
             }
             
             guard let data = data else {
-                print("Нет данных в ответе")
+                print("No data in response")
                 DispatchQueue.main.async {
                     completion(false)
                 }
@@ -71,7 +68,7 @@ class CartViewModel: ObservableObject {
                     completion(true)
                 }
             } catch {
-                print("Ошибка декодирования корзины: \(error.localizedDescription)")
+                print("Error decoding cart: \(error.localizedDescription)")
                 DispatchQueue.main.async {
                     completion(false)
                 }
@@ -126,7 +123,7 @@ class CartViewModel: ObservableObject {
                 if let index = self.cart.firstIndex(where: { $0.id == updatedProduct.product.id }) {
                     self.cart[index].quantity = updatedProduct.quantity
                 }
-                // self.saveCart() // Закомментировано для удаления кэширования
+                // self.saveCart() // Commented out to disable caching
             }
         } catch {
             DispatchQueue.main.async {
@@ -135,10 +132,10 @@ class CartViewModel: ObservableObject {
         }
     }
     
-    func removeFromCart(_ product: Product) async {
+    // This function is used to delete a product from the cart
+    func removeFromCard(_ product: Product) async {
         print("Attempting to remove product: \(product.name), ID: \(product.id)")
 
-        // Проверяем, установлен ли dataId
         guard dataId != 0 else {
             print("Error: dataId is 0. Unable to remove product.")
             return
@@ -182,7 +179,6 @@ class CartViewModel: ObservableObject {
             
             DispatchQueue.main.async {
                 self.cart.removeAll { $0.id == product.id }
-                // self.saveCart() // Закомментировано для удаления кэширования
                 print("Cart updated: product with ID \(product.id) removed")
             }
         } catch {
@@ -193,13 +189,64 @@ class CartViewModel: ObservableObject {
         }
     }
 
-    
+    // This function is used to delete a product from the cart by its ID
+    func removeFromCart(productId: Int) async {
+        print("Attempting to remove product with ID: \(productId)")
+
+        guard let url = URL(string: "\(baseURL)delete/\(productId)/") else {
+            print("Error: Invalid URL")
+            return
+        }
+
+        print("URL to remove product: \(url)")
+
+        var token = await getToken()
+        guard token != nil else {
+            print("Error: Unable to get token")
+            return
+        }
+
+        print("Token received: \(token!)")
+
+        var request = createRequest(url: url, method: "DELETE", token: token!)
+
+        do {
+            let (data, response) = try await URLSession.shared.data(for: request)
+
+            if let httpResponse = response as? HTTPURLResponse {
+                print("HTTP Status Code: \(httpResponse.statusCode)")
+
+                if httpResponse.statusCode == 204 {
+                    print("Product successfully removed")
+                } else {
+                    print("Failed to remove product. Status code: \(httpResponse.statusCode)")
+                }
+            }
+
+            if let jsonResponse = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
+                print("Response JSON: \(jsonResponse)")
+            } else {
+                print("Failed to parse response data")
+            }
+
+            DispatchQueue.main.async {
+                self.cart.removeAll { $0.id == productId }
+                print("Cart updated: product with ID \(productId) removed")
+            }
+        } catch {
+            print("Error removing product from cart: \(error.localizedDescription)")
+            DispatchQueue.main.async {
+                self.isError = true
+            }
+        }
+    }
+
     // MARK: - Product Selection
     func selectAllProducts(_ selectAll: Bool) {
         for product in cartProduct {
             selectedProducts[product.id] = selectAll
         }
-        print("Все продукты выбраны: \(selectAll)")
+        print("All products selected: \(selectAll)")
         updateSelectedTotalPrice()
     }
 
@@ -254,8 +301,6 @@ class CartViewModel: ObservableObject {
     }
     
     // MARK: - Cart Management
-    // Удалены методы loadCart и saveCart для отключения кэширования
-
     private func refreshAuthToken() {
         authManager.refreshAccessToken { success in
             if success {

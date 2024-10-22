@@ -14,6 +14,7 @@ struct CartMainView: View {
     @State private var isFetching = false
     @State private var isSelectionMode: Bool = false
     
+    
     var body: some View {
         VStack(spacing: 0) {
             header

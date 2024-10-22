@@ -184,6 +184,6 @@ struct CartItemView: View {
     }
     
     private func toggleCart() async {
-        await viewModel.cartViewModel.removeFromCart(cartProduct.product)
+        await viewModel.cartViewModel.removeFromCart(productId: cartProduct.id)
     }
 }
