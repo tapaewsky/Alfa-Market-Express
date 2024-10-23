@@ -45,7 +45,7 @@ struct ProductCardView: View {
 //        .shadow(radius: 2)
         .onAppear {
             isFavorite = viewModel.favoritesViewModel.isFavorite(product)
-            isAddedToCart = viewModel.cartViewModel.isInCart(product)
+            
         }
     }
     
@@ -85,11 +85,11 @@ struct ProductCardView: View {
             Button(action: {
                 Task {
                     await someFunctionThatCallsToggleFavorite()
-                    isFavorite.toggle() // Обновляем состояние сразу после вызова
+                    isFavorite.toggle()
                 }
             }) {
                 Image(systemName: isFavorite ? "heart.fill" : "heart")
-                    .foregroundColor(isFavorite ? .red : .gray)
+                    .foregroundColor(isFavorite ? .colorGreen : .gray)
             }
             .padding()
         }

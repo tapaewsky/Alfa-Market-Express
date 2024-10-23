@@ -32,7 +32,7 @@ struct ProductDetailView: View {
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             isFavorite = viewModel.favoritesViewModel.isFavorite(product)
-            isAddedToCart = viewModel.cartViewModel.isInCart(product)
+           
         }
     }
     
@@ -59,11 +59,12 @@ struct ProductDetailView: View {
             }
             Button(action: {
                 Task {
-                    await viewModel.favoritesViewModel.toggleFavorite(for: product)
+                    await someFunctionThatCallsToggleFavorite()
+                    isFavorite.toggle()
                 }
             }) {
-                Image(systemName: viewModel.favoritesViewModel.isFavorite(product) ? "heart.fill" : "heart")
-                    .foregroundColor(viewModel.favoritesViewModel.isFavorite(product) ? .colorGreen: .gray)
+                Image(systemName: isFavorite ? "heart.fill" : "heart")
+                    .foregroundColor(isFavorite ? .colorGreen : .gray)
                     .padding()
             }
         }
@@ -85,8 +86,7 @@ struct ProductDetailView: View {
     }
     
     private var productPrice: some View {
-        let priceText = (Double(product.price) != nil) ? "\(product.price) ₽" : "Цена не доступна"
-        return Text(priceText)
+        Text(String(format: "%.0f₽", Double(product.price) ?? 0))
             .font(.title)
             .padding(.horizontal)
             .foregroundColor(.colorRed)
@@ -158,7 +158,7 @@ struct ProductDetailView: View {
         isAddedToCart.toggle()
     }
     
-    private func someFunctionThatCallsToggleFavorite(_ product: Product) {
+    private func someFunctionThatCallsToggleFavorite() async {
         Task {
             await viewModel.favoritesViewModel.toggleFavorite(for: product)
         }

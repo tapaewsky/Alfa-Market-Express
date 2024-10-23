@@ -81,11 +81,12 @@ struct FavoritesCardView: View {
     private var favoriteButton: some View {
         Button(action: {
             Task {
-                await viewModel.favoritesViewModel.toggleFavorite(for: product)
+                await someFunctionThatCallsToggleFavorite()
+                isFavorite.toggle()
             }
         }) {
-            Image(systemName: viewModel.favoritesViewModel.isFavorite(product) ? "heart.fill" : "heart")
-                .foregroundColor(viewModel.favoritesViewModel.isFavorite(product) ? .colorGreen : .gray)
+            Image(systemName: isFavorite ? "heart.fill" : "heart")
+                .foregroundColor(isFavorite ? .colorGreen : .gray)
                 .font(.system(size: 20))
         }
     }
@@ -116,6 +117,12 @@ struct FavoritesCardView: View {
                     .foregroundColor(.white)
                     .cornerRadius(10)
             }
+        }
+    }
+    
+    private func someFunctionThatCallsToggleFavorite() async {
+        Task {
+            await viewModel.favoritesViewModel.toggleFavorite(for: product)
         }
     }
     
