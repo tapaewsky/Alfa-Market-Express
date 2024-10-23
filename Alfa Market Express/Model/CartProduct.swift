@@ -7,10 +7,10 @@
 import Foundation
 
 struct CartProduct: Decodable, Encodable, Identifiable {
-    let id: Int
-    let product: Product
-    let quantity: Int
-    let getTotalPrice: Double
+    var id: Int
+    var product: Product
+    var quantity: Int
+    var getTotalPrice: Double
     
 
     enum CodingKeys: String, CodingKey {
