@@ -10,11 +10,9 @@ import Kingfisher
 
 struct CartMainView: View {
     @StateObject var viewModel: MainViewModel
-    @State private var selectAll: Bool = false
     @State private var isFetching = false
     @State private var isSelectionMode: Bool = false
-    
-    
+
     var body: some View {
         VStack(spacing: 0) {
             header
@@ -35,9 +33,8 @@ struct CartMainView: View {
             loadCart()
         }
         .onTapGesture {
-              
-              UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
-          }
+            UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+        }
     }
 
     private var header: some View {
@@ -52,23 +49,24 @@ struct CartMainView: View {
         }
         .padding()
     }
-    
+
     private var selectionCountView: some View {
         Text("Выбрано: \(viewModel.cartViewModel.selectedProducts.filter { $0.value }.count)")
+            
             .font(.headline)
     }
-    
+
     private var cartCountView: some View {
         Text("Корзина   ")
             .font(.headline) +
-        Text("\(Set(viewModel.cartViewModel.cartProduct.map { $0.product.id }).count)")
+        Text("\(viewModel.cartViewModel.cartProduct.count)")
             .font(.headline)
             .foregroundColor(.gray) +
         Text(" товаров")
             .font(.headline)
             .foregroundColor(.gray)
     }
-    
+
     private var selectionButton: some View {
         Button(action: {
             toggleSelectionMode()
@@ -84,14 +82,14 @@ struct CartMainView: View {
             .padding()
             .foregroundColor(.gray)
     }
-    
+
     private var cartContent: some View {
         ScrollView(.vertical, showsIndicators: false) {
             cartItems
         }
         .frame(maxHeight: .infinity)
     }
-    
+
     private var cartItems: some View {
         VStack {
             ForEach(viewModel.cartViewModel.cartProduct, id: \.id) { cartProduct in
@@ -99,14 +97,17 @@ struct CartMainView: View {
                     get: { viewModel.cartViewModel.selectedProducts[cartProduct.id] ?? false },
                     set: { newValue in
                         viewModel.cartViewModel.selectedProducts[cartProduct.id] = newValue
-                        viewModel.cartViewModel.updateSelectedTotalPrice()
+                        viewModel.cartViewModel.updateSelectedTotalPrice() // Обновляем общую цену при изменении выбора
                     }
                 )
                 
                 CartItemView(
                     cartProduct: cartProduct,
                     viewModel: viewModel,
-                    isSelected: isSelected
+                    isSelected: isSelected,
+                    onCartUpdated: {
+                        viewModel.cartViewModel.updateTotalPrice() // Обновляем цену при изменении
+                    }
                 )
                 .padding(.vertical, 2)
                 .padding(.horizontal, 15)
@@ -114,10 +115,11 @@ struct CartMainView: View {
             }
         }
     }
-    
+
     private var footer: some View {
         HStack {
-            Text("\(Int(viewModel.cartViewModel.selectedTotalPrice)) ₽")
+            let totalPrice = isSelectionMode ? viewModel.cartViewModel.selectedTotalPrice : viewModel.cartViewModel.totalPrice
+            Text("\(Int(totalPrice)) ₽")
                 .font(.callout)
                 .bold()
             
@@ -144,24 +146,23 @@ struct CartMainView: View {
                 isFetching = false
                 if success {
                     print("Корзина успешно загружена")
+                    viewModel.cartViewModel.updateTotalPrice() // Обновляем цену после загрузки
                 } else {
                     print("Не удалось загрузить корзину")
                 }
             }
         }
     }
-    
+
     private func selectedOrAllProducts() -> [Product] {
         let selectedProducts = viewModel.cartViewModel.cartProduct.filter { viewModel.cartViewModel.selectedProducts[$0.id] == true }
         return selectedProducts.isEmpty
             ? viewModel.cartViewModel.cartProduct.map { $0.product }
             : selectedProducts.map { $0.product }
     }
-    
+
     private func toggleSelectionMode() {
         isSelectionMode.toggle()
-        selectAll = false
-        viewModel.cartViewModel.clearSelection()
-        viewModel.cartViewModel.selectAllProducts(selectAll)
+        viewModel.cartViewModel.clearSelection() // Сбрасываем выбор при переходе в режим выбора
     }
 }

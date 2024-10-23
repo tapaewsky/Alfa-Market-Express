@@ -36,6 +36,7 @@ struct CheckoutView: View {
                 self.presentationMode.wrappedValue.dismiss()
             })
         }
+     
         .navigationBarBackButtonHidden(true)
     }
 
@@ -56,18 +57,28 @@ struct CheckoutView: View {
                         }
                     )
                     
-                    CartItemView(
-                        cartProduct: cartProduct,
-                        viewModel: viewModel,
-                      
-                        isSelected: isSelected
-                    )
-                    .padding(.vertical, 2)
-                    .padding(.horizontal, 15)
+                    CartItemCheckout(cartProduct: Binding<CartProduct>(
+                           get: { cartProduct },
+                           set: { newValue in /* здесь можно обновить cartProduct если это нужно */ }
+                       ))
+                       .padding(.vertical, 2)
+                       .padding(.horizontal, 15)
+                   
                 }
             }
         }
     }
+
+    // Метод loadCart
+//    private func loadCart() {
+//        viewModel.cartViewModel.fetchCart { success in
+//            if success {
+//                print("Корзина успешно обновлена")
+//            } else {
+//                print("Не удалось обновить корзину")
+//            }
+//        }
+//    }
 
     private var title: some View {
         VStack {
@@ -218,8 +229,9 @@ struct CheckoutView: View {
     }
 }
 
-//struct CheckoutView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        CheckoutView(viewModel: MainViewModel(), products: product)
-//    }
-//}
+
+struct CheckoutView_Previews: PreviewProvider {
+    static var previews: some View {
+        CheckoutView(viewModel: MainViewModel(), products: [Product]())
+    }
+}
