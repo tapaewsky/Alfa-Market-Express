@@ -10,11 +10,9 @@ import Combine
 class CartViewModel: ObservableObject {
     // MARK: - Properties
     @Published var cartProduct: [CartProduct] = []
-    @Published var cart: [Product] = [] {
-        didSet {
-            updateSelectedTotalPrice()
-        }
-    }
+    @Published var cart: [Product] = []
+    
+    
     
     @Published var totalPrice: Double = 0.0
     @Published var selectedTotalPrice: Double = 0.0
@@ -105,30 +103,48 @@ class CartViewModel: ObservableObject {
             print("Error adding to cart: \(error.localizedDescription)")
         }
     }
+    
 
-    func updateProductQuantity(_ product: Product, newQuantity: Int) async {
-        guard let url = URL(string: "\(baseURL)update/\(product.id)/") else { return }
-        
-        var token = await getToken()
-        guard token != nil else { return }
-        
+    func updateProductQuantity(productId: Int, newQuantity: Int) async {
+        guard let url = URL(string: "\(baseURL)update/\(productId)/") else {
+            print("Некорректный URL")
+            return
+        }
+
+        let token = await getToken()
+        guard token != nil else {
+            print("Токен равен nil")
+            return
+        }
+
         var request = createRequest(url: url, method: "PATCH", token: token!)
         let body: [String: Any] = ["quantity": newQuantity]
         request.httpBody = try? JSONSerialization.data(withJSONObject: body)
-        
+
+        print("Отправка запроса на обновление продукта \(productId) с новой величиной \(newQuantity)")
+        print("URL: \(url)")
+        print("Тело запроса: \(String(data: request.httpBody!, encoding: .utf8) ?? "")")
+
         do {
-            let (data, _) = try await URLSession.shared.data(for: request)
-            let updatedProduct = try JSONDecoder().decode(CartProduct.self, from: data)
-            DispatchQueue.main.async {
-                if let index = self.cart.firstIndex(where: { $0.id == updatedProduct.product.id }) {
-                    self.cart[index].quantity = updatedProduct.quantity
+            let (data, response) = try await URLSession.shared.data(for: request)
+            
+            if let httpResponse = response as? HTTPURLResponse {
+                print("Получен HTTP-ответ: \(httpResponse.statusCode)")
+                
+                print("Полученные данные: \(String(data: data, encoding: .utf8) ?? "Нет данных")")
+                
+                if httpResponse.statusCode == 200 {
+                    do {
+                        let updatedProduct = try JSONDecoder().decode(CartProduct.self, from: data)
+                    } catch {
+                        print("Ошибка декодирования: \(error.localizedDescription)")
+                    }
+                } else {
+                    print("Ошибка при обновлении продукта: \(httpResponse.statusCode)")
                 }
-                // self.saveCart() // Commented out to disable caching
             }
         } catch {
-            DispatchQueue.main.async {
-                self.isError = true
-            }
+            print("Произошла ошибка: \(error.localizedDescription)")
         }
     }
     
@@ -241,14 +257,7 @@ class CartViewModel: ObservableObject {
         }
     }
 
-    // MARK: - Product Selection
-    func selectAllProducts(_ selectAll: Bool) {
-        for product in cartProduct {
-            selectedProducts[product.id] = selectAll
-        }
-        print("All products selected: \(selectAll)")
-        updateSelectedTotalPrice()
-    }
+
 
     func clearSelection() {
         for product in cart {
@@ -256,7 +265,7 @@ class CartViewModel: ObservableObject {
         }
     }
 
-    func toggleProductSelection(_ product: Product) {
+    func toggleProductSelection(_ product: Product) async {
         if let index = cartProduct.firstIndex(where: { $0.product.id == product.id }) {
             let isSelected = selectedProducts[product.id] ?? false
             selectedProducts[product.id] = !isSelected
@@ -343,6 +352,11 @@ class CartViewModel: ObservableObject {
             print("Checkout Response: \(jsonResponse)")
         } else {
             print("Failed to decode response data")
+        }
+    }
+    func updateTotalPrice()  {
+        totalPrice = cartProduct.reduce(0) { total, cartProduct in
+            return total + cartProduct.getTotalPrice
         }
     }
 }

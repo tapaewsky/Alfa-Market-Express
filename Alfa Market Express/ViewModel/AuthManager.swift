@@ -37,7 +37,7 @@ class AuthManager: ObservableObject {
                     self.isAuthenticated = true
                     self.isCheckingAuth = false
                 }
-            } else {
+            } else if let refreshToken = self.refreshToken {
                 print("Токен не найден, попытка обновить токен...")
                 self.refreshAccessToken { success in
                     DispatchQueue.main.async {
@@ -46,10 +46,19 @@ class AuthManager: ObservableObject {
                             self.isAuthenticated = true
                         } else {
                             print("Не удалось обновить токен")
-                            self.isAuthenticated = false
+                            self.clearTokens()  // Очистим токены
+                            self.isAuthenticated = false  // Переходим к экрану входа
                         }
                         self.isCheckingAuth = false
                     }
+                }
+            } else {
+                // Если ни accessToken, ни refreshToken нет, показываем экран входа
+                print("Ни accessToken, ни refreshToken не найдены, показываем LoginView")
+                DispatchQueue.main.async {
+                    self.clearTokens()
+                    self.isAuthenticated = false
+                    self.isCheckingAuth = false
                 }
             }
         }

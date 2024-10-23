@@ -12,7 +12,7 @@ struct OrdersCard: View {
     var orderItem: OrderItem
     var createdAt: String
     var status: String
-    var orderId: Int // Добавлено поле для идентификатора заказа
+    var orderId: Int
     
     var body: some View {
         HStack {
@@ -61,7 +61,7 @@ struct OrdersCard: View {
     }
     
     private var priceInfo: some View {
-        Text("\(String(format: "%.2f", orderItem.price)) ₽")
+        Text(String(format: "%.0f₽", Double(orderItem.price) ?? 0))
             .font(.subheadline)
             .foregroundColor(.colorRed)
     }
@@ -125,7 +125,7 @@ struct Preview_OrdersCard: PreviewProvider {
                                         image: "https://avatars.mds.yandex.net/get-mpic/6559549/2a0000018ac1d8e3008a371458cfe88c20e7/orig"),
                    createdAt: "2024-10-10T23:27:13.650331Z",
                    status: "обработка", orderId: 12)
-            .previewLayout(.sizeThatFits)
+         
             .padding()
     }
 }
