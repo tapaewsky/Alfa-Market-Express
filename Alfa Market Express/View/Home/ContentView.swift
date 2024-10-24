@@ -7,47 +7,59 @@
 
 import SwiftUI
 
+
 struct ContentView: View {
+    @StateObject private var viewModel = MainViewModel() // Один экземпляр на всё приложение
+    @State private var selectedTab: Int = 0
+ 
+
     var body: some View {
-        TabView {
-            
-            HomeView(viewModel: MainViewModel())
-            .tabItem {
-                Image(systemName: "house")
-            }
+        TabView(selection: $selectedTab) {
+            HomeView(viewModel: viewModel)
+                .tabItem {
+                    Image(systemName: "house")
+                }
+                .tag(0)
 
             NavigationView {
-                CategoryView(viewModel: MainViewModel())
+                CategoryView(viewModel: viewModel)
             }
             .tabItem {
                 Image(systemName: "list.dash")
             }
+            .tag(1)
 
             NavigationView {
-                CartView(viewModel: MainViewModel())
+                CartView(viewModel: viewModel)
             }
             .tabItem {
                 Image(systemName: "cart")
             }
-            
+            .tag(2)
+
             NavigationView {
-                FavoritesView(viewModel: MainViewModel())
+                FavoritesView(viewModel: viewModel)
             }
             .tabItem {
                 Image(systemName: "heart")
             }
+            .tag(3)
 
             NavigationView {
-                ProfileView(viewModel: MainViewModel())
+                ProfileView(viewModel: viewModel)
             }
             .tabItem {
                 Image(systemName: "person.circle")
             }
+            .tag(4)
         }
-        
+      
+           
+        }
     }
-}
 
+
+// Превью для ContentView
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()

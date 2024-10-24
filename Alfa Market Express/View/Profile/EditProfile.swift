@@ -10,6 +10,8 @@ import Kingfisher
 struct EditProfile: View {
     @ObservedObject var viewModel: MainViewModel
     @State private var showImagePicker: Bool = false
+    @Environment(\.presentationMode) var presentationMode
+
 
     var body: some View {
         ScrollView {
@@ -22,6 +24,10 @@ struct EditProfile: View {
             }
             .padding()
         }
+        .navigationBarItems(leading: CustomBackButton(label: "Назад", color: .colorGreen) {
+            self.presentationMode.wrappedValue.dismiss()
+        })
+        .navigationBarBackButtonHidden(true)
         .sheet(isPresented: $showImagePicker) {
             ImagePicker(selectedImage: $viewModel.profileViewModel.selectedImage)
         }
