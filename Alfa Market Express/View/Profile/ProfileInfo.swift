@@ -9,32 +9,32 @@ import Kingfisher
 
 struct ProfileInfo: View {
     @ObservedObject var viewModel: MainViewModel
-    @State var isFetching: Bool = false
-    
-    var body: some View {
-        NavigationView {
-            VStack {
-                ScrollView {
-                    if isFetching {
-                    } else if viewModel.profileViewModel.userProfile == nil {
-                        Text("Нет данных о профиле")
-                            .padding()
-                    } else {
-                        profileImage
-                        shopOwner
-                        displayStoreInfo
-                    }
+    @State private var isFetching: Bool = false
+    @State private var showOrders = false
 
-                    Spacer()
+    var body: some View {
+        VStack {
+            ScrollView {
+                if isFetching {
+                    ProgressView() 
+                } else if viewModel.profileViewModel.userProfile == nil {
+                    Text("Нет данных о профиле")
+                        .padding()
+                } else {
+                    profileImage
+                    shopOwner
+                    displayStoreInfo
                 }
+
+                Spacer()
             }
-            .padding()
-            .onAppear() {
-                loadProfile()
-            }
-            .navigationBarTitleDisplayMode(.inline)
+        }
+        .onAppear {
+            loadProfile()
         }
     }
+    
+    // MARK: - Profile Image
     
     private var profileImage: some View {
         Group {
@@ -53,10 +53,10 @@ struct ProfileInfo: View {
         }
     }
     
-    
+    // MARK: - Shop Owner Information
     
     private var shopOwner: some View {
-        VStack  {
+        VStack {
             Text("Владелец магазина")
                 .font(.title2)
                 .foregroundColor(.black)
@@ -64,27 +64,22 @@ struct ProfileInfo: View {
             
             Divider()
                 .background(.gray)
-            
         }
-        
         .padding()
     }
     
+    // MARK: - Display Store Information
     
     private var displayStoreInfo: some View {
         VStack(alignment: .leading, spacing: 15) {
             HStack {
-                Text("\(viewModel.profileViewModel.userProfile.firstName)")
-                Text("\(viewModel.profileViewModel.userProfile.lastName)")
+                Text(viewModel.profileViewModel.userProfile.firstName)
+                Text(viewModel.profileViewModel.userProfile.lastName)
             }
-                .foregroundColor(.gray)
-                .bold()
+            .foregroundColor(.gray)
+            .bold()
             
-//            Text("\(viewModel.profileViewModel.userProfile.username)")
-//                .foregroundColor(.gray)
-//                .bold()
-            
-            Text("\(viewModel.profileViewModel.userProfile.storeName)")
+            Text(viewModel.profileViewModel.userProfile.storeName)
                 .foregroundColor(.black)
                 .bold()
             
@@ -116,12 +111,36 @@ struct ProfileInfo: View {
             Text(viewModel.profileViewModel.userProfile.managerPhoneNumber)
                 .foregroundColor(.colorGreen)
                 .bold()
-                
             
+            Spacer()
+            
+            ordersButton
+            
+            NavigationLink(destination: OrdersView(viewModel: viewModel), isActive: $showOrders) {
+                EmptyView()
+            }
         }
         .padding()
-        .frame(maxWidth: .infinity, alignment: .leading)
     }
+    
+    // MARK: - Orders Button
+    
+    private var ordersButton: some View {
+        Button(action: {
+            showOrders = true
+        }) {
+            Text("Мои заказы")
+                .font(.subheadline)
+                .foregroundColor(.colorGreen)
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background(.white)
+                .cornerRadius(10)
+        }
+        .shadow(radius: 3)
+    }
+
+    // MARK: - Load Profile
     
     private func loadProfile() {
         isFetching = true

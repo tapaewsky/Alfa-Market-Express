@@ -11,57 +11,32 @@ struct ProfileView: View {
     @ObservedObject var viewModel: MainViewModel
 
     var body: some View {
-        VStack {
-            HeaderView {
-                Image("logo_v1")
-                    .resizable()
-                    .scaledToFit()
-                    .padding(.horizontal)
+        VStack(alignment: .leading) {
+     
+            HStack {
+                Spacer()
+
+                NavigationLink(destination: EditProfile(viewModel: viewModel)) {
+                    ZStack {
+                        Image(systemName: "person")
+                            .resizable()
+                            .frame(width: 30, height: 30)
+                            .foregroundColor(.colorGreen)
+
+                        Image(systemName: "gearshape")
+                            .resizable()
+                            .frame(width: 10, height: 10)
+                            .foregroundColor(.colorGreen)
+                            .offset(x: 15, y: -5)
+                    }
+                }
+                .padding(.horizontal)
             }
-            NavigationButtons(selectedTab: $selectedTab)
-            TabView(selection: $selectedTab) {
-                ProfileInfo(viewModel: viewModel)
-                    .tag(0)
-                OrdersView(viewModel: viewModel)
-                    .tag(1)
-                EditProfile(viewModel: viewModel)
-                    .tag(2)
-            }
+
+          
+            ProfileInfo(viewModel: viewModel)
         }
-    }
-}
-
-struct NavigationButtons: View {
-    @Binding var selectedTab: Int
-
-    var body: some View {
-        HStack(spacing: 10) {
-            NavigationButton(title: "Профиль", tabIndex: 0, selectedTab: $selectedTab)
-            NavigationButton(title: "Мои заказы", tabIndex: 1, selectedTab: $selectedTab)
-            NavigationButton(title: "Редактировать", tabIndex: 2, selectedTab: $selectedTab)
-        }
-        .padding(.vertical, 15)
-    }
-}
-
-struct NavigationButton: View {
-    let title: String
-    let tabIndex: Int
-    @Binding var selectedTab: Int
-
-    var body: some View {
-        Button(action: {
-            selectedTab = tabIndex
-        }) {
-            Text(title)
-                .bold()
-                .padding(.vertical, 10)
-                .padding(.horizontal, 5)
-                .background(selectedTab == tabIndex ? .colorGreen : Color.clear)
-                .foregroundColor(selectedTab == tabIndex ? .white : .black)
-                .cornerRadius(20)
-                .overlay(RoundedRectangle(cornerRadius: 20).stroke(Color.colorGreen, lineWidth: 1))
-        }
+        .padding()
     }
 }
 
