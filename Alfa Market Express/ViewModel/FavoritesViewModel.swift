@@ -14,6 +14,11 @@ class FavoritesViewModel: ObservableObject {
 
     private let authManager = AuthManager.shared
     private let baseUrl = "http://95.174.90.162:60/api"
+    
+//    func reset() {
+//        favorites.removeAll()
+//           print("FavoritesViewModel reset")
+//       }
 
     func fetchFavorites(completion: @escaping (Bool) -> Void) {
        
