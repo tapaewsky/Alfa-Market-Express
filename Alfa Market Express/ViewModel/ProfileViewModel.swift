@@ -18,6 +18,25 @@ class ProfileViewModel: ObservableObject {
     
     private let baseURL = "http://95.174.90.162:60/api"
     private let authManager = AuthManager.shared
+    
+//    func reset() {
+//        userProfile = UserProfile(
+//            id: 0,
+//            username: "",
+//            firstName: "",
+//            lastName: "",
+//            storeName: "",
+//            storeImageUrl: "https://via.placeholder.com/150",
+//            storeAddress: "",
+//            storePhoneNumber: "",
+//            storeCode: "",
+//            managerName: "",
+//            managerPhoneNumber: "",
+//            remainingDebt: "",
+//            favoriteProducts: []
+//        )
+//        print("ProfileViewModel reset")
+//    }
 
     // MARK: - Initializer
     init() {
