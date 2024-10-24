@@ -12,8 +12,6 @@ class CartViewModel: ObservableObject {
     @Published var cartProduct: [CartProduct] = []
     @Published var cart: [Product] = []
     
-    
-    
     @Published var totalPrice: Double = 0.0
     @Published var selectedTotalPrice: Double = 0.0
     @Published var isLoading = false
@@ -24,6 +22,12 @@ class CartViewModel: ObservableObject {
     private let baseURL = "http://95.174.90.162:60/api/cart/"
     private var authManager = AuthManager.shared
 
+    init() {
+           for product in cartProduct {
+               selectedProducts[product.id] = false // Или true, если хотите, чтобы по умолчанию некоторые товары были выбраны
+           }
+       }
+    
     // MARK: - API Calls
     func fetchCart(completion: @escaping (Bool) -> Void) {
         guard let accessToken = authManager.accessToken else {
@@ -257,7 +261,17 @@ class CartViewModel: ObservableObject {
         }
     }
 
-
+    func calculateTotalPrice() -> Double {
+        var total: Double = 0.0
+        for cartItem in cartProduct {
+            if let isSelected = selectedProducts[cartItem.product.id], isSelected {
+                if let price = Double(cartItem.product.price) {
+                    total += price * Double(cartItem.quantity)
+                }
+            }
+        }
+        return total
+    }
 
     func clearSelection() {
         for product in cart {
@@ -266,22 +280,35 @@ class CartViewModel: ObservableObject {
     }
 
     func toggleProductSelection(_ product: Product) async {
-        if let index = cartProduct.firstIndex(where: { $0.product.id == product.id }) {
-            let isSelected = selectedProducts[product.id] ?? false
-            selectedProducts[product.id] = !isSelected
-            updateSelectedTotalPrice()
-        }
+        guard let index = cartProduct.firstIndex(where: { $0.product.id == product.id }) else { return }
+        
+        let isSelected = selectedProducts[product.id] ?? false
+        selectedProducts[product.id] = !isSelected
+        
+       
+        print("Товар \(product.name) \(isSelected ? "снят с выбора" : "выбран")")
+        print("Текущее состояние selectedProducts: \(selectedProducts)")
+        
+        updateSelectedTotalPrice()
     }
 
-    func isInCart(_ product: Product) -> Bool {
-        return cart.contains(where: { $0.id == product.id })
-    }
 
     func updateSelectedTotalPrice() {
-        selectedTotalPrice = cart.reduce(0) { total, product in
-            let isSelected = selectedProducts[product.id] ?? false
-            return total + (isSelected ? (Double(product.price) ?? 0) * Double(product.quantity) : 0)
+        print("cartProduct: \(cartProduct)")
+        let selectedProductsList = cartProduct.filter { selectedProducts[$0.id] ?? false }
+
+      
+
+        print("Выбранные продукты для расчета цены: \(selectedProductsList)")
+
+        selectedTotalPrice = selectedProductsList.reduce(0) { total, product in
+            let price = Double(product.product.price) ?? 0
+            let quantity = product.quantity
+            print("Продукт: \(product.product.name), Цена: \(price), Количество: \(quantity)")
+            return total + (price * Double(quantity))
         }
+
+        print("Общая цена выбранных продуктов: \(selectedTotalPrice)")
     }
 
     func selectProductsForCheckout(products: [CartProduct]) async {
@@ -289,20 +316,40 @@ class CartViewModel: ObservableObject {
             print("Invalid URL: \(baseURL)select/")
             return
         }
+        
         print("Request URL: \(url.absoluteString)")
         
         var token = await getToken()
-        guard token != nil else { return }
+        guard token != nil else {
+            print("Token not found, aborting checkout.")
+            return
+        }
         
         var request = createRequest(url: url, method: "POST", token: token!)
+
+      
+        print("Selected products for checkout:")
+        for product in products {
+            print("Product ID: \(product.product.id), Name: \(product.product.name), Quantity: \(product.quantity)")
+        }
         
         do {
             let jsonData = try JSONEncoder().encode(products)
             request.httpBody = jsonData
             
+            print("Sending request with body: \(String(data: jsonData, encoding: .utf8) ?? "Invalid JSON")") // Печатаем JSON-тело запроса
+            
             let (data, response) = try await URLSession.shared.data(for: request)
+
+           
+            if let httpResponse = response as? HTTPURLResponse {
+                print("Received HTTP Status Code: \(httpResponse.statusCode)")
+            }
+            
+           
             handleCheckoutResponse(data: data, response: response)
         } catch {
+            print("Error during checkout request: \(error.localizedDescription)")
             DispatchQueue.main.async {
                 self.isError = true
             }
