@@ -12,20 +12,12 @@ struct CartMainView: View {
     @StateObject var viewModel: MainViewModel
     @State private var isFetching = false
     @State private var isSelectionMode: Bool = false
+    @State private var selectedTab: Int = 0
 
     var body: some View {
         VStack(spacing: 0) {
             header
-            
-            ZStack {
-                if viewModel.cartViewModel.cartProduct.isEmpty && !isFetching {
-                    emptyCartView
-                } else {
-                    cartContent
-                }
-            }
-            .frame(maxHeight: .infinity)
-            
+            cartContent
             footer
         }
         .padding(0)
@@ -40,31 +32,14 @@ struct CartMainView: View {
     private var header: some View {
         HStack {
             if isSelectionMode {
-                selectionCountView
+                SelectionCountView(selectedCount: viewModel.cartViewModel.selectedProducts.filter { $0.value }.count)
             } else {
-                cartCountView
+                CartCountView(count: viewModel.cartViewModel.cartProduct.count)
             }
             Spacer()
             selectionButton
         }
         .padding()
-    }
-
-    private var selectionCountView: some View {
-        Text("Выбрано: \(viewModel.cartViewModel.selectedProducts.filter { $0.value }.count)")
-            
-            .font(.headline)
-    }
-
-    private var cartCountView: some View {
-        Text("Корзина   ")
-            .font(.headline) +
-        Text("\(viewModel.cartViewModel.cartProduct.count)")
-            .font(.headline)
-            .foregroundColor(.gray) +
-        Text(" товаров")
-            .font(.headline)
-            .foregroundColor(.gray)
     }
 
     private var selectionButton: some View {
@@ -77,15 +52,16 @@ struct CartMainView: View {
         }
     }
 
-    private var emptyCartView: some View {
-        Text("Корзина пуста")
-            .padding()
-            .foregroundColor(.gray)
-    }
-
     private var cartContent: some View {
-        ScrollView(.vertical, showsIndicators: false) {
-            cartItems
+        ZStack {
+            if viewModel.cartViewModel.cartProduct.isEmpty && !isFetching {
+                EmptyCartView()
+            } else {
+                ScrollView(.vertical, showsIndicators: false) {
+                    cartItems
+                }
+                .frame(maxHeight: .infinity)
+            }
         }
         .frame(maxHeight: .infinity)
     }
@@ -93,29 +69,11 @@ struct CartMainView: View {
     private var cartItems: some View {
         VStack {
             ForEach(viewModel.cartViewModel.cartProduct, id: \.id) { cartProduct in
-                let isSelected = Binding<Bool>(
-                    get: { viewModel.cartViewModel.selectedProducts[cartProduct.id] ?? false },
-                    set: { newValue in
-                        viewModel.cartViewModel.selectedProducts[cartProduct.id] = newValue
-                        viewModel.cartViewModel.updateSelectedTotalPrice() // Обновляем общую цену при изменении выбора
-                        
-                        // Печатаем цену для выбранных продуктов
-                        let selectedTotalPrice = viewModel.cartViewModel.selectedTotalPrice
-                        print("Текущая цена для выбранных продуктов: \(Int(selectedTotalPrice)) ₽")
-                    }
-                )
-                
-                CartItemView(
+                CartItemRow(
                     cartProduct: cartProduct,
                     viewModel: viewModel,
-                    isSelected: isSelected,
-                    onCartUpdated: {
-                        viewModel.cartViewModel.updateTotalPrice() // Обновляем цену при изменении
-                    }
+                    isSelectionMode: $isSelectionMode
                 )
-                .padding(.vertical, 2)
-                .padding(.horizontal, 15)
-                .environment(\.isSelectionMode, isSelectionMode)
             }
         }
     }
@@ -123,22 +81,9 @@ struct CartMainView: View {
     private var footer: some View {
         HStack {
             let totalPrice = isSelectionMode ? viewModel.cartViewModel.selectedTotalPrice : viewModel.cartViewModel.totalPrice
-            Text("\(Int(totalPrice)) ₽")
-                .font(.callout)
-                .bold()
-            
+            TotalPriceView(totalPrice: totalPrice)
             Spacer()
-            
-            NavigationLink(
-                destination: CheckoutView(viewModel: viewModel, products: selectedOrAllProducts())
-            ) {
-                Text("Оформить заказ")
-                    .font(.callout)
-                    .padding(10)
-                    .background(Color.colorGreen)
-                    .foregroundColor(.white)
-                    .cornerRadius(17)
-            }
+            CheckoutButton(viewModel: viewModel, selectedTab: $selectedTab, selectedOrAllProducts: selectedOrAllProducts)
         }
         .padding()
         .onChange(of: viewModel.cartViewModel.selectedTotalPrice) { newValue in
@@ -153,7 +98,7 @@ struct CartMainView: View {
                 isFetching = false
                 if success {
                     print("Корзина успешно загружена")
-                    viewModel.cartViewModel.updateTotalPrice() // Обновляем цену после загрузки
+                    viewModel.cartViewModel.updateTotalPrice()
                 } else {
                     print("Не удалось загрузить корзину")
                 }
@@ -171,5 +116,107 @@ struct CartMainView: View {
     private func toggleSelectionMode() {
         isSelectionMode.toggle()
         viewModel.cartViewModel.clearSelection()
+    }
+}
+
+// MARK: - Subviews
+
+struct EmptyCartView: View {
+    var body: some View {
+        Text("Корзина пуста")
+            .padding()
+            .foregroundColor(.gray)
+    }
+}
+
+struct SelectionCountView: View {
+    let selectedCount: Int
+
+    var body: some View {
+        Text("Выбрано: \(selectedCount)")
+            .font(.headline)
+    }
+}
+
+struct CartCountView: View {
+    let count: Int
+
+    var body: some View {
+        Text("Корзина   ")
+            .font(.headline) +
+        Text("\(count)")
+            .font(.headline)
+            .foregroundColor(.gray) +
+        Text(" товаров")
+            .font(.headline)
+            .foregroundColor(.gray)
+    }
+}
+
+struct TotalPriceView: View {
+    let totalPrice: Double
+
+    var body: some View {
+        Text("\(Int(totalPrice)) ₽")
+            .font(.callout)
+            .bold()
+    }
+}
+
+struct CheckoutButton: View {
+    @ObservedObject var viewModel: MainViewModel
+    @Binding var selectedTab: Int
+    var selectedOrAllProducts: () -> [Product]
+
+    var body: some View {
+        NavigationLink(
+            destination: CheckoutView(viewModel: viewModel, selectedTab: $selectedTab, products: selectedOrAllProducts())
+        ) {
+            Text("Оформить заказ")
+                .font(.callout)
+                .padding(10)
+                .background(Color.colorGreen)
+                .foregroundColor(.white)
+                .cornerRadius(17)
+        }
+    }
+}
+
+// MARK: - CartItemRow
+
+struct CartItemRow: View {
+    let cartProduct: CartProduct
+    @ObservedObject var viewModel: MainViewModel
+    @Binding var isSelectionMode: Bool
+
+    var body: some View {
+        let isSelected = Binding<Bool>(
+            get: { viewModel.cartViewModel.selectedProducts[cartProduct.id] ?? false },
+            set: { newValue in
+                viewModel.cartViewModel.selectedProducts[cartProduct.id] = newValue
+                viewModel.cartViewModel.updateSelectedTotalPrice()
+                print("Текущая цена для выбранных продуктов: \(Int(viewModel.cartViewModel.selectedTotalPrice)) ₽")
+            }
+        )
+
+        CartItemView(
+            cartProduct: cartProduct,
+            viewModel: viewModel,
+            isSelected: isSelected,
+            onCartUpdated: {
+                viewModel.cartViewModel.updateTotalPrice()
+            }
+        )
+        .padding(.vertical, 2)
+        .padding(.horizontal, 15)
+        .environment(\.isSelectionMode, isSelectionMode)
+    }
+}
+
+// MARK: - Preview
+
+struct CartMainView_Previews: PreviewProvider {
+    static var previews: some View {
+        CartMainView(viewModel: MainViewModel())
     }
 }

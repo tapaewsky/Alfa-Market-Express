@@ -13,10 +13,9 @@ struct CartItemView: View {
     var cartProduct: CartProduct
     @State private var quantity: Int
     @State private var totalPriceForProduct: Double
-    @State var isSelected: Bool = false
+    @Binding var isSelected: Bool
     var onCartUpdated: () -> Void
     @Environment(\.isSelectionMode) var isSelectionMode
-   
     
     init(cartProduct: CartProduct, viewModel: MainViewModel, isSelected: Binding<Bool>, onCartUpdated: @escaping () -> Void) {
         self.cartProduct = cartProduct
@@ -24,7 +23,7 @@ struct CartItemView: View {
         self._quantity = State(initialValue: cartProduct.quantity)
         self._totalPriceForProduct = State(initialValue: cartProduct.getTotalPrice)
         self.onCartUpdated = onCartUpdated
-        self.isSelected = isSelected.wrappedValue
+        self._isSelected = isSelected // Directly using Binding
     }
     
     var body: some View {
@@ -39,16 +38,18 @@ struct CartItemView: View {
                 deleteButton
             }
         }
-        .onChange(of: quantity) { newValue in
-            Task { await updateQuantity() } // Обновление цены при изменении количества
+        .onChange(of: quantity) { _ in
+            Task { await updateQuantity() } // Update price when quantity changes
         }
         .onAppear {
             Task {
-                await viewModel.cartViewModel.updateTotalPrice() // Обновление общей цены при появлении
+                await viewModel.cartViewModel.updateTotalPrice() // Update total price on appear
                 await updateSelection()
             }
         }
     }
+    
+    // MARK: - UI Components
     
     private var background: some View {
         RoundedRectangle(cornerRadius: 15)
@@ -58,23 +59,30 @@ struct CartItemView: View {
     
     private var productImage: some View {
         ZStack(alignment: .topLeading) {
-            if let imageUrl = URL(string: cartProduct.product.imageUrl ?? "") {
+            loadImage()
+            if isSelectionMode {
+                selectButton
+            }
+        }
+    }
+    
+    private func loadImage() -> some View {
+        if let imageUrl = URL(string: cartProduct.product.imageUrl ?? "") {
+            return AnyView(
                 KFImage(imageUrl)
                     .placeholder { ProgressView() }
                     .resizable()
                     .scaledToFill()
                     .frame(maxWidth: 115, maxHeight: 150)
                     .cornerRadius(15)
-            } else {
+            )
+        } else {
+            return AnyView(
                 Image(systemName: "photo")
                     .resizable()
                     .scaledToFill()
                     .frame(maxWidth: 115, maxHeight: 150)
-            }
-            
-            if isSelectionMode {
-                selectButton
-            }
+            )
         }
     }
     
@@ -93,7 +101,6 @@ struct CartItemView: View {
                 .font(.footnote)
                 .lineLimit(2)
                 .foregroundColor(.black)
-            
             
             quantityControl
         }
@@ -133,14 +140,12 @@ struct CartItemView: View {
     
     private var deleteButton: some View {
         VStack {
-            Button(action: { Task { await toggleCart()
-                } }) {
+            Button(action: { Task { await toggleCart() } }) {
                 Image(systemName: "trash")
                     .foregroundColor(.colorGreen)
                     .padding()
             }
         }
-      
     }
     
     private var selectButton: some View {
@@ -157,6 +162,8 @@ struct CartItemView: View {
         .buttonStyle(PlainButtonStyle())
     }
     
+    // MARK: - Actions
+    
     private func controlButton(systemName: String, action: @escaping () -> Void) -> some View {
         Button(action: { Task { await action() } }) {
             Image(systemName: systemName)
@@ -169,17 +176,15 @@ struct CartItemView: View {
     
     private func increaseQuantity() async {
         quantity += 1
-       
     }
     
     private func decreaseQuantity() async {
         if quantity > 1 {
             quantity -= 1
-            
         }
     }
     
-    func updateQuantity() async {
+    private func updateQuantity() async {
         Task {
             await viewModel.cartViewModel.updateProductQuantity(productId: cartProduct.id, newQuantity: quantity)
             await calculateTotalPrice()
@@ -201,13 +206,13 @@ struct CartItemView: View {
         viewModel.cartViewModel.updateSelectedTotalPrice()
     }
     
-    private func updateSelection() async  {
+    private func updateSelection() async {
         isSelected = viewModel.cartViewModel.selectedProducts[cartProduct.id] ?? false
     }
     
     private func toggleCart() async {
         await viewModel.cartViewModel.removeFromCart(productId: cartProduct.id)
-            onCartUpdated()
-            viewModel.cartViewModel.updateTotalPrice()
-        
-    }}
+        onCartUpdated()
+        viewModel.cartViewModel.updateTotalPrice()
+    }
+}
