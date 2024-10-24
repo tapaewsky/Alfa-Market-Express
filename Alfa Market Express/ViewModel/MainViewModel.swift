@@ -13,20 +13,43 @@ class MainViewModel: ObservableObject {
     @Published var favoritesViewModel: FavoritesViewModel
     @Published var cartViewModel: CartViewModel
     @Published var profileViewModel: ProfileViewModel
-    @Published var ordersViewModel: OrdersViewModel
+    @Published var ordersViewModel: OrdersViewModel?
     @Published var authManager = AuthManager.shared
     @Published var slideViewModel: SlideViewModel
     @Published var searchViewModel: SearchViewModel
+    
+   
 
+    // MARK: - Initializer
     init() {
-        favoritesViewModel = FavoritesViewModel()
-        categoryViewModel = CategoryViewModel()
-        productViewModel = ProductViewModel()
-        cartViewModel = CartViewModel()
-        profileViewModel = ProfileViewModel()
-        ordersViewModel = OrdersViewModel(cartViewModel: CartViewModel())
-        slideViewModel = SlideViewModel()
-        searchViewModel = SearchViewModel()
-      
-    } 
+        self.categoryViewModel = CategoryViewModel()
+        self.productViewModel = ProductViewModel()
+        self.favoritesViewModel = FavoritesViewModel()
+        self.cartViewModel = CartViewModel()
+        self.profileViewModel = ProfileViewModel()
+        self.slideViewModel = SlideViewModel()
+        self.searchViewModel = SearchViewModel()
+
+        // Инициализация ordersViewModel после создания объекта
+        self.ordersViewModel = OrdersViewModel(cartViewModel: self.cartViewModel)
+    }
+
+    // MARK: - Reset State
+//    func resetState(for tab: Int) {
+//        print("Сброс состояния для вкладки: \(tab)")
+//        switch tab {
+//        case 0:
+//            productViewModel.reset()
+//        case 1:
+//            categoryViewModel.reset()
+//        case 2:
+//            cartViewModel.reset()
+//        case 3:
+//            favoritesViewModel.reset()
+//        case 4:
+//            profileViewModel.reset()
+//        default:
+//            break
+//        }
+//    }
 }

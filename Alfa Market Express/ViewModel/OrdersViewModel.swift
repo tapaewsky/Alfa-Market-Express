@@ -17,12 +17,13 @@ class OrdersViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     var authManager = AuthManager.shared
     private let baseURL = "http://95.174.90.162:60/api/orders/"
-    private let orderKey = "cashedOrder"
     
-    
+  
     init(cartViewModel: CartViewModel) {
         self.cartViewModel = cartViewModel
     }
+    
+   
     
     // MARK: - Fetch Orders
     func fetchOrders(completion: @escaping (Bool) -> Void) {
