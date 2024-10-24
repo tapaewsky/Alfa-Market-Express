@@ -170,7 +170,7 @@ struct ProductCardView: View {
 //            imageUrl: "https://avatars.mds.yandex.net/i?id=8e94bb0804af03474956f3d282b1f3b62a783e17-10639895-images-thumbs&n=13",
 //            category: 2,
 //            isFavorite: false,
-//            isInCart: true,
+
 //            quantity: 1
 //        )
 //        
