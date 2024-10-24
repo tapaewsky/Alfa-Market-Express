@@ -14,7 +14,6 @@ struct Product: Identifiable, Decodable, Hashable, Encodable {
     var imageUrl: String?
     var category: Int
     var isFavorite: Bool
-    var isInCart: Bool
     var quantity: Int
    
 
@@ -26,7 +25,6 @@ struct Product: Identifiable, Decodable, Hashable, Encodable {
         case imageUrl = "image"
         case category
         case isFavorite
-        case isInCart
         case quantity
     }
 
@@ -39,7 +37,6 @@ struct Product: Identifiable, Decodable, Hashable, Encodable {
         imageUrl = try container.decodeIfPresent(String.self, forKey: .imageUrl)
         category = try container.decodeIfPresent(Int.self, forKey: .category) ?? 0 
         isFavorite = try container.decodeIfPresent(Bool.self, forKey: .isFavorite) ?? false
-        isInCart = try container.decodeIfPresent(Bool.self, forKey: .isInCart) ?? false
         quantity = try container.decodeIfPresent(Int.self, forKey: .quantity) ?? 1
     }
 
@@ -52,7 +49,6 @@ struct Product: Identifiable, Decodable, Hashable, Encodable {
         try container.encode(imageUrl, forKey: .imageUrl)
         try container.encode(category, forKey: .category)
         try container.encode(isFavorite, forKey: .isFavorite)
-        try container.encode(isInCart, forKey: .isInCart)
         try container.encode(quantity, forKey: .quantity)
     }
 }
