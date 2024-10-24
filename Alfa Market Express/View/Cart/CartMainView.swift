@@ -98,6 +98,10 @@ struct CartMainView: View {
                     set: { newValue in
                         viewModel.cartViewModel.selectedProducts[cartProduct.id] = newValue
                         viewModel.cartViewModel.updateSelectedTotalPrice() // Обновляем общую цену при изменении выбора
+                        
+                        // Печатаем цену для выбранных продуктов
+                        let selectedTotalPrice = viewModel.cartViewModel.selectedTotalPrice
+                        print("Текущая цена для выбранных продуктов: \(Int(selectedTotalPrice)) ₽")
                     }
                 )
                 
@@ -137,6 +141,9 @@ struct CartMainView: View {
             }
         }
         .padding()
+        .onChange(of: viewModel.cartViewModel.selectedTotalPrice) { newValue in
+            print("Общая цена выбранных продуктов: \(Int(newValue)) ₽")
+        }
     }
 
     private func loadCart() {
@@ -163,6 +170,6 @@ struct CartMainView: View {
 
     private func toggleSelectionMode() {
         isSelectionMode.toggle()
-        viewModel.cartViewModel.clearSelection() // Сбрасываем выбор при переходе в режим выбора
+        viewModel.cartViewModel.clearSelection()
     }
 }
