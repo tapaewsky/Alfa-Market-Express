@@ -33,6 +33,8 @@ struct OrdersCard: View {
         .shadow(radius: 2)
     }
     
+    // MARK: - UI Components
+    
     private var productImage: some View {
         KFImage(URL(string: orderItem.image))
             .placeholder {
@@ -54,7 +56,7 @@ struct OrdersCard: View {
             
             Spacer()
             
-            Text("ID: \(orderId)") // Изменено на отображение orderId
+            Text("ID: \(orderId)")
                 .font(.subheadline)
                 .foregroundColor(.gray)
         }
@@ -78,6 +80,8 @@ struct OrdersCard: View {
             .foregroundColor(statusColor(for: status))
     }
     
+    // MARK: - Helper Functions
+    
     private func statusColor(for status: String) -> Color {
         switch status {
         case "обработка":
@@ -93,39 +97,32 @@ struct OrdersCard: View {
         }
     }
     
-    // Форматирование даты в удобный вид
     private func formattedDate(from isoDate: String) -> String {
-        
-        let cleanDate = String(isoDate.prefix(10)) // "2024-10-10"
-        
+        let cleanDate = String(isoDate.prefix(10))
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
         
-        
         if let date = dateFormatter.date(from: cleanDate) {
-            
             dateFormatter.dateFormat = "dd MMMM yyyy"
-            dateFormatter.locale = Locale(identifier: "ru_RU") // Русская локализация
-            return dateFormatter.string(from: date) // Возвращаем отформатированную дату
+            dateFormatter.locale = Locale(identifier: "ru_RU")
+            return dateFormatter.string(from: date)
         }
         
-        return cleanDate // Если преобразование не удалось, возвращаем исходное значение
+        return cleanDate
     }
 }
-
-
 
 struct Preview_OrdersCard: PreviewProvider {
     static var previews: some View {
         OrdersCard(orderItem: OrderItem(product: "Pepsi",
                                         productId: 3,
                                         quantity: 1,
-                                        price: 50.0, // Double
+                                        price: 50.0,
                                         image: "https://avatars.mds.yandex.net/get-mpic/6559549/2a0000018ac1d8e3008a371458cfe88c20e7/orig"),
                    createdAt: "2024-10-10T23:27:13.650331Z",
-                   status: "обработка", orderId: 12)
-         
+                   status: "обработка",
+                   orderId: 12)
             .padding()
     }
 }
