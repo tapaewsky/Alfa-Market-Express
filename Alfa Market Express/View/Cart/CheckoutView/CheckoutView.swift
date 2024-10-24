@@ -13,8 +13,7 @@ struct CheckoutView: View {
     @State private var comment: String = ""
     var products: [Product]
     @Environment(\.presentationMode) var presentationMode
-    @State private var showAlert = false
-    @State private var navigateToCart = false
+
 
     var body: some View {
         ZStack {
@@ -36,6 +35,9 @@ struct CheckoutView: View {
                 self.presentationMode.wrappedValue.dismiss()
             })
         }
+        .onAppear {
+            viewModel.profileViewModel.fetchUserProfile(completion: { _ in })
+        }
      
         .navigationBarBackButtonHidden(true)
     }
@@ -52,14 +54,16 @@ struct CheckoutView: View {
                             viewModel.cartViewModel.selectedProducts[cartProduct.id] ?? false
                         },
                         set: { newValue in
+                            // Обновление значения в selectedProducts
                             viewModel.cartViewModel.selectedProducts[cartProduct.id] = newValue
+                            print("Установлено isSelected для \(cartProduct.product.name): \(newValue)")
                             viewModel.cartViewModel.updateSelectedTotalPrice()
                         }
                     )
                     
                     CartItemCheckout(cartProduct: Binding<CartProduct>(
                            get: { cartProduct },
-                           set: { newValue in /* здесь можно обновить cartProduct если это нужно */ }
+                           set: { newValue in }
                        ))
                        .padding(.vertical, 2)
                        .padding(.horizontal, 15)
@@ -68,17 +72,6 @@ struct CheckoutView: View {
             }
         }
     }
-
-    // Метод loadCart
-//    private func loadCart() {
-//        viewModel.cartViewModel.fetchCart { success in
-//            if success {
-//                print("Корзина успешно обновлена")
-//            } else {
-//                print("Не удалось обновить корзину")
-//            }
-//        }
-//    }
 
     private var title: some View {
         VStack {
@@ -124,8 +117,7 @@ struct CheckoutView: View {
                     .foregroundColor(.black)
 
                 Spacer()
-
-                Text("\(Int(selectedTotalPrice)) ₽")
+                Text("\(Int(viewModel.cartViewModel.selectedTotalPrice)) ₽")
                     .foregroundColor(.colorRed)
                     .font(.title3)
                     .bold()
@@ -153,7 +145,7 @@ struct CheckoutView: View {
     }
 
     private var orderButton: some View {
-        NavigationLink(destination: CartView(viewModel: viewModel).navigationBarHidden(true), isActive: $navigateToCart) {
+        NavigationLink(destination: SuccessfullOrderView(viewModel: viewModel).navigationBarHidden(true), isActive: $showSuccessView) {
             Button(action: {
                 Task {
                     var selectedProducts = viewModel.cartViewModel.cartProduct.filter {
@@ -190,7 +182,7 @@ struct CheckoutView: View {
 
                         print("Заказ успешно создан: \(order)")
                         showSuccessView = true
-                        showAlert = true
+                        
 
                     } catch {
                         print("Ошибка при создании заказа: \(error.localizedDescription)")
@@ -205,29 +197,13 @@ struct CheckoutView: View {
                     .foregroundColor(.white)
             }
         }
-        .alert(isPresented: $showAlert) {
-            Alert(
-                title: Text("Вы успешно сделали заказ"),
-                message: Text("Вы можете просмотреть свои заказы в профиле."),
-                dismissButton: .default(Text("Перейти в корзину"), action: {
-                    navigateToCart = true
-                })
-            )
+      
         }
-    }
-
     private var selectedProductCount: Int {
         viewModel.cartViewModel.cartProduct.filter { viewModel.cartViewModel.selectedProducts[$0.id] == true }.count
     }
-
-    private var selectedTotalPrice: Double {
-        viewModel.cartViewModel.cartProduct
-            .filter { viewModel.cartViewModel.selectedProducts[$0.id] == true }
-            .reduce(0) { total, cartProduct in
-                total + (Double(cartProduct.product.price) ?? 0)
-            }
     }
-}
+
 
 
 struct CheckoutView_Previews: PreviewProvider {
