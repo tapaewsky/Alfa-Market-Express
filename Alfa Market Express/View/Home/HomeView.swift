@@ -24,6 +24,8 @@ struct HomeView: View {
                 }
             }
         }
+        .navigationBarBackButtonHidden(true)
+
         .onAppear {
             loadData()
         }
