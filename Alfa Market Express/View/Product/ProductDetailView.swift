@@ -21,7 +21,6 @@ struct ProductDetailView: View {
                 productTitleAndFavoriteButton
                 productDescription
                 productPrice
-//                productQuantityStepper
                 addToCartButton
                 similarProductsSection
             }
@@ -54,7 +53,6 @@ struct ProductDetailView: View {
                 Image(systemName: "photo")
                     .resizable()
                     .aspectRatio(contentMode: .fit)
-//                    .frame(maxWidth: .infinity, maxHeight: 400)
                     .background(Color.gray.opacity(0.2))
             }
             Button(action: {
@@ -92,19 +90,7 @@ struct ProductDetailView: View {
             .foregroundColor(.colorRed)
     }
     
-    private var productQuantityStepper: some View {
-        HStack {
-            Text("Количество:")
-                .font(.title3)
-                .padding(.horizontal)
-            
-            Stepper(value: $quantity, in: 1...1000) {
-                Text("\(quantity)")
-                    .font(.title3)
-            }
-            .padding(.horizontal)
-        }
-    }
+
     
     private var addToCartButton: some View {
             Button(action: {
