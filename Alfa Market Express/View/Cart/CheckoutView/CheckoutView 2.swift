@@ -1,3 +1,11 @@
+//
+//  CheckoutView 2.swift
+//  Alfa Market Express
+//
+//  Created by Said Tapaev on 24.10.2024.
+//
+
+
 struct CheckoutView: View {
     @ObservedObject var viewModel: MainViewModel // ViewModel для управления данными
     @Binding var selectedTab: Int // Привязка для переключения вкладок
