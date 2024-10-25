@@ -9,7 +9,7 @@ import SwiftUI
 
 struct CustomBackButton: View {
     var label: String = "Назад"
-    var color: Color = .blue
+    var color: Color = .colorGreen
     var action: (() -> Void)?
     
     var body: some View {

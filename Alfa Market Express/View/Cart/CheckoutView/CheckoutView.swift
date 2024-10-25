@@ -72,8 +72,7 @@ struct CheckoutView: View {
         )
     }
     
-    private func setupView() {
-        viewModel.cartViewModel.isOrderSuccessful = false
+    private func setupView() {       
         viewModel.profileViewModel.fetchUserProfile { _ in }
     }
     
@@ -86,7 +85,7 @@ struct CheckoutView: View {
                 selectedProducts = viewModel.cartViewModel.cartProduct
             }
             guard !selectedProducts.isEmpty else { return }
-            
+
             do {
                 let orderItems = try selectedProducts.map {
                     viewModel.ordersViewModel!.orderItemFromCartProduct($0)
@@ -98,7 +97,6 @@ struct CheckoutView: View {
                 )
                 print("Заказ успешно создан: \(order)")
                 showSuccessView = true
-                viewModel.cartViewModel.isOrderSuccessful = true
             } catch {
                 print("Ошибка при создании заказа: \(error.localizedDescription)")
             }

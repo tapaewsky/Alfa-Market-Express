@@ -7,11 +7,9 @@
 
 import SwiftUI
 
-
 struct ContentView: View {
-    @StateObject private var viewModel = MainViewModel() // Один экземпляр на всё приложение
+    @StateObject private var viewModel = MainViewModel()
     @State private var selectedTab: Int = 0
- 
 
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -54,15 +52,12 @@ struct ContentView: View {
             .tag(4)
         }
         .onReceive(NotificationCenter.default.publisher(for: Notification.Name("SwitchToHome"))) { _ in
-            print("Received notification to switch to Home")
-            selectedTab = 0 // Переключение на вкладку HomeView
-        }
-           
+            print("Switching to Home tab")
+            selectedTab = 0
         }
     }
+}
 
-
-// Превью для ContentView
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()

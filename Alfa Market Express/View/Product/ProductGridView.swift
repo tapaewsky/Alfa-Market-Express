@@ -18,7 +18,6 @@ struct ProductGridView: View {
                     NavigationLink(destination: ProductDetailView(
                         viewModel: viewModel,
                         product: product)) {
-                            
                             ProductCardView(
                                 product: product,
                                 viewModel: viewModel,

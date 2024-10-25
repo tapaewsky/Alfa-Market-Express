@@ -13,6 +13,7 @@ struct ProductDetailView: View {
     @State private var quantity: Int = 1
     @State private var isFavorite: Bool = false
     @State private var isAddedToCart: Bool = false
+    @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
         ScrollView {
@@ -27,11 +28,14 @@ struct ProductDetailView: View {
             .background(.colorGray)
             .padding(.vertical)
         }
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(leading: CustomBackButton() {
+            self.presentationMode.wrappedValue.dismiss()
+        })
         .navigationTitle("Информация о продукте")
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             isFavorite = viewModel.favoritesViewModel.isFavorite(product)
-           
         }
     }
     
@@ -130,7 +134,6 @@ struct ProductDetailView: View {
             }
             .padding(.horizontal, 10)
         }
-        
     }
     
     // MARK: - Логика для работы с корзиной и избранным
