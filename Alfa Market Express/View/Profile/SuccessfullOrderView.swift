@@ -16,15 +16,15 @@ struct SuccessfullOrderView: View {
         GeometryReader { geometry in
             VStack {
                 Spacer()
-                
+
                 SuccessIcon(size: min(geometry.size.width, 150))
-                
+
                 Spacer()
-                
+
                 SuccessMessageView()
-                
+
                 Spacer()
-                
+
                 OrdersButton {
                     showOrders = true
                 }
@@ -33,18 +33,18 @@ struct SuccessfullOrderView: View {
                         EmptyView()
                     }
                 )
-                
+
                 HomeButton {
                     print("Navigating to Home")
-                    selectedTab = 0
+                    NotificationCenter.default.post(name: Notification.Name("SwitchToHome"), object: nil)
                 }
-                
+
                 Spacer()
             }
             .navigationBarBackButtonHidden(true)
         }
         .onDisappear {
-            print("Resetting order status on disappear") // Message on disappear
+            print("Resetting order status on disappear")
             viewModel.cartViewModel.resetOrderStatus()
         }
     }

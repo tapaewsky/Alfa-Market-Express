@@ -53,7 +53,10 @@ struct ContentView: View {
             }
             .tag(4)
         }
-      
+        .onReceive(NotificationCenter.default.publisher(for: Notification.Name("SwitchToHome"))) { _ in
+            print("Received notification to switch to Home")
+            selectedTab = 0 // Переключение на вкладку HomeView
+        }
            
         }
     }
