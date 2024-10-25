@@ -11,15 +11,9 @@ struct CartView: View {
     
     var body: some View {
         CartMainView(viewModel: viewModel)
-            .onAppear {
-                
-                if viewModel.cartViewModel.isOrderSuccessful {
-                    print("Resetting order status on appearance of CartView")
-                    
-                    viewModel.cartViewModel.resetOrderStatus()
-                }
-            }
+            .navigationBarBackButtonHidden(true)
     }
+        
 }
 
 struct CartView_Previews: PreviewProvider {

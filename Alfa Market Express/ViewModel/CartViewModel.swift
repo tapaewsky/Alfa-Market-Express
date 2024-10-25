@@ -21,21 +21,7 @@ class CartViewModel: ObservableObject {
     @Published var dataId: Int = 0
     private let baseURL = "http://95.174.90.162:60/api/cart/"
     private var authManager = AuthManager.shared
-    @Published var isOrderSuccessful: Bool = false
-    
-    func resetOrderStatus() {
-        print("Resetting order status from: \(isOrderSuccessful)") // Состояние перед сбросом
-        isOrderSuccessful = false
-        print("Order status reset to: \(isOrderSuccessful)") // Состояние после сброса
-    }
 
-    
-//
-//    func reset() {
-//        cart.removeAll()
-//           print("cartViewModel reset")
-//       }
-    
     init() {
            for product in cartProduct {
                selectedProducts[product.id] = false 
