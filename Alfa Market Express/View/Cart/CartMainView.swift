@@ -117,7 +117,7 @@ struct CartMainView: View {
                     .padding(10)
                     .background(Color.colorGreen)
                     .foregroundColor(.white)
-                    .cornerRadius(17)
+                    .cornerRadius(15)
             }
         }
         .padding()

@@ -39,11 +39,11 @@ struct CartItemView: View {
             }
         }
         .onChange(of: quantity) { _ in
-            Task { await updateQuantity() } // Update price when quantity changes
+            Task { await updateQuantity() }
         }
         .onAppear {
             Task {
-                await viewModel.cartViewModel.updateTotalPrice() // Update total price on appear
+                await viewModel.cartViewModel.updateTotalPrice()
                 await updateSelection()
             }
         }

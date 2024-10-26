@@ -22,8 +22,7 @@ struct CheckoutView: View {
 
     var body: some View {
         ZStack {
-//            Color.white.ignoresSafeArea()
-            VStack {
+            VStack(spacing: 0) {
                 selectedProductsList
                 orderDetails
                 Spacer()
@@ -116,7 +115,7 @@ struct CheckoutView: View {
                 }
             }
             .padding()
-            .background(Color.white)
+            .background(.white)
             .cornerRadius(15)
             .shadow(radius: 1)
         }

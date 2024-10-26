@@ -21,9 +21,6 @@ struct CartItemCheckout: View {
                 productDetails
                 Spacer()
             }
-            .padding(0)
-     
-            //        .background(RoundedRectangle(cornerRadius: 15).fill(Color.white).shadow(radius: 1))
         }
     }
     
