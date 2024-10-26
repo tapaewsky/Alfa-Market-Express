@@ -31,7 +31,7 @@ struct OrdersView: View {
                         }
                         
                     }
-                    .navigationBarItems(leading: CustomBackButton(label: "Назад", color: .colorGreen) {
+                    .navigationBarItems(leading: CustomBackButton() {
                         self.presentationMode.wrappedValue.dismiss()
                     })
                     .navigationBarBackButtonHidden(true)

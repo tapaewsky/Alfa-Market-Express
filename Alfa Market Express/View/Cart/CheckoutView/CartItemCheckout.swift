@@ -14,13 +14,23 @@ struct CartItemCheckout: View {
     @Binding var cartProduct: CartProduct
     
     var body: some View {
-        HStack {
-            productImage
-            productDetails
-            Spacer()
+        ZStack {
+            background
+            HStack {
+                productImage
+                productDetails
+                Spacer()
+            }
+            .padding(0)
+     
+            //        .background(RoundedRectangle(cornerRadius: 15).fill(Color.white).shadow(radius: 1))
         }
-        .padding(0)
-        .background(RoundedRectangle(cornerRadius: 15).fill(Color.white).shadow(radius: 1))
+    }
+    
+    private var background: some View {
+        RoundedRectangle(cornerRadius: 15)
+            .fill(Color.white)
+            .shadow(radius: 2)
     }
     
     private var productImage: some View {

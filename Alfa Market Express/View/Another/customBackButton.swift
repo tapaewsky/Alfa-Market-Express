@@ -9,7 +9,8 @@ import SwiftUI
 
 struct CustomBackButton: View {
     var label: String = "Назад"
-    var color: Color = .colorGreen
+    var colorImage: Color = .colorGreen
+    var colorText: Color = .black
     var action: (() -> Void)?
     
     var body: some View {
@@ -18,9 +19,9 @@ struct CustomBackButton: View {
         }) {
             HStack {
                 Image(systemName: "chevron.left")
-                    .foregroundColor(color)
+                    .foregroundColor(colorImage)
                 Text(label)
-                    .foregroundColor(color)
+                    .foregroundColor(colorText)
             }
         }
     }

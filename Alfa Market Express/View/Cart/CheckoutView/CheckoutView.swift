@@ -17,9 +17,12 @@ struct CheckoutView: View {
     @Environment(\.presentationMode) var presentationMode
     var products: [Product]
     
+    var totalPrice: Double
+    var productCount: Int
+
     var body: some View {
         ZStack {
-            Color.white.ignoresSafeArea()
+//            Color.white.ignoresSafeArea()
             VStack {
                 selectedProductsList
                 orderDetails
@@ -32,28 +35,104 @@ struct CheckoutView: View {
             .padding()
             .navigationBarItems(leading: backButton)
         }
+            
         .onAppear { setupView() }
         .navigationBarBackButtonHidden(true)
     }
     
+    // MARK: - UI Components
+
     private var backButton: some View {
-        CustomBackButton(label: "Назад", color: .colorGreen) {
+        CustomBackButton {
             self.presentationMode.wrappedValue.dismiss()
         }
     }
     
     private var selectedProductsList: some View {
-        ProductListView(viewModel: viewModel)
-            .padding(.vertical, 2)
-            .padding(.horizontal, 15)
+        ScrollView {
+            VStack {
+                let selectedProducts = viewModel.cartViewModel.cartProduct.filter {
+                    viewModel.cartViewModel.selectedProducts[$0.id] == true
+                }
+                let productsToShow = selectedProducts.isEmpty ? viewModel.cartViewModel.cartProduct : selectedProducts
+                
+                ForEach(productsToShow, id: \.id) { cartProduct in
+                    CartItemCheckout(cartProduct: Binding<CartProduct>(
+                        get: { cartProduct },
+                        set: { _ in }
+                    ))
+                }
+            }
+        }
+        .padding(.vertical, 2)
+        .padding(.horizontal, 15)
     }
     
     private var orderDetails: some View {
-        OrderDetailsView(viewModel: viewModel)
+        VStack {
+            Text("Оформление заказа")
+                .bold()
+                .font(.title3)
+            
+            VStack(alignment: .leading, spacing: 12) {
+                Text(viewModel.profileViewModel.userProfile.storeName)
+                    .foregroundColor(.black)
+                    .font(.system(size: 15, weight: .light))
+                    .lineLimit(1)
+                
+                Text("Код магазина: \(viewModel.profileViewModel.userProfile.storeCode)")
+                    .foregroundColor(.black)
+                    .font(.system(size: 15, weight: .light))
+                    .lineLimit(1)
+                
+                HStack {
+                    Text("Адрес: ")
+                        .foregroundColor(.black)
+                        .font(.system(size: 15, weight: .light)) +
+                    Text(viewModel.profileViewModel.userProfile.storeAddress)
+                        .foregroundColor(.black)
+                        .font(.system(size: 15, weight: .light))
+                }
+                
+                HStack {
+                    Text("Телефон: \(viewModel.profileViewModel.userProfile.storePhoneNumber)")
+                        .foregroundColor(.black)
+                        .font(.system(size: 15, weight: .light))
+                        .lineLimit(1)
+                }
+                
+                HStack {
+                    Text("\(productCount) товара")
+                        .font(.title3)
+                        .bold()
+                        .foregroundColor(.black)
+                    
+                    Spacer()
+                    
+                    Text("\(Int(totalPrice)) ₽")
+                        .foregroundColor(.colorRed)
+                        .font(.title3)
+                        .bold()
+                }
+            }
+            .padding()
+            .background(Color.white)
+            .cornerRadius(15)
+            .shadow(radius: 1)
+        }
     }
     
     private var commentSection: some View {
-        CommentSection(comment: $comment)
+        VStack(alignment: .leading) {
+            Text("Комментарий к заказу")
+                .foregroundColor(.black)
+                .font(.system(size: 20, weight: .regular))
+            
+            TextField("Ваш комментарий", text: $comment)
+                .padding()
+                .background(Color.white)
+                .overlay(RoundedRectangle(cornerRadius: 15).stroke(Color.colorGreen, lineWidth: 1))
+        }
     }
     
     private var orderButton: some View {
@@ -72,7 +151,9 @@ struct CheckoutView: View {
         )
     }
     
-    private func setupView() {       
+    // MARK: - Methods
+
+    private func setupView() {
         viewModel.profileViewModel.fetchUserProfile { _ in }
     }
     
@@ -104,120 +185,10 @@ struct CheckoutView: View {
     }
 }
 
-// MARK: - ProductListView
-
-struct ProductListView: View {
-    @ObservedObject var viewModel: MainViewModel
-    
-    var body: some View {
-        ScrollView {
-            VStack {
-                let selectedProducts = viewModel.cartViewModel.cartProduct.filter {
-                    viewModel.cartViewModel.selectedProducts[$0.id] == true
-                }
-                let productsToShow = selectedProducts.isEmpty ? viewModel.cartViewModel.cartProduct : selectedProducts
-                
-                ForEach(productsToShow, id: \.id) { cartProduct in
-                    CartItemCheckout(cartProduct: Binding<CartProduct>(
-                        get: { cartProduct },
-                        set: { _ in }
-                    ))
-                }
-            }
-        }
-    }
-}
-
-// MARK: - OrderDetailsView
-
-struct OrderDetailsView: View {
-    @ObservedObject var viewModel: MainViewModel
-    
-    var body: some View {
-        VStack {
-            Text("Оформление заказа")
-                .bold()
-                .font(.title3)
-            storeInfo
-        }
-    }
-    
-    private var storeInfo: some View {
-        VStack(alignment: .leading, spacing: 12) {
-            Text(viewModel.profileViewModel.userProfile.storeName)
-                .foregroundColor(.black)
-                .font(.system(size: 15, weight: .light))
-                .lineLimit(1)
-            
-            Text("Код магазина: \(viewModel.profileViewModel.userProfile.storeCode)")
-                .foregroundColor(.black)
-                .font(.system(size: 15, weight: .light))
-                .lineLimit(1)
-            
-            HStack {
-                Text("Адрес: ")
-                    .foregroundColor(.black)
-                    .font(.system(size: 15, weight: .light)) +
-                Text(viewModel.profileViewModel.userProfile.storeAddress)
-                    .foregroundColor(.black)
-                    .font(.system(size: 15, weight: .light))
-            }
-            
-            HStack {
-                Text("Телефон: \(viewModel.profileViewModel.userProfile.storePhoneNumber)")
-                    .foregroundColor(.black)
-                    .font(.system(size: 15, weight: .light))
-                    .lineLimit(1)
-            }
-            
-            HStack {
-                Text("\(selectedProductCount) товара")
-                    .font(.title3)
-                    .bold()
-                    .foregroundColor(.black)
-                
-                Spacer()
-                
-                Text("\(Int(viewModel.cartViewModel.selectedTotalPrice)) ₽")
-                    .foregroundColor(.colorRed)
-                    .font(.title3)
-                    .bold()
-            }
-        }
-        .padding() // Убираем фиксированные отступы и используем общее значение
-        .background(Color.white)
-        .cornerRadius(15)
-        .shadow(radius: 1)
-    }
-    
-    private var selectedProductCount: Int {
-        viewModel.cartViewModel.cartProduct.filter { viewModel.cartViewModel.selectedProducts[$0.id] == true }.count
-    }
-}
-
-// MARK: - CommentSection
-
-struct CommentSection: View {
-    @Binding var comment: String
-    
-    var body: some View {
-        VStack(alignment: .leading) {
-            Text("Комментарий к заказу")
-                .foregroundColor(.black)
-                .font(.system(size: 20, weight: .regular))
-            
-            TextField("Ваш комментарий", text: $comment)
-                .padding()
-                .background(Color.white)
-                .overlay(RoundedRectangle(cornerRadius: 15).stroke(Color.colorGreen, lineWidth: 1))
-        }
-    }
-}
-
 // MARK: - Preview
 
-struct CheckoutView_Previews: PreviewProvider {
-    static var previews: some View {
-        CheckoutView(viewModel: MainViewModel(), selectedTab: .constant(0), products: [Product]())
-    }
-}
+//struct CheckoutView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        CheckoutView(viewModel: MainViewModel(), selectedTab: .constant(0), products: [Product]())
+//    }
+//}

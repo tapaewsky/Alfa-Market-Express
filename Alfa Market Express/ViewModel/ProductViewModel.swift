@@ -16,10 +16,6 @@ class ProductViewModel: ObservableObject {
     
     private let baseURL = "http://95.174.90.162:60/api/products/"
     
-//    func reset() {
-//        products.removeAll()
-//           print("ProductViewModel reset")
-//       }
     
     func fetchProducts(completion: @escaping (Bool) -> Void) {
         guard let url = URL(string: baseURL) else {
@@ -29,19 +25,6 @@ class ProductViewModel: ObservableObject {
         }
         var request = URLRequest(url: url)
         
-        guard let token = authManager.accessToken else {
-            print("Токен доступа не найден, обновляем токен")
-            authManager.refreshAccessToken { [weak self] success in
-                if success {
-                    self?.fetchProducts(completion: completion)
-                } else {
-                    self?.isLoading = false
-                    self?.isError = true
-                    completion(false)
-                }
-            }
-            return
-        }
         
         URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
             defer { self?.isLoading = false }

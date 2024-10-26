@@ -27,11 +27,11 @@ struct HomeView: View {
         .navigationBarBackButtonHidden(true)
 
         .onAppear {
-            loadData()
+            loadProducts()
         }
     }
     
-    private func loadData() {
+    private func loadProducts() {
         isFetching = true
         
      

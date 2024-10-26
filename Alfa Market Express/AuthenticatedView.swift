@@ -17,15 +17,10 @@ struct AuthenticatedView: View {
                 SplashLogoView()
             } else if authManager.isAuthenticated {
                 ContentView()
-//                    .preferredColorScheme(.light)
                    
             } else {
                 LoginView(viewModel: viewModel)
-//                    .preferredColorScheme(.light)
             }
-        }
-        .onAppear {
-            authManager.checkAuthentication()
         }
     }
 }

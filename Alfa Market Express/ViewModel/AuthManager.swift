@@ -10,16 +10,15 @@ import SwiftUI
 class AuthManager: ObservableObject {
     // MARK: - Singleton Instance
     static let shared = AuthManager()
-    
+
     // MARK: - Properties
     @Published var isAuthenticated: Bool = false
     @Published var isCheckingAuth: Bool = true
 
     private let accessTokenKey = "accessToken"
     private let refreshTokenKey = "refreshToken"
-    
     private let baseUrl = "http://95.174.90.162:60/api"
-    
+
     var accessToken: String? {
         UserDefaults.standard.string(forKey: accessTokenKey)
     }
@@ -28,33 +27,38 @@ class AuthManager: ObservableObject {
         UserDefaults.standard.string(forKey: refreshTokenKey)
     }
 
-    // MARK: - Проверка аутентификации
+    // MARK: - Initialization
+    init() {
+        checkAuthentication()
+    }
+
+    // MARK: - Authentication Check
     func checkAuthentication() {
-        DispatchQueue.global().async {
+        DispatchQueue.global().async { [weak self] in
+            guard let self = self else { return }
+            
             if let token = self.accessToken {
-                print("Токен существует: \(token)")
+                print("Access token exists: \(token)")
                 DispatchQueue.main.async {
                     self.isAuthenticated = true
                     self.isCheckingAuth = false
                 }
             } else if let refreshToken = self.refreshToken {
-                print("Токен не найден, попытка обновить токен...")
+                print("Access token not found, trying to refresh...")
                 self.refreshAccessToken { success in
                     DispatchQueue.main.async {
-                        if success {
-                            print("Токен успешно обновлён")
-                            self.isAuthenticated = true
-                        } else {
-                            print("Не удалось обновить токен")
-                            self.clearTokens()  // Очистим токены
-                            self.isAuthenticated = false  // Переходим к экрану входа
-                        }
+                        self.isAuthenticated = success
                         self.isCheckingAuth = false
+                        if success {
+                            print("Token successfully refreshed")
+                        } else {
+                            print("Failed to refresh token")
+                            self.clearTokens()
+                        }
                     }
                 }
             } else {
-                // Если ни accessToken, ни refreshToken нет, показываем экран входа
-                print("Ни accessToken, ни refreshToken не найдены, показываем LoginView")
+                print("No access or refresh token found, showing LoginView")
                 DispatchQueue.main.async {
                     self.clearTokens()
                     self.isAuthenticated = false
@@ -63,78 +67,73 @@ class AuthManager: ObservableObject {
             }
         }
     }
-    
-    // MARK: - Обновление токена
+
+    // MARK: - Refresh Access Token
     func refreshAccessToken(completion: @escaping (Bool) -> Void) {
         guard let refreshToken = self.refreshToken else {
-            print("Refresh-токен не найден")
+            print("Refresh token not found")
             completion(false)
             return
         }
-        
+
         let url = URL(string: "\(baseUrl)/token/refresh/")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        
+
         let body: [String: String] = ["refresh": refreshToken]
         request.httpBody = try? JSONSerialization.data(withJSONObject: body)
-        
+
         URLSession.shared.dataTask(with: request) { data, response, error in
             guard let data = data, error == nil else {
-                print("Ошибка при обновлении токена: \(error?.localizedDescription ?? "Неизвестная ошибка")")
+                print("Error refreshing token: \(error?.localizedDescription ?? "Unknown error")")
                 completion(false)
                 return
             }
-            
+
             do {
                 if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
                    let newAccessToken = json["access"] as? String {
                     UserDefaults.standard.set(newAccessToken, forKey: self.accessTokenKey)
-                    print("Новый токен получен: \(newAccessToken)")
+                    print("New token received: \(newAccessToken)")
                     completion(true)
                 } else {
-                    print("Некорректный формат ответа при обновлении токена")
+                    print("Invalid response format during token refresh")
                     completion(false)
                 }
             } catch {
-                print("Ошибка при декодировании ответа: \(error.localizedDescription)")
+                print("Failed to decode response: \(error.localizedDescription)")
                 completion(false)
             }
         }.resume()
     }
 
-    // MARK: - Аутентификация пользователя
+    // MARK: - User Authentication
     func authenticateUser(username: String, password: String, completion: @escaping (Bool) -> Void) {
-        print("Аутентификация пользователя...")
+        print("Authenticating user...")
 
-        // Проверка корректности URL
         guard let url = URL(string: "\(baseUrl)/token/") else {
-            print("Некорректный URL")
+            print("Invalid URL")
             completion(false)
             return
         }
 
-        // Формируем тело запроса с логином и паролем
         let body: [String: String] = ["username": username, "password": password]
-        
-        // Сериализация тела запроса
+
         guard let jsonData = try? JSONSerialization.data(withJSONObject: body) else {
-            print("Ошибка сериализации JSON")
+            print("Failed to serialize JSON")
             completion(false)
             return
         }
 
-        // Создаем запрос
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = jsonData
 
-        // Выполняем запрос
         URLSession.shared.dataTask(with: request) { data, response, error in
             guard let data = data, error == nil else {
-                print("Ошибка: \(error?.localizedDescription ?? "Неизвестная ошибка")")
+                print("Error: \(error?.localizedDescription ?? "Unknown error")")
                 completion(false)
                 return
             }
@@ -147,21 +146,21 @@ class AuthManager: ObservableObject {
                         completion(true)
                     }
                 } else {
-                    print("Некорректный формат ответа")
+                    print("Invalid response format")
                     completion(false)
                 }
             } catch {
-                print("Ошибка декодирования JSON: \(error.localizedDescription)")
+                print("Failed to decode JSON: \(error.localizedDescription)")
                 completion(false)
             }
         }.resume()
     }
 
-    // MARK: - Получение токена (асинхронно)
+    // MARK: - Get Token (Async)
     func getToken() async -> String? {
         var token = accessToken
         if token == nil {
-            print("Токен не найден, попытка обновить токен...")
+            print("Token not found, trying to refresh...")
             let success = await withCheckedContinuation { continuation in
                 refreshAccessToken { success in
                     continuation.resume(returning: success)
@@ -169,20 +168,17 @@ class AuthManager: ObservableObject {
             }
             if success {
                 token = accessToken
-            } else {
-                token = nil
             }
         }
-
         return token
     }
-    
-    // MARK: - Управление токенами
+
+    // MARK: - Token Management
     func setTokens(accessToken: String, refreshToken: String) {
         UserDefaults.standard.set(accessToken, forKey: accessTokenKey)
         UserDefaults.standard.set(refreshToken, forKey: refreshTokenKey)
     }
-    
+
     func clearTokens() {
         UserDefaults.standard.removeObject(forKey: accessTokenKey)
         UserDefaults.standard.removeObject(forKey: refreshTokenKey)

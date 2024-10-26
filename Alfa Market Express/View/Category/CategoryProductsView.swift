@@ -22,11 +22,13 @@ struct CategoryProductsView: View {
                     }) {
                         HStack {
                             Image(systemName: "chevron.left")
+                                .foregroundColor(.colorGreen)
                             Text("Назад")
+                                .foregroundColor(.black)
                         }
                     }
                     .padding()
-                    .foregroundColor(.colorGreen)
+                    
                     Spacer()
                 }
                 
@@ -42,9 +44,9 @@ struct CategoryProductsView: View {
                         )
                     }
                 }
-                .onAppear {
-                    loadProducts(for: category)
-                }
+//                .onAppear {
+//                    loadProducts(for: category)
+//                }
 
             } else {
                 LazyVGrid(columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 1)], spacing: 10) {
@@ -61,18 +63,18 @@ struct CategoryProductsView: View {
         }
     }
 
-    private func loadProducts(for category: Category) {
-        guard !isFetching else { return }
-        isFetching = true
-        viewModel.productViewModel.fetchProducts { success in
-            DispatchQueue.main.async {
-                isFetching = false
-                if success {
-                    print("Продукты успешно загружены для категории \(category.name)")
-                } else {
-                    print("Не удалось загрузить продукты для категории \(category.name)")
-                }
-            }
-        }
-    }
+//    private func loadProducts(for category: Category) {
+//        guard !isFetching else { return }
+//        isFetching = true
+//        viewModel.productViewModel.fetchProducts { success in
+//            DispatchQueue.main.async {
+//                isFetching = false
+//                if success {
+//                    print("Продукты успешно загружены для категории \(category.name)")
+//                } else {
+//                    print("Не удалось загрузить продукты для категории \(category.name)")
+//                }
+//            }
+//        }
+//    }
 }

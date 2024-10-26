@@ -23,7 +23,7 @@ struct ProductDetailView: View {
                 productDescription
                 productPrice
                 addToCartButton
-                similarProductsSection
+//                similarProductsSection
             }
             .background(.colorGray)
             .padding(.vertical)

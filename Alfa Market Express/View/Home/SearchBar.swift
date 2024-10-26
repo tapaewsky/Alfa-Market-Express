@@ -10,31 +10,27 @@ struct SearchBar: View {
     @ObservedObject var viewModel: MainViewModel
     @State private var isSearching: Bool = false
     @State private var showSearchResults: Bool = false
-    @State private var isLoading: Bool = false  // Флаг для отслеживания загрузки
-    @FocusState private var isSearchFieldFocused: Bool  // Отслеживание фокуса
-
+    @State private var isLoading: Bool = false
+    @FocusState private var isSearchFieldFocused: Bool
+    
     var body: some View {
         VStack {
             HStack {
-                // Лупа
                 Image(systemName: "magnifyingglass")
                     .foregroundColor(.gray)
                     .padding(11)
-
-                // Текстовое поле для поиска
+                                
                 TextField("Поиск", text: $viewModel.searchViewModel.searchText)
                     .padding(.vertical, 10)
-                    .focused($isSearchFieldFocused)  // Следим за фокусом
+                    .focused($isSearchFieldFocused)
                     .onSubmit {
-                        performSearch()  // Выполняем поиск при нажатии Enter
+                        performSearch()
                     }
                     .onChange(of: isSearchFieldFocused) { isFocused in
                         if !isFocused {
-                            clearSearch()  // Очищаем при потере фокуса
+                            clearSearch()
                         }
                     }
-
-                // Фиксик - кнопка очистки
                 if isSearching {
                     Button(action: {
                         clearSearch()
@@ -49,14 +45,11 @@ struct SearchBar: View {
             .cornerRadius(20)
             .shadow(radius: 1)
             .padding()
-
-            // Индикатор загрузки
+                        
             if isLoading {
                 ProgressView("Загрузка...")
                     .padding()
             }
-
-            // Переход на экран результатов
             NavigationLink(
                 destination: SearchResultsView(
                     viewModel: viewModel,
@@ -74,20 +67,20 @@ struct SearchBar: View {
             isSearching = !viewModel.searchViewModel.searchText.isEmpty
         }
     }
-
+    
     // MARK: - Perform Search
     private func performSearch() {
         guard !viewModel.searchViewModel.searchText.isEmpty else { return }
-        isLoading = true  // Устанавливаем флаг загрузки
-
+        isLoading = true
+        
         viewModel.searchViewModel.searchProducts(query: viewModel.searchViewModel.searchText) {
             DispatchQueue.main.async {
-                isLoading = false  // Останавливаем загрузку
-                showSearchResults = true  // Переходим на экран результатов
+                isLoading = false
+                showSearchResults = true
             }
         }
     }
-
+    
     // MARK: - Clear Search
     private func clearSearch() {
         viewModel.searchViewModel.searchText = ""
@@ -100,7 +93,7 @@ struct SearchResultsView: View {
     @StateObject var viewModel: MainViewModel
     var products: [Product]
     var onFavoriteToggle: (Product) -> Void
-
+    
     var body: some View {
         ScrollView {
             ProductGridView(viewModel: viewModel, products: products, onFavoriteToggle: onFavoriteToggle)

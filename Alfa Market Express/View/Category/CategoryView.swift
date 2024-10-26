@@ -16,15 +16,13 @@ struct CategoryView: View {
             VStack {
                 HeaderView {
                     SearchBar(viewModel: viewModel)
-                        
                 }
                 ScrollView {
                     if viewModel.categoryViewModel.categories.isEmpty && !isFetching {
                         Text("Нет доступных категорий")
                             .padding()
                     } else {
-                        CategoryProductsView(viewModel: viewModel)
-                            
+                        CategoryProductsView(viewModel: viewModel)         
                     }
                 }
             }

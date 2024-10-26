@@ -14,46 +14,52 @@ class SearchViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     var products: [Product] = []
     
-    func searchProducts(query: String) {
-    print("Запрос на searchProducts")
+    func searchProducts(query: String, completion: @escaping () -> Void) {
+        print("Запрос на searchProducts")
+        
         guard !query.isEmpty else {
             self.products = []
+            completion()
             return
         }
-
-      
 
         let searchUrl = "\(baseURL)?search=\(query)"
         guard let encodedUrlString = searchUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
               let url = URL(string: encodedUrlString) else {
             print("Invalid search URL")
+            completion()
             return
         }
 
         var request = URLRequest(url: url)
-       
 
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
                 print("Error searching products: \(error.localizedDescription)")
+                completion()
                 return
             }
 
             guard let data = data else {
                 print("No data in response")
+                completion()
                 return
             }
 
             do {
                 let products = try JSONDecoder().decode([Product].self, from: data)
                 DispatchQueue.main.async {
-                    self.products = products  // Сохраняем полученные продукты
+                    self.products = products
+                    completion()  // Сообщаем о завершении загрузки
                 }
             } catch {
                 print("Error decoding products: \(error.localizedDescription)")
+                completion()
             }
         }.resume()
     }
+    
+    
     var filteredProducts: [Product] {
         if searchText.isEmpty {
             return products
@@ -61,5 +67,4 @@ class SearchViewModel: ObservableObject {
             return products.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
         }
     }
-
 }
