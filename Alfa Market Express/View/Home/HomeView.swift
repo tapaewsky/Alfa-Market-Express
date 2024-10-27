@@ -42,7 +42,6 @@ struct HomeView: View {
             DispatchQueue.main.async {
                 if success {
                     self.updateShuffledProducts()
-                    print("Главное успешно загружено")
                 } else {
                     print("Не удалось загрузить главное")
                 }
@@ -54,7 +53,6 @@ struct HomeView: View {
         viewModel.slideViewModel.fetchSlides { success in
             DispatchQueue.main.async {
                 if success {
-                    print("Слайды успешно загружены")
                 } else {
                     print("Не удалось загрузить слайды")
                 }

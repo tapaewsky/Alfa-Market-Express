@@ -42,6 +42,8 @@ class OrdersViewModel: ObservableObject {
         var request = URLRequest(url: url)
         request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
         
+        print("Запрос на сервер: \(url.absoluteString)")
+        
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
                 print("Ошибка при получении заказов: \(error.localizedDescription)")
@@ -110,6 +112,8 @@ class OrdersViewModel: ObservableObject {
         var token = await authManager.getToken()
         
         var request = createRequest(url: url, method: "POST", token: token!)
+        
+        print("Запрос на сервер: \(url.absoluteString)")
 
         let orderRequest = CreateOrderRequest(items: items, comments: comments)
 
@@ -150,6 +154,8 @@ class OrdersViewModel: ObservableObject {
         guard token != nil else { return }
         
         var request = createRequest(url: url, method: "PATCH", token: token!)
+        
+        print("Запрос на сервер: \(url.absoluteString)")
         
         let commentData = UpdateCommentRequest(comments: comment)
         

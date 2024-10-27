@@ -49,7 +49,6 @@ struct FavoritesView: View {
             DispatchQueue.main.async {
                 isFetching = false
                 if success {
-                    print("Избранное успешно загружено")
                 } else {
                     print("Не удалось загрузить избранное")
                 }

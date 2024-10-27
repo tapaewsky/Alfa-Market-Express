@@ -147,7 +147,6 @@ struct ProfileInfo: View {
             DispatchQueue.main.async {
                 isFetching = false
                 if success {
-                    print("Профиль успешно загружен")
                 } else {
                     print("Не удалось загрузить профиль")
                 }

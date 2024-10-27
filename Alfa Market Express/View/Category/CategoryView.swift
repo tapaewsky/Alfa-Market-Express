@@ -38,7 +38,6 @@ struct CategoryView: View {
             DispatchQueue.main.async {
                 isFetching = false
                 if success {
-                    print("Категории успешно загружены")
                 } else {
                     print("Не удалось загрузить категории")
                 }

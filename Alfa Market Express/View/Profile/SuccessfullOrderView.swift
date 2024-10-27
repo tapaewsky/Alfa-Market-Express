@@ -48,7 +48,6 @@ struct SuccessfullOrderView: View {
                 )
 
                 HomeButton {
-                    print("Navigating to Home")
                     NotificationCenter.default.post(name: Notification.Name("SwitchToHome"), object: nil)
                 }
 

@@ -49,7 +49,6 @@ struct OrdersView: View {
             DispatchQueue.main.async {
                 isFetching = false
                 if success {
-                    print("Заказы успешно загружены")
                 } else {
                     print("Не удалось загрузить заказы")
                 }

@@ -45,6 +45,8 @@ class CartViewModel: ObservableObject {
         var request = URLRequest(url: url)
         request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
         
+        print("Запрос на сервер: \(url.absoluteString)")
+        
         URLSession.shared.dataTask(with: request) { data, response, error in
             
             if let error = error {
@@ -91,6 +93,8 @@ class CartViewModel: ObservableObject {
         let body: [String: Any] = ["product": product.id, "quantity": quantity]
         request.httpBody = try? JSONSerialization.data(withJSONObject: body)
         
+        print("Запрос на сервер: \(url.absoluteString)")
+        
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
             if let httpResponse = response as? HTTPURLResponse {
@@ -125,9 +129,7 @@ class CartViewModel: ObservableObject {
         let body: [String: Any] = ["quantity": newQuantity]
         request.httpBody = try? JSONSerialization.data(withJSONObject: body)
 
-        print("Отправка запроса на обновление продукта \(productId) с новой величиной \(newQuantity)")
-        print("URL: \(url)")
-        print("Тело запроса: \(String(data: request.httpBody!, encoding: .utf8) ?? "")")
+        print("Запрос на сервер: \(url.absoluteString)")
 
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
@@ -154,10 +156,8 @@ class CartViewModel: ObservableObject {
     
     // This function is used to delete a product from the cart
     func removeFromCard(_ product: Product) async {
-        print("Attempting to remove product: \(product.name), ID: \(product.id)")
 
         guard dataId != 0 else {
-            print("Error: dataId is 0. Unable to remove product.")
             return
         }
 
@@ -166,17 +166,16 @@ class CartViewModel: ObservableObject {
             return
         }
 
-        print("URL to remove product: \(url)")
-
         var token = await getToken()
         guard token != nil else {
             print("Error: Unable to get token")
             return
         }
 
-        print("Token received: \(token!)")
 
         var request = createRequest(url: url, method: "DELETE", token: token!)
+        
+        print("Запрос на сервер: \(url.absoluteString)")
         
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
@@ -199,7 +198,6 @@ class CartViewModel: ObservableObject {
             
             DispatchQueue.main.async {
                 self.cart.removeAll { $0.id == product.id }
-                print("Cart updated: product with ID \(product.id) removed")
             }
         } catch {
             print("Error removing product from cart: \(error.localizedDescription)")
@@ -218,7 +216,6 @@ class CartViewModel: ObservableObject {
             return
         }
 
-        print("URL to remove product: \(url)")
 
         var token = await getToken()
         guard token != nil else {
@@ -229,6 +226,8 @@ class CartViewModel: ObservableObject {
         print("Token received: \(token!)")
 
         var request = createRequest(url: url, method: "DELETE", token: token!)
+        
+        print("Запрос на сервер: \(url.absoluteString)")
 
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
@@ -237,21 +236,18 @@ class CartViewModel: ObservableObject {
                 print("HTTP Status Code: \(httpResponse.statusCode)")
 
                 if httpResponse.statusCode == 204 {
-                    print("Product successfully removed")
                 } else {
                     print("Failed to remove product. Status code: \(httpResponse.statusCode)")
                 }
             }
 
             if let jsonResponse = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
-                print("Response JSON: \(jsonResponse)")
             } else {
                 print("Failed to parse response data")
             }
 
             DispatchQueue.main.async {
                 self.cart.removeAll { $0.id == productId }
-                print("Cart updated: product with ID \(productId) removed")
             }
         } catch {
             print("Error removing product from cart: \(error.localizedDescription)")
@@ -286,29 +282,23 @@ class CartViewModel: ObservableObject {
         selectedProducts[product.id] = !isSelected
         
        
-        print("Товар \(product.name) \(isSelected ? "снят с выбора" : "выбран")")
-        print("Текущее состояние selectedProducts: \(selectedProducts)")
         
         updateSelectedTotalPrice()
     }
 
 
     func updateSelectedTotalPrice() {
-        print("cartProduct: \(cartProduct)")
         let selectedProductsList = cartProduct.filter { selectedProducts[$0.id] ?? false }
 
       
 
-        print("Выбранные продукты для расчета цены: \(selectedProductsList)")
 
         selectedTotalPrice = selectedProductsList.reduce(0) { total, product in
             let price = Double(product.product.price) ?? 0
             let quantity = product.quantity
-            print("Продукт: \(product.product.name), Цена: \(price), Количество: \(quantity)")
             return total + (price * Double(quantity))
         }
 
-        print("Общая цена выбранных продуктов: \(selectedTotalPrice)")
     }
 
     func selectProductsForCheckout(products: [CartProduct]) async {
@@ -317,7 +307,7 @@ class CartViewModel: ObservableObject {
             return
         }
         
-        print("Request URL: \(url.absoluteString)")
+   
         
         var token = await getToken()
         guard token != nil else {
@@ -326,18 +316,17 @@ class CartViewModel: ObservableObject {
         }
         
         var request = createRequest(url: url, method: "POST", token: token!)
+        print("Запрос на сервер: \(url.absoluteString)")
 
       
-        print("Selected products for checkout:")
+       
         for product in products {
-            print("Product ID: \(product.product.id), Name: \(product.product.name), Quantity: \(product.quantity)")
         }
         
         do {
             let jsonData = try JSONEncoder().encode(products)
             request.httpBody = jsonData
             
-            print("Sending request with body: \(String(data: jsonData, encoding: .utf8) ?? "Invalid JSON")") // Печатаем JSON-тело запроса
             
             let (data, response) = try await URLSession.shared.data(for: request)
 
@@ -396,7 +385,6 @@ class CartViewModel: ObservableObject {
         }
         
         if let jsonResponse = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
-            print("Checkout Response: \(jsonResponse)")
         } else {
             print("Failed to decode response data")
         }

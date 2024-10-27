@@ -10,7 +10,7 @@ import SwiftUI
 // MARK: - CheckoutView
 
 struct CheckoutView: View {
-    @ObservedObject var viewModel: MainViewModel
+    @StateObject var viewModel: MainViewModel
     @Binding var selectedTab: Int
     @State private var showSuccessView = false
     @State private var comment: String = ""

@@ -25,6 +25,8 @@ class ProductViewModel: ObservableObject {
         }
         var request = URLRequest(url: url)
         
+        print("Запрос на сервер: \(url.absoluteString)")
+        
         
         URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
             defer { self?.isLoading = false }

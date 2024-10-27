@@ -38,7 +38,9 @@ class FavoritesViewModel: ObservableObject {
 
         var request = URLRequest(url: url)
         request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
-
+        
+        print("Запрос на сервер: \(url.absoluteString)")
+        
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
                 print("Ошибка при получении избранного: \(error.localizedDescription)")
@@ -95,6 +97,8 @@ class FavoritesViewModel: ObservableObject {
 
         let requestBody: [String: Any] = ["product_id": product.id]
         request.httpBody = try? JSONSerialization.data(withJSONObject: requestBody)
+        
+        print("Запрос на сервер: \(url.absoluteString)")
 
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
@@ -118,7 +122,6 @@ class FavoritesViewModel: ObservableObject {
         } else {
             favorites.append(product)
         }
-        print("Товар \(product.name) теперь \(isFavorite(product) ? "в избранном" : "не в избранном")")
     }
 
     func isFavorite(_ product: Product) -> Bool {

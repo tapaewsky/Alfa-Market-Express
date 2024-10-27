@@ -29,8 +29,6 @@ class MainViewModel: ObservableObject {
         self.profileViewModel = ProfileViewModel()
         self.slideViewModel = SlideViewModel()
         self.searchViewModel = SearchViewModel()
-
-        // Инициализация ordersViewModel после создания объекта
         self.ordersViewModel = OrdersViewModel(cartViewModel: self.cartViewModel)
     }
 

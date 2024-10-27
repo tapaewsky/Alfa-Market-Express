@@ -83,6 +83,8 @@ class AuthManager: ObservableObject {
 
         let body: [String: String] = ["refresh": refreshToken]
         request.httpBody = try? JSONSerialization.data(withJSONObject: body)
+        
+        print("Запрос на сервер: \(url.absoluteString)")
 
         URLSession.shared.dataTask(with: request) { data, response, error in
             guard let data = data, error == nil else {
@@ -130,6 +132,8 @@ class AuthManager: ObservableObject {
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = jsonData
+        
+        print("Запрос на сервер: \(url.absoluteString)")
 
         URLSession.shared.dataTask(with: request) { data, response, error in
             guard let data = data, error == nil else {

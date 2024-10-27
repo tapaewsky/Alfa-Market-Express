@@ -7,7 +7,7 @@
 import SwiftUI
 
 struct CartView: View {
-    @StateObject var viewModel: MainViewModel
+    @ObservedObject var viewModel: MainViewModel
     
     var body: some View {
         CartMainView(viewModel: viewModel)

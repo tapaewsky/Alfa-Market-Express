@@ -11,14 +11,14 @@ struct EditProfile: View {
     @ObservedObject var viewModel: MainViewModel
     @State private var showImagePicker: Bool = false
     @Environment(\.presentationMode) var presentationMode
-
-
+    
+    
     var body: some View {
         ScrollView {
             VStack {
                 navBar
                 imagePickerButton
-                .padding(.bottom)
+                    .padding(.bottom)
                 formFields
                 saveButton
             }
@@ -32,14 +32,14 @@ struct EditProfile: View {
             ImagePicker(selectedImage: $viewModel.profileViewModel.selectedImage)
         }
     }
-
+    
     private var navBar: some View {
         Text("Редактировать профиль")
             .font(.title2)
             .bold()
             .foregroundColor(.black)
     }
-
+    
     private var imagePickerButton: some View {
         VStack {
             if let selectedImage = viewModel.profileViewModel.selectedImage {
@@ -66,7 +66,7 @@ struct EditProfile: View {
                         .frame(maxWidth: .infinity)
                 }
             }
-
+            
             Button(action: { showImagePicker = true }) {
                 Text("Изменить фото магазина")
                     .bold()
@@ -75,7 +75,7 @@ struct EditProfile: View {
             }
         }
     }
-
+    
     private var formFields: some View {
         VStack {
             editTextField(placeholder: viewModel.profileViewModel.userProfile.firstName, text: $viewModel.profileViewModel.userProfile.firstName)
@@ -87,18 +87,20 @@ struct EditProfile: View {
         .padding()
         
     }
-
+    
     private func editTextField(placeholder: String, text: Binding<String>) -> some View {
         TextField(placeholder, text: text)
             .padding()
             .background(RoundedRectangle(cornerRadius: 15).stroke(.colorGreen, lineWidth: 1))
     }
-
+    
     private var saveButton: some View {
         Button(action: {
             Task {
                 await viewModel.profileViewModel.updateProfile { success in
-                    print(success ? "Профиль успешно сохранен" : "Ошибка при сохранении профиля")
+                    if !success {
+                        print("Ошибка при сохранении профиля")
+                    }
                 }
             }
         }) {

@@ -79,7 +79,6 @@ struct CartMainView: View {
             set: { newValue in
                 viewModel.cartViewModel.selectedProducts[cartProduct.id] = newValue
                 viewModel.cartViewModel.updateSelectedTotalPrice()
-                print("Текущая цена для выбранных продуктов: \(Int(viewModel.cartViewModel.selectedTotalPrice)) ₽")
             }
         )
 
@@ -136,7 +135,6 @@ struct CartMainView: View {
             DispatchQueue.main.async {
                 isFetching = false
                 if success {
-                    print("Корзина успешно загружена")
                     viewModel.cartViewModel.updateTotalPrice()
                 } else {
                     print("Не удалось загрузить корзину")

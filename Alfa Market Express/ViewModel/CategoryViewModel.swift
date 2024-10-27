@@ -34,7 +34,8 @@ class CategoryViewModel: ObservableObject {
         
         
         var request = URLRequest(url: url)
-       
+        
+        print("Запрос на сервер: \(url.absoluteString)")
         
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {

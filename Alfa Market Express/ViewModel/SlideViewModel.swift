@@ -25,6 +25,9 @@ class SlideViewModel: ObservableObject {
         isLoading = true
         isError = false
         
+        print("Запрос на сервер: \(url.absoluteString)")
+        
+        
         URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
             defer { self?.isLoading = false }
             

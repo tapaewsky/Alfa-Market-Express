@@ -15,7 +15,6 @@ class SearchViewModel: ObservableObject {
     var products: [Product] = []
     
     func searchProducts(query: String, completion: @escaping () -> Void) {
-        print("Запрос на searchProducts")
         
         guard !query.isEmpty else {
             self.products = []
@@ -32,6 +31,8 @@ class SearchViewModel: ObservableObject {
         }
 
         var request = URLRequest(url: url)
+        
+        print("Запрос на сервер: \(url.absoluteString)")
 
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
@@ -50,7 +51,7 @@ class SearchViewModel: ObservableObject {
                 let products = try JSONDecoder().decode([Product].self, from: data)
                 DispatchQueue.main.async {
                     self.products = products
-                    completion()  // Сообщаем о завершении загрузки
+                    completion()  
                 }
             } catch {
                 print("Error decoding products: \(error.localizedDescription)")
