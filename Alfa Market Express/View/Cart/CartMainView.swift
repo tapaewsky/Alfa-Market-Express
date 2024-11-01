@@ -13,6 +13,7 @@ struct CartMainView: View {
     @State private var isFetching = false
     @State private var isSelectionMode: Bool = false
     @State private var selectedTab: Int = 0
+    
 
     var body: some View {
         VStack(spacing: 0) {
@@ -24,6 +25,9 @@ struct CartMainView: View {
         .onAppear { loadCart() }
         .onTapGesture {
             UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+        }
+        .onReceive(viewModel.cartViewModel.$totalPrice) { newTotal in
+            print("Updated total price: \(newTotal)")
         }
     }
 
@@ -94,9 +98,7 @@ struct CartMainView: View {
 
     private var footer: some View {
         HStack {
-            let totalPrice = isSelectionMode ? viewModel.cartViewModel.selectedTotalPrice : viewModel.cartViewModel.totalPrice
-
-            Text("\(Int(totalPrice)) ₽")
+            Text("\(Int(viewModel.cartViewModel.totalPrice)) ₽")
                 .font(.callout)
                 .bold()
             
@@ -107,8 +109,8 @@ struct CartMainView: View {
                     viewModel: viewModel,
                     selectedTab: $selectedTab,
                     products: selectedOrAllProducts(),
-                    totalPrice: totalPrice,
-                    productCount: selectedOrAllProducts().count
+                    
+                    totalPrice: viewModel.cartViewModel.totalPrice, productCount: selectedOrAllProducts().count
                 )
             ) {
                 Text("Оформить заказ")

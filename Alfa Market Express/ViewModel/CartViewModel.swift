@@ -9,7 +9,11 @@ import Combine
 
 class CartViewModel: ObservableObject {
     // MARK: - Properties
-    @Published var cartProduct: [CartProduct] = []
+    @Published var cartProduct: [CartProduct] = [] {
+           didSet {
+               updateTotalPrice()
+           }
+       }
     @Published var cart: [Product] = []
     
     @Published var totalPrice: Double = 0.0
@@ -23,10 +27,8 @@ class CartViewModel: ObservableObject {
     private var authManager = AuthManager.shared
 
     init() {
-           for product in cartProduct {
-               selectedProducts[product.id] = false 
-           }
-       }
+            updateTotalPrice()
+        }
     
     // MARK: - API Calls
     func fetchCart(completion: @escaping (Bool) -> Void) {
@@ -132,28 +134,40 @@ class CartViewModel: ObservableObject {
         print("Запрос на сервер: \(url.absoluteString)")
 
         do {
+            // Выполняем запрос
             let (data, response) = try await URLSession.shared.data(for: request)
             
-            if let httpResponse = response as? HTTPURLResponse {
+            // Проверяем статус ответа
+            if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
                 print("Получен HTTP-ответ: \(httpResponse.statusCode)")
                 
-                print("Полученные данные: \(String(data: data, encoding: .utf8) ?? "Нет данных")")
-                
-                if httpResponse.statusCode == 200 {
-                    do {
-                        let updatedProduct = try JSONDecoder().decode(CartProduct.self, from: data)
-                    } catch {
-                        print("Ошибка декодирования: \(error.localizedDescription)")
+                // Декодируем ответ
+                if let jsonResponse = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
+                   let cartItem = jsonResponse["cart_item"] as? [String: Any],
+                   let product = cartItem["product"] as? [String: Any],
+                   let quantity = cartItem["quantity"] as? Int,
+                   let priceString = product["price"] as? String,
+                   let price = Double(priceString) {
+
+                    // Обновляем quantity и totalPrice
+                    DispatchQueue.main.async {
+                        if let index = self.cartProduct.firstIndex(where: { $0.id == productId }) {
+                            self.cartProduct[index].quantity = quantity
+                            self.updateTotalPrice()
+                        } else {
+                            print("Product with ID \(productId) not found in cartProduct")
+                        }
                     }
                 } else {
-                    print("Ошибка при обновлении продукта: \(httpResponse.statusCode)")
+                    print("Ошибка: структура данных не соответствует ожидаемой.")
                 }
+            } else {
+                print("Ошибка: некорректный HTTP-ответ или код состояния")
             }
         } catch {
-            print("Произошла ошибка: \(error.localizedDescription)")
+            print("Ошибка декодирования: \(error.localizedDescription)")
         }
     }
-    
     // This function is used to delete a product from the cart
     func removeFromCard(_ product: Product) async {
 
@@ -290,9 +304,6 @@ class CartViewModel: ObservableObject {
     func updateSelectedTotalPrice() {
         let selectedProductsList = cartProduct.filter { selectedProducts[$0.id] ?? false }
 
-      
-
-
         selectedTotalPrice = selectedProductsList.reduce(0) { total, product in
             let price = Double(product.product.price) ?? 0
             let quantity = product.quantity
@@ -389,9 +400,9 @@ class CartViewModel: ObservableObject {
             print("Failed to decode response data")
         }
     }
-    func updateTotalPrice()  {
+    func updateTotalPrice() {
         totalPrice = cartProduct.reduce(0) { total, cartProduct in
-            return total + cartProduct.getTotalPrice
+            total + cartProduct.getTotalPrice
         }
     }
 }
