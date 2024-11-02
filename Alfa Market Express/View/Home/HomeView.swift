@@ -25,7 +25,6 @@ struct HomeView: View {
             }
         }
         .navigationBarBackButtonHidden(true)
-
         .onAppear {
             loadProducts()
         }
@@ -33,8 +32,6 @@ struct HomeView: View {
     
     private func loadProducts() {
         isFetching = true
-        
-     
         let productFetchGroup = DispatchGroup()
         
         productFetchGroup.enter()
@@ -65,4 +62,3 @@ struct HomeView: View {
         shuffledProducts = viewModel.productViewModel.products.shuffled()
     }
 }
-        

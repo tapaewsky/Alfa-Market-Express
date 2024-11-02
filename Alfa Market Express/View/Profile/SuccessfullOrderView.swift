@@ -56,7 +56,6 @@ struct SuccessfullOrderView: View {
         }
     }
 
-// MARK: - Cart Button
 private func cartButton(action: @escaping () -> Void) -> some View {
         Button(action: action) {
             HStack {
@@ -70,7 +69,6 @@ private func cartButton(action: @escaping () -> Void) -> some View {
     }
 }
 
-// MARK: - Success Icon
 private struct SuccessIcon: View {
     let size: CGFloat
 
@@ -81,7 +79,6 @@ private struct SuccessIcon: View {
     }
 }
 
-// MARK: - Success Message View
 private struct SuccessMessageView: View {
     var body: some View {
         VStack(spacing: 15) {
@@ -99,7 +96,6 @@ private struct SuccessMessageView: View {
     }
 }
 
-// MARK: - Orders Button
 private struct OrdersButton: View {
     let action: () -> Void
 
@@ -118,7 +114,6 @@ private struct OrdersButton: View {
     }
 }
 
-// MARK: - Home Button
 private struct HomeButton: View {
     let action: () -> Void
 
@@ -137,7 +132,6 @@ private struct HomeButton: View {
     }
 }
 
-// MARK: - Preview
 struct SuccessfullOrderView_Preview: PreviewProvider {
     static var previews: some View {
         SuccessfullOrderView(

@@ -6,7 +6,7 @@
 //
 import Foundation
 
-struct CartProduct: Decodable, Encodable, Identifiable {
+struct CartProduct: Decodable, Encodable, Identifiable, Equatable {
     var id: Int
     var product: Product
     var quantity: Int

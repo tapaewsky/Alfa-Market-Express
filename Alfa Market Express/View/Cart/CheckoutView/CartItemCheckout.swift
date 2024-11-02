@@ -8,7 +8,6 @@
 import SwiftUI
 import Kingfisher
 
-// MARK: - CartItemCheckout
 
 struct CartItemCheckout: View {
     @Binding var cartProduct: CartProduct
@@ -56,7 +55,6 @@ struct CartItemCheckout: View {
     }
 }
 
-// MARK: - ProductImageView
 
 struct ProductImageView: View {
     var imageUrl: String?
@@ -80,7 +78,6 @@ struct ProductImageView: View {
     }
 }
 
-// MARK: - ProductDescriptionView
 
 struct ProductDescriptionView: View {
     var description: String
@@ -96,7 +93,6 @@ struct ProductDescriptionView: View {
     }
 }
 
-// MARK: - QuantityView
 
 struct QuantityView: View {
     var quantity: Int

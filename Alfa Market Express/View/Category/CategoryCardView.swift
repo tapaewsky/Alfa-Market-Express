@@ -34,7 +34,7 @@ struct CategoryCardView: View {
                 .font(.subheadline)
                 .fontWeight(.bold)
                 .lineLimit(1)
-                .foregroundColor(.primary) // Изменено на белый цвет для лучшей видимости
+                .foregroundColor(.primary) 
                 .padding(5) 
                
                
@@ -42,6 +42,5 @@ struct CategoryCardView: View {
         .padding(0)
         .background(Color.colorGray)
         .cornerRadius(15)
-//        .aspectRatio(1, contentMode: .fit)
     }
 }

@@ -13,7 +13,6 @@ struct CartMainView: View {
     @State private var isFetching = false
     @State private var isSelectionMode: Bool = false
     @State private var selectedTab: Int = 0
-    
 
     var body: some View {
         VStack(spacing: 0) {
@@ -22,14 +21,18 @@ struct CartMainView: View {
             footer
         }
         .padding(0)
-        .onAppear { loadCart() }
+        .onAppear {
+            loadCart()
+            viewModel.cartViewModel.updateTotalPrice()
+        }
         .onTapGesture {
             UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
         }
-        .onReceive(viewModel.cartViewModel.$totalPrice) { newTotal in
-            print("Updated total price: \(newTotal)")
+        .onChange(of: viewModel.cartViewModel.cartProduct) { _ in
+            viewModel.cartViewModel.updateTotalPrice()
         }
     }
+
 
     private var header: some View {
         HStack {
@@ -109,7 +112,6 @@ struct CartMainView: View {
                     viewModel: viewModel,
                     selectedTab: $selectedTab,
                     products: selectedOrAllProducts(),
-                    
                     totalPrice: viewModel.cartViewModel.totalPrice, productCount: selectedOrAllProducts().count
                 )
             ) {
@@ -158,7 +160,10 @@ struct CartMainView: View {
         isSelectionMode.toggle()
         viewModel.cartViewModel.clearSelection()
     }
+    
+   
 }
+
 
 // MARK: - Preview
 

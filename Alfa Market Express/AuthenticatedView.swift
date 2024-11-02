@@ -9,7 +9,7 @@ import SwiftUI
 
 struct AuthenticatedView: View {
     @StateObject private var authManager = AuthManager.shared
-    @ObservedObject private var viewModel = MainViewModel()
+    @StateObject private var viewModel = MainViewModel()
     
     var body: some View {
         Group {

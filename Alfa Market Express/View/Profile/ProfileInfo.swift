@@ -33,7 +33,6 @@ struct ProfileInfo: View {
         }
     }
     
-    // MARK: - Profile Image
     
     private var profileImage: some View {
         Group {
@@ -52,7 +51,6 @@ struct ProfileInfo: View {
         }
     }
     
-    // MARK: - Shop Owner Information
     
     private var shopOwner: some View {
         VStack {
@@ -67,7 +65,6 @@ struct ProfileInfo: View {
         .padding()
     }
     
-    // MARK: - Display Store Information
     
     private var displayStoreInfo: some View {
         VStack(alignment: .leading, spacing: 15) {
@@ -122,7 +119,6 @@ struct ProfileInfo: View {
         .padding()
     }
     
-    // MARK: - Orders Button
     
     private var ordersButton: some View {
         Button(action: {
@@ -139,7 +135,6 @@ struct ProfileInfo: View {
         .shadow(radius: 3)
     }
 
-    // MARK: - Load Profile
     
     private func loadProfile() {
         isFetching = true

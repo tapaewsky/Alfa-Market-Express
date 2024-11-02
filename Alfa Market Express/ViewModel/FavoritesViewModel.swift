@@ -15,10 +15,6 @@ class FavoritesViewModel: ObservableObject {
     private let authManager = AuthManager.shared
     private let baseUrl = "http://95.174.90.162:60/api"
     
-//    func reset() {
-//        favorites.removeAll()
-//           print("FavoritesViewModel reset")
-//       }
 
     func fetchFavorites(completion: @escaping (Bool) -> Void) {
        
@@ -33,9 +29,7 @@ class FavoritesViewModel: ObservableObject {
             completion(false)
             return
         }
-
-      
-
+        
         var request = URLRequest(url: url)
         request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
         
@@ -116,6 +110,7 @@ class FavoritesViewModel: ObservableObject {
         }
     }
 
+    
     private func toggleProductFavoriteStatus(product: Product) {
         if let index = favorites.firstIndex(where: { $0.id == product.id }) {
             favorites.remove(at: index)

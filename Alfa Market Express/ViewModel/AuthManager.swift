@@ -8,10 +8,8 @@ import Foundation
 import SwiftUI
 
 class AuthManager: ObservableObject {
-    // MARK: - Singleton Instance
     static let shared = AuthManager()
 
-    // MARK: - Properties
     @Published var isAuthenticated: Bool = false
     @Published var isCheckingAuth: Bool = true
 
@@ -27,12 +25,10 @@ class AuthManager: ObservableObject {
         UserDefaults.standard.string(forKey: refreshTokenKey)
     }
 
-    // MARK: - Initialization
     init() {
         checkAuthentication()
     }
 
-    // MARK: - Authentication Check
     func checkAuthentication() {
         DispatchQueue.global().async { [weak self] in
             guard let self = self else { return }
@@ -68,7 +64,6 @@ class AuthManager: ObservableObject {
         }
     }
 
-    // MARK: - Refresh Access Token
     func refreshAccessToken(completion: @escaping (Bool) -> Void) {
         guard let refreshToken = self.refreshToken else {
             print("Refresh token not found")
@@ -110,7 +105,6 @@ class AuthManager: ObservableObject {
         }.resume()
     }
 
-    // MARK: - User Authentication
     func authenticateUser(username: String, password: String, completion: @escaping (Bool) -> Void) {
         print("Authenticating user...")
 
@@ -160,7 +154,6 @@ class AuthManager: ObservableObject {
         }.resume()
     }
 
-    // MARK: - Get Token (Async)
     func getToken() async -> String? {
         var token = accessToken
         if token == nil {
@@ -177,7 +170,6 @@ class AuthManager: ObservableObject {
         return token
     }
 
-    // MARK: - Token Management
     func setTokens(accessToken: String, refreshToken: String) {
         UserDefaults.standard.set(accessToken, forKey: accessTokenKey)
         UserDefaults.standard.set(refreshToken, forKey: refreshTokenKey)

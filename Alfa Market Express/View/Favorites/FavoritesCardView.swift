@@ -13,7 +13,6 @@ struct FavoritesCardView: View {
     @State private var isFavorite = true
     @State private var isAddedToCart: Bool = false
     @State private var quantity: Int = 1
-//    var orderItem: OrderItem
     
     var body: some View {
         VStack(spacing: 12) {
@@ -28,7 +27,6 @@ struct FavoritesCardView: View {
         )
     }
     
-    // Приватный компонент для изображения и информации о продукте
     private var productImageAndInfo: some View {
         HStack(alignment: .top) {
             productImage
@@ -38,12 +36,11 @@ struct FavoritesCardView: View {
         }
     }
     
-    // Приватный компонент для изображения продукта
     private var productImage: some View {
         Group {
             if let imageUrl = product.imageUrl, let url = URL(string: imageUrl) {
                 KFImage(url)
-                    .placeholder { ProgressView()}
+                    .placeholder { ProgressView() }
                     .resizable()
                     .scaledToFill()
                     .frame(maxWidth: 115, maxHeight: 150)
@@ -54,22 +51,15 @@ struct FavoritesCardView: View {
                     .scaledToFill()
                     .frame(maxWidth: 115, maxHeight: 150)
             }
-           
         }
     }
     
-    // Приватный компонент для информации о продукте
     private var productInfo: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(product.name)
                 .font(.system(size: 14, weight: .semibold))
                 .multilineTextAlignment(.leading)
                 .foregroundColor(.black)
-            
-//            Text("ID: \(orderItem.productId)")
-//                .font(.subheadline)
-//                .foregroundColor(.gray)
-                
             Text(String(format: "%.0f₽", Double(product.price) ?? 0))
                 .font(.headline)
                 .foregroundColor(.black)
@@ -77,7 +67,6 @@ struct FavoritesCardView: View {
         .padding(.vertical)
     }
     
-    // Приватный компонент для кнопки "избранное"
     private var favoriteButton: some View {
         Button(action: {
             Task {
@@ -91,8 +80,6 @@ struct FavoritesCardView: View {
         }
     }
 
-    
-    // Приватный компонент для кнопки корзины
     private var cartButton: some View {
         Button(action: {
             Task {

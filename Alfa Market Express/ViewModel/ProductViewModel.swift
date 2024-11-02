@@ -12,10 +12,7 @@ class ProductViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var isError = false
     private let authManager = AuthManager.shared
-
-    
     private let baseURL = "http://95.174.90.162:60/api/products/"
-    
     
     func fetchProducts(completion: @escaping (Bool) -> Void) {
         guard let url = URL(string: baseURL) else {
@@ -26,8 +23,6 @@ class ProductViewModel: ObservableObject {
         var request = URLRequest(url: url)
         
         print("Запрос на сервер: \(url.absoluteString)")
-        
-        
         URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
             defer { self?.isLoading = false }
             

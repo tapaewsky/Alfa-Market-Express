@@ -23,7 +23,6 @@ struct ProductDetailView: View {
                 productDescription
                 productPrice
                 addToCartButton
-//                similarProductsSection
             }
             .background(.colorGray)
             .padding(.vertical)
@@ -39,7 +38,6 @@ struct ProductDetailView: View {
         }
     }
     
-    // MARK: - Приватные функции для отдельных частей представления
     
     private var productImage: some View {
         ZStack(alignment: .topTrailing) {
@@ -49,8 +47,8 @@ struct ProductDetailView: View {
                         ProgressView()
                     }
                     .resizable()
-                    
-                    
+                
+                
                     .cornerRadius(20)
                     .scaledToFit()
             } else {
@@ -94,24 +92,24 @@ struct ProductDetailView: View {
             .foregroundColor(.colorRed)
     }
     
-
+    
     
     private var addToCartButton: some View {
-            Button(action: {
-                Task {
-                    await toggleCart()
-                }
-            }) {
-                Text(isAddedToCart ? "Удалить из корзины" : "Добавить в корзину")
-                    .fontWeight(.bold)
-                    .foregroundColor(.white)
-                    .frame(maxWidth: .infinity, minHeight: 50)
-                    .background(isAddedToCart ? .colorRed : .colorGreen)
-                    .cornerRadius(10)
-                    .shadow(radius: 5)
+        Button(action: {
+            Task {
+                await toggleCart()
             }
-            .padding(.horizontal)
+        }) {
+            Text(isAddedToCart ? "Удалить из корзины" : "Добавить в корзину")
+                .fontWeight(.bold)
+                .foregroundColor(.white)
+                .frame(maxWidth: .infinity, minHeight: 50)
+                .background(isAddedToCart ? .colorRed : .colorGreen)
+                .cornerRadius(10)
+                .shadow(radius: 5)
         }
+        .padding(.horizontal)
+    }
     
     private var similarProductsSection: some View {
         VStack(alignment: .leading) {
@@ -135,9 +133,6 @@ struct ProductDetailView: View {
             .padding(.horizontal, 10)
         }
     }
-    
-    // MARK: - Логика для работы с корзиной и избранным
-    
     private func toggleCart() async {
         if isAddedToCart {
             await viewModel.cartViewModel.removeFromCard(product)

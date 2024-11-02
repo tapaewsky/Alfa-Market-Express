@@ -16,33 +16,17 @@ struct ProductCardView: View {
     @State private var isAddedToCart: Bool = false
 
     var body: some View {
-        
         VStack(alignment: .leading) {
-//            RoundedRectangle(cornerRadius: 15)
-//                .fill(Color.white)
-//                .shadow(radius: 2)
             productImageAndFavoriteButton
                 .padding(0)
             Spacer()
             productDetails
-//                .padding()
-//                .padding(.leading)
             productPriceAndCartButton
-//                .padding()
-//                .padding(.leading)
             cartButton
                 .padding(.horizontal)
                
         }
-        
-        
-//        .overlay(
-//            RoundedRectangle(cornerRadius: 1)
-//                .foregroundColor(.white)
-//        )
         .background(.clear)
-        
-//        .shadow(radius: 2)
         .onAppear {
             isFavorite = viewModel.favoritesViewModel.isFavorite(product)
             
@@ -53,21 +37,6 @@ struct ProductCardView: View {
         ZStack(alignment: .topTrailing) {
                 if let imageUrl = product.imageUrl, let url = URL(string: imageUrl) {
                     KFImage(url)
-//                        .placeholder {
-//                            ProgressView()
-//                        }
-//                        .resizable()
-//                        .scaledToFit()
-//                        .frame(width: 150, height: 150)
-//                        .clipped()
-////                        .background(.gray)
-//                        .cornerRadius(10)
-//                } else {
-//                    Image(systemName: "photo")
-//                        .resizable()
-//                        .scaledToFit()
-//                        .clipped()
-//                }
                         .placeholder {
                             Image(systemName: "photo")
                                 .resizable()
@@ -79,7 +48,6 @@ struct ProductCardView: View {
                         .resizable() 
                         .cornerRadius(20)
                         .scaledToFit()
-//                        .frame(width: 150, height: 150)
                 }
                 
             Button(action: {

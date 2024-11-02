@@ -23,7 +23,7 @@ struct CartItemView: View {
         self._quantity = State(initialValue: cartProduct.quantity)
         self._totalPriceForProduct = State(initialValue: cartProduct.getTotalPrice)
         self.onCartUpdated = onCartUpdated
-        self._isSelected = isSelected // Directly using Binding
+        self._isSelected = isSelected
     }
     
     var body: some View {
@@ -39,17 +39,18 @@ struct CartItemView: View {
             }
         }
         .onChange(of: quantity) { _ in
-            Task { await updateQuantity() }
-        }
-        .onAppear {
-            Task {
-                await viewModel.cartViewModel.updateTotalPrice()
-                await updateSelection()
+                    Task { await updateQuantity() }
+                    viewModel.cartViewModel.updateTotalPrice()
+                }
+                .onAppear {
+                    Task {
+                        await updateSelection()
+                    }
+                }
             }
-        }
-    }
+            
     
-    // MARK: - UI Components
+  
     
     private var background: some View {
         RoundedRectangle(cornerRadius: 15)
@@ -162,7 +163,7 @@ struct CartItemView: View {
         .buttonStyle(PlainButtonStyle())
     }
     
-    // MARK: - Actions
+
     
     private func controlButton(systemName: String, action: @escaping () -> Void) -> some View {
         Button(action: { Task { await action() } }) {
@@ -176,11 +177,13 @@ struct CartItemView: View {
     
     private func increaseQuantity() async {
         quantity += 1
+   
     }
     
     private func decreaseQuantity() async {
         if quantity > 1 {
             quantity -= 1
+
         }
     }
     
@@ -188,12 +191,16 @@ struct CartItemView: View {
         Task {
             await viewModel.cartViewModel.updateProductQuantity(productId: cartProduct.id, newQuantity: quantity)
             await calculateTotalPrice()
-            viewModel.cartViewModel.updateTotalPrice()
+            onCartUpdated()
+                   
+                    print("Updated quantity for product \(cartProduct.product.name) to \(quantity)")
+                
         }
     }
     
     private func calculateTotalPrice() async {
         totalPriceForProduct = (Double(cartProduct.product.price) ?? 0) * Double(quantity)
+        print("Calculated total price for product \(cartProduct.product.name): \(totalPriceForProduct)")
     }
     
     private func toggleSelection() async {
@@ -213,6 +220,5 @@ struct CartItemView: View {
     private func toggleCart() async {
         await viewModel.cartViewModel.removeFromCart(productId: cartProduct.id)
         onCartUpdated()
-        viewModel.cartViewModel.updateTotalPrice()
     }
 }

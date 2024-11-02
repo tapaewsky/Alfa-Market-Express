@@ -32,8 +32,6 @@ struct ProfileView: View {
                 }
                 .padding(.horizontal)
             }
-
-          
             ProfileInfo(viewModel: viewModel)
         }
         .padding()

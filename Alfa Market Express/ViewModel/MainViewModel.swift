@@ -18,9 +18,6 @@ class MainViewModel: ObservableObject {
     @Published var slideViewModel: SlideViewModel
     @Published var searchViewModel: SearchViewModel
     
-   
-
-    // MARK: - Initializer
     init() {
         self.categoryViewModel = CategoryViewModel()
         self.productViewModel = ProductViewModel()
@@ -31,23 +28,4 @@ class MainViewModel: ObservableObject {
         self.searchViewModel = SearchViewModel()
         self.ordersViewModel = OrdersViewModel(cartViewModel: self.cartViewModel)
     }
-
-    // MARK: - Reset State
-//    func resetState(for tab: Int) {
-//        print("Сброс состояния для вкладки: \(tab)")
-//        switch tab {
-//        case 0:
-//            productViewModel.reset()
-//        case 1:
-//            categoryViewModel.reset()
-//        case 2:
-//            cartViewModel.reset()
-//        case 3:
-//            favoritesViewModel.reset()
-//        case 4:
-//            profileViewModel.reset()
-//        default:
-//            break
-//        }
-//    }
 }

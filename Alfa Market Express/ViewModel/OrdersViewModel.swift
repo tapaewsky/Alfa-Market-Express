@@ -23,9 +23,6 @@ class OrdersViewModel: ObservableObject {
         self.cartViewModel = cartViewModel
     }
     
-   
-    
-    // MARK: - Fetch Orders
     func fetchOrders(completion: @escaping (Bool) -> Void) {
         guard let accessToken = authManager.accessToken else {
             print("Access token not found.")
@@ -75,10 +72,7 @@ class OrdersViewModel: ObservableObject {
             }
         }.resume()
     }
-
-
     
-    // MARK: - Cancel Order
     func cancelOrder(orderId: Int) async {
         guard let url = URL(string: "\(baseURL)cancel/\(orderId)/") else { return }
         
@@ -100,7 +94,6 @@ class OrdersViewModel: ObservableObject {
         }
     }
     
-    // MARK: - Create Order
     func createOrder(items: [OrderItem], comments: String, accessToken: String) async throws -> Order {
         if items.isEmpty {
             throw URLError(.badServerResponse)
@@ -134,7 +127,6 @@ class OrdersViewModel: ObservableObject {
         }
     }
 
-    // MARK: - Convert CartProduct to OrderItem
     func orderItemFromCartProduct(_ cartProduct: CartProduct) -> OrderItem {
         let orderItem = OrderItem(
             product: cartProduct.product.name,
@@ -146,7 +138,6 @@ class OrdersViewModel: ObservableObject {
         return orderItem
     }
 
-    // MARK: - Update Order Comment
     func updateOrderComment(orderId: Int, comment: String) async {
         guard let url = URL(string: "\(baseURL)comment/\(orderId)/") else { return }
         
@@ -180,12 +171,4 @@ class OrdersViewModel: ObservableObject {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         return request
     }
-    
-//    private func refreshAuthToken() async {
-//        await withCheckedContinuation { continuation in
-//            authManager.refreshAccessToken { success in
-//                continuation.resume(returning: success)
-//            }
-//        }
-//    }
 }

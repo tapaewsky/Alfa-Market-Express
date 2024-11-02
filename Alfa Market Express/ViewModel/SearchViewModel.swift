@@ -15,13 +15,11 @@ class SearchViewModel: ObservableObject {
     var products: [Product] = []
     
     func searchProducts(query: String, completion: @escaping () -> Void) {
-        
         guard !query.isEmpty else {
             self.products = []
             completion()
             return
         }
-
         let searchUrl = "\(baseURL)?search=\(query)"
         guard let encodedUrlString = searchUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
               let url = URL(string: encodedUrlString) else {
@@ -29,7 +27,6 @@ class SearchViewModel: ObservableObject {
             completion()
             return
         }
-
         var request = URLRequest(url: url)
         
         print("Запрос на сервер: \(url.absoluteString)")
@@ -59,7 +56,6 @@ class SearchViewModel: ObservableObject {
             }
         }.resume()
     }
-    
     
     var filteredProducts: [Product] {
         if searchText.isEmpty {

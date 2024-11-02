@@ -12,7 +12,6 @@ class SlideViewModel: ObservableObject {
     @Published var slides: [Slide] = []
     @Published var isLoading = false
     @Published var isError = false
-    
     private let baseURL = "http://95.174.90.162:60/api/sliders/"
     
     func fetchSlides(completion: @escaping (Bool) -> Void) {
@@ -26,8 +25,6 @@ class SlideViewModel: ObservableObject {
         isError = false
         
         print("Запрос на сервер: \(url.absoluteString)")
-        
-        
         URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
             defer { self?.isLoading = false }
             

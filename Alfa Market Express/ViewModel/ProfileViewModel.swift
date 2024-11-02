@@ -9,7 +9,6 @@
 import SwiftUI
 
 class ProfileViewModel: ObservableObject {
-    // MARK: - Properties
     @Published var userProfile: UserProfile
     @Published var isEditing: Bool = false
     @Published var isLoading = false
@@ -19,7 +18,6 @@ class ProfileViewModel: ObservableObject {
     private let baseURL = "http://95.174.90.162:60/api"
     private let authManager = AuthManager.shared
     
-    // MARK: - Initializer
     init() {
         self.userProfile = UserProfile(
             id: 0,
@@ -38,7 +36,6 @@ class ProfileViewModel: ObservableObject {
         )
     }
 
-    // MARK: - Получение профиля пользователя
     func fetchUserProfile(completion: @escaping (Bool) -> Void) {
         isLoading = true
         isError = false
@@ -133,7 +130,6 @@ class ProfileViewModel: ObservableObject {
         }.resume()
     }
 
-    // MARK: - Обновление профиля
     func updateProfile(completion: @escaping (Bool) -> Void) {
         guard let url = URL(string: "\(baseURL)/me/update/"),
               let accessToken = authManager.accessToken else {

@@ -8,14 +8,12 @@ import Foundation
 import Combine
 
 class CartViewModel: ObservableObject {
-    // MARK: - Properties
     @Published var cartProduct: [CartProduct] = [] {
-           didSet {
-               updateTotalPrice()
-           }
-       }
+        didSet {
+            updateTotalPrice()
+        }
+    }
     @Published var cart: [Product] = []
-    
     @Published var totalPrice: Double = 0.0
     @Published var selectedTotalPrice: Double = 0.0
     @Published var isLoading = false
@@ -23,14 +21,19 @@ class CartViewModel: ObservableObject {
     @Published var selectedProducts: [Int: Bool] = [:]
     @Published var selectedProduct: Product?
     @Published var dataId: Int = 0
+    
     private let baseURL = "http://95.174.90.162:60/api/cart/"
     private var authManager = AuthManager.shared
-
-    init() {
-            updateTotalPrice()
-        }
+    private var cancellables = Set<AnyCancellable>()
     
-    // MARK: - API Calls
+    init() {
+        $cartProduct
+            .sink { [weak self] _ in
+                self?.updateTotalPrice()
+            }
+            .store(in: &cancellables)
+    }
+    
     func fetchCart(completion: @escaping (Bool) -> Void) {
         guard let accessToken = authManager.accessToken else {
             print("Access token not found.")
@@ -81,7 +84,7 @@ class CartViewModel: ObservableObject {
             }
         }.resume()
     }
-
+    
     func addToCart(_ product: Product, quantity: Int) async {
         guard let url = URL(string: "\(baseURL)add/") else {
             print("Invalid URL")
@@ -114,42 +117,38 @@ class CartViewModel: ObservableObject {
         }
     }
     
-
+    
     func updateProductQuantity(productId: Int, newQuantity: Int) async {
         guard let url = URL(string: "\(baseURL)update/\(productId)/") else {
             print("Некорректный URL")
             return
         }
-
+        objectWillChange.send()
         let token = await getToken()
         guard token != nil else {
             print("Токен равен nil")
             return
         }
-
+        
         var request = createRequest(url: url, method: "PATCH", token: token!)
         let body: [String: Any] = ["quantity": newQuantity]
         request.httpBody = try? JSONSerialization.data(withJSONObject: body)
-
+        
         print("Запрос на сервер: \(url.absoluteString)")
-
+        
         do {
-            // Выполняем запрос
             let (data, response) = try await URLSession.shared.data(for: request)
             
-            // Проверяем статус ответа
             if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 200 {
                 print("Получен HTTP-ответ: \(httpResponse.statusCode)")
                 
-                // Декодируем ответ
                 if let jsonResponse = try JSONSerialization.jsonObject(with: data, options: []) as? [String: Any],
                    let cartItem = jsonResponse["cart_item"] as? [String: Any],
                    let product = cartItem["product"] as? [String: Any],
                    let quantity = cartItem["quantity"] as? Int,
                    let priceString = product["price"] as? String,
                    let price = Double(priceString) {
-
-                    // Обновляем quantity и totalPrice
+                    
                     DispatchQueue.main.async {
                         if let index = self.cartProduct.firstIndex(where: { $0.id == productId }) {
                             self.cartProduct[index].quantity = quantity
@@ -170,23 +169,23 @@ class CartViewModel: ObservableObject {
     }
     // This function is used to delete a product from the cart
     func removeFromCard(_ product: Product) async {
-
+        
         guard dataId != 0 else {
             return
         }
-
+        
         guard let url = URL(string: "\(baseURL)delete/\(dataId)/") else {
             print("Error: Invalid URL")
             return
         }
-
+        
         var token = await getToken()
         guard token != nil else {
             print("Error: Unable to get token")
             return
         }
-
-
+        
+        
         var request = createRequest(url: url, method: "DELETE", token: token!)
         
         print("Запрос на сервер: \(url.absoluteString)")
@@ -220,46 +219,46 @@ class CartViewModel: ObservableObject {
             }
         }
     }
-
+    
     // This function is used to delete a product from the cart by its ID
     func removeFromCart(productId: Int) async {
         print("Attempting to remove product with ID: \(productId)")
-
+        
         guard let url = URL(string: "\(baseURL)delete/\(productId)/") else {
             print("Error: Invalid URL")
             return
         }
-
-
+        
+        
         var token = await getToken()
         guard token != nil else {
             print("Error: Unable to get token")
             return
         }
-
+        
         print("Token received: \(token!)")
-
+        
         var request = createRequest(url: url, method: "DELETE", token: token!)
         
         print("Запрос на сервер: \(url.absoluteString)")
-
+        
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
-
+            
             if let httpResponse = response as? HTTPURLResponse {
                 print("HTTP Status Code: \(httpResponse.statusCode)")
-
+                
                 if httpResponse.statusCode == 204 {
                 } else {
                     print("Failed to remove product. Status code: \(httpResponse.statusCode)")
                 }
             }
-
+            
             if let jsonResponse = try? JSONSerialization.jsonObject(with: data, options: []) as? [String: Any] {
             } else {
                 print("Failed to parse response data")
             }
-
+            
             DispatchQueue.main.async {
                 self.cart.removeAll { $0.id == productId }
             }
@@ -270,67 +269,47 @@ class CartViewModel: ObservableObject {
             }
         }
     }
-
+    
     func calculateTotalPrice() -> Double {
-        var total: Double = 0.0
-        for cartItem in cartProduct {
-            if let isSelected = selectedProducts[cartItem.product.id], isSelected {
-                if let price = Double(cartItem.product.price) {
-                    total += price * Double(cartItem.quantity)
-                }
-            }
-        }
-        return total
+        return cartProduct.reduce(0) { $0 + $1.getTotalPrice }
     }
-
+    
     func clearSelection() {
         for product in cart {
             selectedProducts[product.id] = false
         }
     }
-
+    
     func toggleProductSelection(_ product: Product) async {
         guard let index = cartProduct.firstIndex(where: { $0.product.id == product.id }) else { return }
-        
         let isSelected = selectedProducts[product.id] ?? false
         selectedProducts[product.id] = !isSelected
-        
-       
-        
         updateSelectedTotalPrice()
     }
-
-
+    
+    
     func updateSelectedTotalPrice() {
         let selectedProductsList = cartProduct.filter { selectedProducts[$0.id] ?? false }
-
         selectedTotalPrice = selectedProductsList.reduce(0) { total, product in
             let price = Double(product.product.price) ?? 0
             let quantity = product.quantity
             return total + (price * Double(quantity))
         }
-
     }
-
+    
     func selectProductsForCheckout(products: [CartProduct]) async {
         guard let url = URL(string: "\(baseURL)select/") else {
             print("Invalid URL: \(baseURL)select/")
             return
         }
         
-   
-        
         var token = await getToken()
         guard token != nil else {
             print("Token not found, aborting checkout.")
             return
         }
-        
         var request = createRequest(url: url, method: "POST", token: token!)
         print("Запрос на сервер: \(url.absoluteString)")
-
-      
-       
         for product in products {
         }
         
@@ -340,13 +319,11 @@ class CartViewModel: ObservableObject {
             
             
             let (data, response) = try await URLSession.shared.data(for: request)
-
-           
+            
+            
             if let httpResponse = response as? HTTPURLResponse {
                 print("Received HTTP Status Code: \(httpResponse.statusCode)")
             }
-            
-           
             handleCheckoutResponse(data: data, response: response)
         } catch {
             print("Error during checkout request: \(error.localizedDescription)")
@@ -356,7 +333,6 @@ class CartViewModel: ObservableObject {
         }
     }
     
-    // MARK: - Cart Management
     private func refreshAuthToken() {
         authManager.refreshAccessToken { success in
             if success {
@@ -367,20 +343,18 @@ class CartViewModel: ObservableObject {
         }
     }
     
-    // MARK: - Product Selection Helpers
     func selectProduct(_ cartProduct: CartProduct) {
         selectedProducts[cartProduct.id] = true
     }
-
+    
     func deselectProduct(_ cartProduct: CartProduct) {
         selectedProducts[cartProduct.id] = false
     }
     
-    // MARK: - Token Management
     private func getToken() async -> String? {
         return authManager.accessToken
     }
-
+    
     private func createRequest(url: URL, method: String, token: String) -> URLRequest {
         var request = URLRequest(url: url)
         request.httpMethod = method
@@ -389,7 +363,6 @@ class CartViewModel: ObservableObject {
         return request
     }
     
-    // MARK: - Handle Response
     private func handleCheckoutResponse(data: Data, response: URLResponse) {
         if let httpResponse = response as? HTTPURLResponse {
             print("HTTP Status Code: \(httpResponse.statusCode)")
@@ -401,8 +374,6 @@ class CartViewModel: ObservableObject {
         }
     }
     func updateTotalPrice() {
-        totalPrice = cartProduct.reduce(0) { total, cartProduct in
-            total + cartProduct.getTotalPrice
-        }
+        totalPrice = calculateTotalPrice()
     }
 }

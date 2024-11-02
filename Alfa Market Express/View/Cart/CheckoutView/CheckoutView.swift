@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-// MARK: - CheckoutView
 
 struct CheckoutView: View {
     @StateObject var viewModel: MainViewModel
@@ -39,7 +38,6 @@ struct CheckoutView: View {
         .navigationBarBackButtonHidden(true)
     }
     
-    // MARK: - UI Components
 
     private var backButton: some View {
         CustomBackButton {
@@ -150,7 +148,6 @@ struct CheckoutView: View {
         )
     }
     
-    // MARK: - Methods
 
     private func setupView() {
         viewModel.profileViewModel.fetchUserProfile { _ in }

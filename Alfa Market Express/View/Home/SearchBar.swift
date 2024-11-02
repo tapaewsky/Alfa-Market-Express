@@ -68,7 +68,6 @@ struct SearchBar: View {
         }
     }
     
-    // MARK: - Perform Search
     private func performSearch() {
         guard !viewModel.searchViewModel.searchText.isEmpty else { return }
         isLoading = true

@@ -33,7 +33,6 @@ struct OrdersCard: View {
         .shadow(radius: 2)
     }
     
-    // MARK: - UI Components
     
     private var productImage: some View {
         KFImage(URL(string: orderItem.image))
@@ -80,7 +79,6 @@ struct OrdersCard: View {
             .foregroundColor(statusColor(for: status))
     }
     
-    // MARK: - Helper Functions
     
     private func statusColor(for status: String) -> Color {
         switch status {
