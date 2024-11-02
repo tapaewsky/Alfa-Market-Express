@@ -38,7 +38,7 @@ struct ProductDetailView: View {
         }
     }
     
-    
+        
     private var productImage: some View {
         ZStack(alignment: .topTrailing) {
             if let imageUrl = product.imageUrl, let url = URL(string: imageUrl) {

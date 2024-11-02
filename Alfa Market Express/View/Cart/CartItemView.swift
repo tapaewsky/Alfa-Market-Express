@@ -15,15 +15,16 @@ struct CartItemView: View {
     @State private var totalPriceForProduct: Double
     @Binding var isSelected: Bool
     var onCartUpdated: () -> Void
-    @Environment(\.isSelectionMode) var isSelectionMode
+    let isSelectionMode: Bool
     
-    init(cartProduct: CartProduct, viewModel: MainViewModel, isSelected: Binding<Bool>, onCartUpdated: @escaping () -> Void) {
+    init(cartProduct: CartProduct, viewModel: MainViewModel, isSelected: Binding<Bool>, onCartUpdated: @escaping () -> Void, isSelectionMode: Bool) {
         self.cartProduct = cartProduct
         self.viewModel = viewModel
         self._quantity = State(initialValue: cartProduct.quantity)
         self._totalPriceForProduct = State(initialValue: cartProduct.getTotalPrice)
         self.onCartUpdated = onCartUpdated
         self._isSelected = isSelected
+        self.isSelectionMode = isSelectionMode
     }
     
     var body: some View {
@@ -61,6 +62,7 @@ struct CartItemView: View {
     private var productImage: some View {
         ZStack(alignment: .topLeading) {
             loadImage()
+            
             if isSelectionMode {
                 selectButton
             }

@@ -7,17 +7,23 @@
 
 import SwiftUI
 
-
 struct CheckoutView: View {
     @StateObject var viewModel: MainViewModel
     @Binding var selectedTab: Int
+    @Binding var totalPrice: Double
+    @Binding var productCount: Int
     @State private var showSuccessView = false
     @State private var comment: String = ""
     @Environment(\.presentationMode) var presentationMode
     var products: [Product]
-    
-    var totalPrice: Double
-    var productCount: Int
+
+    init(viewModel: MainViewModel, selectedTab: Binding<Int>, totalPrice: Binding<Double>, productCount: Binding<Int>, products: [Product]) {
+        _viewModel = StateObject(wrappedValue: viewModel)
+        _selectedTab = selectedTab
+        _totalPrice = totalPrice
+        _productCount = productCount
+        self.products = products
+    }
 
     var body: some View {
         ZStack {
@@ -33,11 +39,9 @@ struct CheckoutView: View {
             .padding()
             .navigationBarItems(leading: backButton)
         }
-            
         .onAppear { setupView() }
         .navigationBarBackButtonHidden(true)
     }
-    
 
     private var backButton: some View {
         CustomBackButton {

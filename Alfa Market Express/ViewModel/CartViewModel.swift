@@ -272,6 +272,7 @@ class CartViewModel: ObservableObject {
     
     func calculateTotalPrice() -> Double {
         return cartProduct.reduce(0) { $0 + $1.getTotalPrice }
+        
     }
     
     func clearSelection() {
@@ -373,6 +374,8 @@ class CartViewModel: ObservableObject {
             print("Failed to decode response data")
         }
     }
+    
+    
     func updateTotalPrice() {
         totalPrice = calculateTotalPrice()
     }

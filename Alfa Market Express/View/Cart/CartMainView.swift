@@ -13,6 +13,8 @@ struct CartMainView: View {
     @State private var isFetching = false
     @State private var isSelectionMode: Bool = false
     @State private var selectedTab: Int = 0
+    @State private var totalPrice: Double = 0
+    @State private var productCount: Int = 0
 
     var body: some View {
         VStack(spacing: 0) {
@@ -28,8 +30,10 @@ struct CartMainView: View {
         .onTapGesture {
             UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
         }
-        .onChange(of: viewModel.cartViewModel.cartProduct) { _ in
-            viewModel.cartViewModel.updateTotalPrice()
+        .onChange(of: viewModel.cartViewModel.selectedTotalPrice) { newValue in
+            totalPrice = newValue
+            productCount = selectedOrAllProducts().count
+            updateTotalPrice()
         }
     }
 
@@ -86,6 +90,8 @@ struct CartMainView: View {
             set: { newValue in
                 viewModel.cartViewModel.selectedProducts[cartProduct.id] = newValue
                 viewModel.cartViewModel.updateSelectedTotalPrice()
+                updateTotalPrice()
+                productCount = selectedOrAllProducts().count
             }
         )
 
@@ -93,7 +99,11 @@ struct CartMainView: View {
             cartProduct: cartProduct,
             viewModel: viewModel,
             isSelected: isSelected,
-            onCartUpdated: { viewModel.cartViewModel.updateTotalPrice() }
+            onCartUpdated: {
+                viewModel.cartViewModel.updateTotalPrice()
+                productCount = selectedOrAllProducts().count
+            },
+            isSelectionMode: isSelectionMode
         )
         .padding(.vertical, 2)
         .padding(.horizontal, 15)
@@ -101,7 +111,7 @@ struct CartMainView: View {
 
     private var footer: some View {
         HStack {
-            Text("\(Int(viewModel.cartViewModel.totalPrice)) ₽")
+            Text("\(Int(totalPrice)) ₽")
                 .font(.callout)
                 .bold()
             
@@ -111,8 +121,9 @@ struct CartMainView: View {
                 destination: CheckoutView(
                     viewModel: viewModel,
                     selectedTab: $selectedTab,
-                    products: selectedOrAllProducts(),
-                    totalPrice: viewModel.cartViewModel.totalPrice, productCount: selectedOrAllProducts().count
+                    totalPrice: $totalPrice,
+                    productCount: $productCount,
+                    products: selectedOrAllProducts()
                 )
             ) {
                 Text("Оформить заказ")
@@ -127,12 +138,12 @@ struct CartMainView: View {
         .background(.white)
         .shadow(radius: 10)
         .cornerRadius(10)
-       
         .onChange(of: viewModel.cartViewModel.selectedTotalPrice) { newValue in
-            
+            totalPrice = newValue
+            productCount = selectedOrAllProducts().count
         }
     }
-
+    
     private func loadCart() {
         isFetching = true
         viewModel.cartViewModel.fetchCart { success in
@@ -140,6 +151,7 @@ struct CartMainView: View {
                 isFetching = false
                 if success {
                     viewModel.cartViewModel.updateTotalPrice()
+                    updateTotalPrice()
                 } else {
                     print("Не удалось загрузить корзину")
                 }
@@ -151,21 +163,43 @@ struct CartMainView: View {
         let selectedProducts = viewModel.cartViewModel.cartProduct.filter {
             viewModel.cartViewModel.selectedProducts[$0.id] == true
         }
-        return selectedProducts.isEmpty
-            ? viewModel.cartViewModel.cartProduct.map { $0.product }
-            : selectedProducts.map { $0.product }
+        return selectedProducts.isEmpty ? viewModel.cartViewModel.cartProduct.map { $0.product } : selectedProducts.map { $0.product }
     }
 
     private func toggleSelectionMode() {
         isSelectionMode.toggle()
-        viewModel.cartViewModel.clearSelection()
+        if isSelectionMode {
+            let selectedCount = viewModel.cartViewModel.selectedProducts.filter { $0.value }.count
+            if selectedCount == 0 {
+                totalPrice = 0
+            }
+        } else {
+            viewModel.cartViewModel.clearSelection()
+            viewModel.cartViewModel.updateSelectedTotalPrice()
+            viewModel.cartViewModel.selectedProducts = [:]
+            totalPrice = calculateTotalPrice()
+            productCount = viewModel.cartViewModel.cartProduct.count
+        }
+    }
+    func calculateTotalPrice() -> Double {
+        return viewModel.cartViewModel.cartProduct.reduce(0) { $0 + $1.getTotalPrice }
+        
     }
     
-   
+    func updateTotalPrice() {
+        if isSelectionMode {
+            totalPrice = viewModel.cartViewModel.selectedProducts.reduce(0) { result, pair in
+                let (id, isSelected) = pair
+                if isSelected, let cartProduct = viewModel.cartViewModel.cartProduct.first(where: { $0.id == id }) {
+                    return result + cartProduct.getTotalPrice
+                }
+                return result
+            }
+        } else {
+            totalPrice = calculateTotalPrice()
+        }
+    }
 }
-
-
-// MARK: - Preview
 
 struct CartMainView_Previews: PreviewProvider {
     static var previews: some View {
