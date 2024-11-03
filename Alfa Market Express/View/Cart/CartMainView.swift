@@ -83,14 +83,13 @@ struct CartMainView: View {
         .frame(maxHeight: .infinity)
     }
 
-    // Добавьте это в CartMainView
     private func cartItemRow(for cartProduct: CartProduct) -> some View {
         let isSelected = Binding<Bool>(
             get: { viewModel.cartViewModel.selectedProducts[cartProduct.id] ?? false },
             set: { newValue in
                 viewModel.cartViewModel.selectedProducts[cartProduct.id] = newValue
                 viewModel.cartViewModel.updateSelectedTotalPrice()
-                updateTotalPrice() // Убедитесь, что вы вызываете это
+                updateTotalPrice()
                 productCount = selectedOrAllProducts().count
             }
         )
@@ -102,7 +101,7 @@ struct CartMainView: View {
             onCartUpdated: {
                 productCount = selectedOrAllProducts().count
             },
-            onTotalPriceUpdated: updateTotalPrice, // Проверьте здесь
+            onTotalPriceUpdated: updateTotalPrice,
             isSelectionMode: isSelectionMode
         )
         .padding(.vertical, 2)

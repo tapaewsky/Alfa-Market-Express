@@ -26,7 +26,7 @@ struct CartItemView: View {
         self.onCartUpdated = onCartUpdated
         self._isSelected = isSelected
         self.isSelectionMode = isSelectionMode
-        self.onTotalPriceUpdated = onTotalPriceUpdated // Теперь это правильно
+        self.onTotalPriceUpdated = onTotalPriceUpdated 
     }
     
     var body: some View {
@@ -52,15 +52,11 @@ struct CartItemView: View {
         }
         
         .onAppear {
-                    Task {
-                        await updateSelection()
-                    }
-                }
+            Task {
+                await updateSelection()
             }
-            
-    
-  
-    
+        }
+    }
     private var background: some View {
         RoundedRectangle(cornerRadius: 15)
             .fill(Color.white)
@@ -137,7 +133,7 @@ struct CartItemView: View {
                     } else if newValue > 1000 {
                         quantity = 1000
                     }
-                    Task { await updateQuantity() } // Добавьте этот вызов
+                    Task { await updateQuantity() }
                 }
 
             controlButton(systemName: "plus") {
@@ -200,9 +196,9 @@ struct CartItemView: View {
     
     private func updateQuantity() async {
         await viewModel.cartViewModel.updateProductQuantity(productId: cartProduct.id, newQuantity: quantity)
-        await calculateTotalPrice() // Эта функция должна обновлять totalPriceForProduct
+        await calculateTotalPrice()
         onCartUpdated()
-        onTotalPriceUpdated() // Убедитесь, что это вызывается после обновления
+        onTotalPriceUpdated()
         print("Updated quantity for product \(cartProduct.product.name) to \(quantity)")
     }
   
@@ -210,7 +206,7 @@ struct CartItemView: View {
     private func calculateTotalPrice() async {
         totalPriceForProduct = (Double(cartProduct.product.price) ?? 0) * Double(quantity)
         print("Calculated total price for product \(cartProduct.product.name): \(totalPriceForProduct)")
-        onTotalPriceUpdated() // Убедитесь, что это вызывается после обновления
+        onTotalPriceUpdated()
     }
     
     private func toggleSelection() async {
