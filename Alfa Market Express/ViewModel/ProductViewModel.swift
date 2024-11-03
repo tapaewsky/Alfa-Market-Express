@@ -15,11 +15,43 @@ class ProductViewModel: ObservableObject {
     private let baseURL = "http://95.174.90.162:60/api/products/"
     
     func fetchProducts(completion: @escaping (Bool) -> Void) {
+        guard !isLoading else {
+            print("Загрузка уже выполняется")
+            return
+        }
+        
+        isLoading = true
+        
+        // Проверяем, есть ли access токен
+        if (authManager.accessToken != nil) {
+            // Если токен действителен, загружаем продукты
+            loadProducts(completion: completion)
+        } else {
+            // Если токена нет, обновляем его
+            print("Токен доступа не найден, обновляем токен")
+            authManager.refreshAccessToken { [weak self] success in
+                guard let self = self else { return }
+                if success {
+                    // После успешного обновления токена, получаем продукты
+                    self.loadProducts(completion: completion)
+                } else {
+                    // Обработка ошибки обновления токена
+                    self.isLoading = false
+                    self.isError = true
+                    completion(false)
+                }
+            }
+        }
+    }
+    
+    private func loadProducts(completion: @escaping (Bool) -> Void) {
         guard let url = URL(string: baseURL) else {
             print("Неверный URL")
+            isLoading = false
             completion(false)
             return
         }
+        
         var request = URLRequest(url: url)
         
         print("Запрос на сервер: \(url.absoluteString)")
@@ -37,8 +69,8 @@ class ProductViewModel: ObservableObject {
             
             guard let data = data else {
                 print("Нет данных в ответе")
-                self?.isError = true
                 DispatchQueue.main.async {
+                    self?.isError = true
                     completion(false)
                 }
                 return
@@ -52,8 +84,8 @@ class ProductViewModel: ObservableObject {
                 }
             } catch {
                 print("Ошибка декодирования продуктов: \(error.localizedDescription)")
-                self?.isError = true
                 DispatchQueue.main.async {
+                    self?.isError = true
                     completion(false)
                 }
             }
