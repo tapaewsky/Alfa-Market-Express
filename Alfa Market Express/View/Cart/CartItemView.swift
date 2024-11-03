@@ -17,6 +17,7 @@ struct CartItemView: View {
     var onCartUpdated: () -> Void
     let isSelectionMode: Bool
     var onTotalPriceUpdated: () -> Void
+    @State private var isNavigating = false
     
     init(cartProduct: CartProduct, viewModel: MainViewModel, isSelected: Binding<Bool>, onCartUpdated: @escaping () -> Void, onTotalPriceUpdated: @escaping () -> Void, isSelectionMode: Bool) {
         self.cartProduct = cartProduct
@@ -69,6 +70,12 @@ struct CartItemView: View {
             
             if isSelectionMode {
                 selectButton
+            } else {
+                NavigationLink(destination: ProductDetailView(viewModel: viewModel, product: cartProduct.product)) {
+                    EmptyView()
+                }
+                .buttonStyle(PlainButtonStyle())
+                .contentShape(Rectangle())
             }
         }
     }
@@ -94,24 +101,38 @@ struct CartItemView: View {
     }
     
     private var productDetails: some View {
-        VStack(alignment: .leading, spacing: 8) {
-            Text(cartProduct.product.name)
-                .font(.headline)
-                .lineLimit(1)
-                .foregroundColor(.black)
-            
-            Text("\(Int(totalPriceForProduct)) ₽")
-                .font(.subheadline)
-                .foregroundColor(.colorRed)
-            
-            Text(cartProduct.product.description)
-                .font(.footnote)
-                .lineLimit(2)
-                .foregroundColor(.black)
-            
-            quantityControl
+        NavigationLink(destination: ProductDetailView(viewModel: viewModel, product: cartProduct.product), isActive: $isNavigating) {
+            Button(action: {
+                if isSelectionMode {
+                    isSelected.toggle()
+                    Task {
+                        await toggleSelection()
+                    }
+                } else {
+                    isNavigating = true // Активируем навигацию
+                }
+            }) {
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(cartProduct.product.name)
+                        .font(.headline)
+                        .lineLimit(1)
+                        .foregroundColor(.black)
+
+                    Text("\(Int(totalPriceForProduct)) ₽")
+                        .font(.subheadline)
+                        .foregroundColor(.colorRed)
+
+                    Text(cartProduct.product.description)
+                        .font(.footnote)
+                        .lineLimit(2)
+                        .foregroundColor(.black)
+
+                    quantityControl
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
+            }
         }
-        .frame(maxWidth: .infinity, alignment: .leading)
+        .buttonStyle(PlainButtonStyle())
     }
     
     private var quantityControl: some View {
