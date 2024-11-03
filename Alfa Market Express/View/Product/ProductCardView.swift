@@ -38,12 +38,10 @@ struct ProductCardView: View {
                 if let imageUrl = product.imageUrl, let url = URL(string: imageUrl) {
                     KFImage(url)
                         .placeholder {
-                            Image(systemName: "photo")
+                            Image("plaseholder")
                                 .resizable()
-                                .background(.red)
                                 .cornerRadius(20)
                                 .scaledToFit()
-                                .foregroundColor(.gray)
                         }
                         .resizable() 
                         .cornerRadius(20)

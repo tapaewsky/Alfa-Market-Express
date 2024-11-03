@@ -42,8 +42,7 @@ struct CartMainView: View {
             DispatchQueue.main.async {
                 isFetching = false
                 if success {
-                    updateTotalPrice() // Обновляем цену
-                    // Обновляем выбранные продукты, если это нужно
+                    updateTotalPrice()
                     productCount = selectedOrAllProducts().count
                 } else {
                     print("Не удалось загрузить корзину")
@@ -123,6 +122,7 @@ struct CartMainView: View {
         .padding(.vertical, 2)
         .padding(.horizontal, 15)
     }
+    
     private var footer: some View {
         HStack {
             Text("\(Int(totalPrice)) ₽")
@@ -146,9 +146,6 @@ struct CartMainView: View {
                     .background(Color.colorGreen)
                     .foregroundColor(.white)
                     .cornerRadius(15)
-            }
-            .onAppear {
-                viewModel.profileViewModel.fetchUserProfile(completion: { _ in })
             }
             .disabled(viewModel.cartViewModel.cartProduct.isEmpty)
             .opacity(viewModel.cartViewModel.cartProduct.isEmpty ? 0.8 : 1)

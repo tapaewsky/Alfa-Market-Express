@@ -47,15 +47,13 @@ struct ProductDetailView: View {
                         ProgressView()
                     }
                     .resizable()
-                
-                
                     .cornerRadius(20)
                     .scaledToFit()
             } else {
-                Image(systemName: "photo")
+                Image("plaseholder")
                     .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .background(Color.gray.opacity(0.2))
+                    .cornerRadius(20)
+                    .scaledToFit()
             }
             Button(action: {
                 Task {

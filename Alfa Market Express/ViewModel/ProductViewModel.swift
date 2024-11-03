@@ -53,6 +53,7 @@ class ProductViewModel: ObservableObject {
         }
         
         var request = URLRequest(url: url)
+        request.setValue("Bearer \(authManager.accessToken!)", forHTTPHeaderField: "Authorization")
         
         print("Запрос на сервер: \(url.absoluteString)")
         URLSession.shared.dataTask(with: request) { [weak self] data, response, error in

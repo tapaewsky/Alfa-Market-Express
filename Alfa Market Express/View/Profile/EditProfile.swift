@@ -83,9 +83,7 @@ struct EditProfile: View {
             editTextField(placeholder: viewModel.profileViewModel.userProfile.storeName, text: $viewModel.profileViewModel.userProfile.storeName)
             editTextField(placeholder: viewModel.profileViewModel.userProfile.storeAddress, text: $viewModel.profileViewModel.userProfile.storeAddress)
             editTextField(placeholder: viewModel.profileViewModel.userProfile.storePhoneNumber, text: $viewModel.profileViewModel.userProfile.storePhoneNumber)
-        }
-        .padding()
-        
+        } 
     }
     
     private func editTextField(placeholder: String, text: Binding<String>) -> some View {

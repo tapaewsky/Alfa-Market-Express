@@ -4,7 +4,6 @@
 //
 //  Created by Said Tapaev on 29.09.2024.
 //
-
 import SwiftUI
 
 struct CheckoutView: View {
@@ -16,6 +15,8 @@ struct CheckoutView: View {
     @State private var comment: String = ""
     @Environment(\.presentationMode) var presentationMode
     var products: [Product]
+    
+    @State private var isLoadingUserProfile: Bool = true
 
     init(viewModel: MainViewModel, selectedTab: Binding<Int>, totalPrice: Binding<Double>, productCount: Binding<Int>, products: [Product]) {
         _viewModel = StateObject(wrappedValue: viewModel)
@@ -24,20 +25,21 @@ struct CheckoutView: View {
         _productCount = productCount
         self.products = products
     }
-
     var body: some View {
         ZStack {
             VStack(spacing: 0) {
                 selectedProductsList
-                orderDetails
-                Spacer()
-                commentSection
-                Spacer()
-                orderButton
-                Spacer()
+
+                VStack {
+                    orderDetails
+                    commentSection
+                    orderButton
+                       
+                }
+                .padding()
             }
-            .padding()
             .navigationBarItems(leading: backButton)
+            .onAppear(perform: loadUserProfile)
         }
         .navigationBarBackButtonHidden(true)
     }
@@ -63,9 +65,10 @@ struct CheckoutView: View {
                     ))
                 }
             }
+            .padding(.vertical, 2)
+            .padding(.horizontal, 15)
+        
         }
-        .padding(.vertical, 2)
-        .padding(.horizontal, 15)
     }
     
     private var orderDetails: some View {
@@ -75,44 +78,49 @@ struct CheckoutView: View {
                 .font(.title3)
             
             VStack(alignment: .leading, spacing: 12) {
-                Text(viewModel.profileViewModel.userProfile.storeName)
-                    .foregroundColor(.black)
-                    .font(.system(size: 15, weight: .light))
-                    .lineLimit(1)
-                
-                Text("Код магазина: \(viewModel.profileViewModel.userProfile.storeCode)")
-                    .foregroundColor(.black)
-                    .font(.system(size: 15, weight: .light))
-                    .lineLimit(1)
-                
-                HStack {
-                    Text("Адрес: ")
-                        .foregroundColor(.black)
-                        .font(.system(size: 15, weight: .light)) +
-                    Text(viewModel.profileViewModel.userProfile.storeAddress)
-                        .foregroundColor(.black)
-                        .font(.system(size: 15, weight: .light))
-                }
-                
-                HStack {
-                    Text("Телефон: \(viewModel.profileViewModel.userProfile.storePhoneNumber)")
+                if isLoadingUserProfile {
+                    ProgressView()
+                        .frame(maxWidth: .infinity, minHeight: 145)
+                } else {
+                    Text(viewModel.profileViewModel.userProfile.storeName)
                         .foregroundColor(.black)
                         .font(.system(size: 15, weight: .light))
                         .lineLimit(1)
-                }
-                
-                HStack {
-                    Text("\(productCount) товара")
-                        .font(.title3)
-                        .bold()
+                    
+                    Text("Код магазина: \(viewModel.profileViewModel.userProfile.storeCode)")
                         .foregroundColor(.black)
+                        .font(.system(size: 15, weight: .light))
+                        .lineLimit(1)
                     
-                    Spacer()
+                    HStack {
+                        Text("Адрес: ")
+                            .foregroundColor(.black)
+                            .font(.system(size: 15, weight: .light)) +
+                        Text(viewModel.profileViewModel.userProfile.storeAddress)
+                            .foregroundColor(.black)
+                            .font(.system(size: 15, weight: .light))
+                    }
                     
-                    Text("\(Int(totalPrice)) ₽")
-                        .foregroundColor(.colorRed)
-                        .font(.title3)
-                        .bold()
+                    HStack {
+                        Text("Телефон: \(viewModel.profileViewModel.userProfile.storePhoneNumber)")
+                            .foregroundColor(.black)
+                            .font(.system(size: 15, weight: .light))
+                            .lineLimit(1)
+                    }
+                    
+                    HStack {
+                        Text("\(productCount) товара")
+                            .font(.title3)
+                            .bold()
+                            .foregroundColor(.black)
+                        
+                        Spacer()
+                        
+                        Text("\(Int(totalPrice)) ₽")
+                            .foregroundColor(.colorRed)
+                            .font(.title3)
+                            .bold()
+                    }
                 }
             }
             .padding()
@@ -120,6 +128,7 @@ struct CheckoutView: View {
             .cornerRadius(15)
             .shadow(radius: 1)
         }
+        
     }
     
     private var commentSection: some View {
@@ -151,6 +160,18 @@ struct CheckoutView: View {
         )
     }
     
+    private func loadUserProfile() {
+        isLoadingUserProfile = true
+        viewModel.profileViewModel.fetchUserProfile { success in
+            DispatchQueue.main.async {
+                isLoadingUserProfile = false
+                if !success {
+                    print("Ошибка загрузки профиля")
+                }
+            }
+        }
+    }
+
     private func placeOrder() {
         Task {
             var selectedProducts = viewModel.cartViewModel.cartProduct.filter {

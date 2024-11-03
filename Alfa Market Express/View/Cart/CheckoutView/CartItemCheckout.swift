@@ -18,7 +18,7 @@ struct CartItemCheckout: View {
             HStack {
                 productImage
                 productDetails
-                Spacer()
+//                Spacer()
             }
         }
     }
@@ -26,7 +26,7 @@ struct CartItemCheckout: View {
     private var background: some View {
         RoundedRectangle(cornerRadius: 15)
             .fill(Color.white)
-            .shadow(radius: 2)
+            .shadow(radius: 1)
     }
     
     private var productImage: some View {

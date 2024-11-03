@@ -47,8 +47,6 @@ struct SearchBar: View {
             .padding()
                         
             if isLoading {
-                ProgressView("Загрузка...")
-                    .padding()
             }
             NavigationLink(
                 destination: SearchResultsView(
@@ -95,13 +93,19 @@ struct SearchResultsView: View {
     
     var body: some View {
         ScrollView {
-            ProductGridView(viewModel: viewModel, products: products, onFavoriteToggle: onFavoriteToggle)
-                .navigationTitle("Результаты поиска")
-                .navigationBarTitleDisplayMode(.inline)
-                .navigationBarItems(leading: CustomBackButton() {
-                    self.presentationMode.wrappedValue.dismiss()
-                })
+            if viewModel.searchViewModel.products.isEmpty {
+                Text("По вашему запросу ничего не найдено.")
+                    .padding()
+                    .foregroundColor(.gray)
+            } else {
+                ProductGridView(viewModel: viewModel, products: products, onFavoriteToggle: onFavoriteToggle)
+            }
         }
+        .navigationTitle("Результаты поиска")
+        .navigationBarTitleDisplayMode(.inline)
+        .navigationBarItems(leading: CustomBackButton() {
+            self.presentationMode.wrappedValue.dismiss()
+        })
         .navigationBarBackButtonHidden(true)
     }
 }

@@ -38,8 +38,7 @@ struct CartItemView: View {
                 NavigationLink(destination: ProductDetailView(viewModel: viewModel, product: cartProduct.product)) {
                     productDetails
                 }
-                Spacer()
-                deleteButton
+                
             }
         }
         .onChange(of: quantity) { newValue in
@@ -109,14 +108,22 @@ struct CartItemView: View {
                         await toggleSelection()
                     }
                 } else {
-                    isNavigating = true 
+                    isNavigating = true
                 }
             }) {
-                VStack(alignment: .leading, spacing: 8) {
-                    Text(cartProduct.product.name)
-                        .font(.headline)
-                        .lineLimit(1)
-                        .foregroundColor(.black)
+                VStack(alignment: .leading) {
+                    HStack {
+                        Text(cartProduct.product.name)
+                            .font(.headline)
+                            .lineLimit(1)
+                            .foregroundColor(.black)
+                        Spacer()
+                        Button(action: { Task { await toggleCart() } }) {
+                            Image(systemName: "trash")
+                                .foregroundColor(.colorGreen)
+                                .padding(.trailing, 8) 
+                        }
+                    }
 
                     Text("\(Int(totalPriceForProduct)) ₽")
                         .font(.subheadline)
@@ -165,16 +172,6 @@ struct CartItemView: View {
         .padding(5)
         .background(Color.gray.opacity(0.2))
         .cornerRadius(15)
-    }
-    
-    private var deleteButton: some View {
-        VStack {
-            Button(action: { Task { await toggleCart() } }) {
-                Image(systemName: "trash")
-                    .foregroundColor(.colorGreen)
-                    .padding()
-            }
-        }
     }
     
     private var selectButton: some View {

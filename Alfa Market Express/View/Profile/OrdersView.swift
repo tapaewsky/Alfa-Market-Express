@@ -31,13 +31,14 @@ struct OrdersView: View {
                         }
                         
                     }
-                    .navigationBarItems(leading: CustomBackButton() {
-                        self.presentationMode.wrappedValue.dismiss()
-                    })
-                    .navigationBarBackButtonHidden(true)
                 }
             }
         }
+        .navigationBarItems(leading: CustomBackButton() {
+            self.presentationMode.wrappedValue.dismiss()
+        })
+        .navigationBarBackButtonHidden(true)
+        
         .onAppear {
             loadOrders()
         }
