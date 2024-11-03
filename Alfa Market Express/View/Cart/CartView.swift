@@ -13,7 +13,6 @@ struct CartView: View {
         CartMainView(viewModel: viewModel)
             .navigationBarBackButtonHidden(true)
     }
-        
 }
 
 struct CartView_Previews: PreviewProvider {

@@ -17,7 +17,7 @@ struct HomeView: View {
         NavigationView {
             ZStack {
                 ScrollView {
-                    RecommendationCardView(viewModel: viewModel)
+                    SlidesCardView(viewModel: viewModel)
                     SearchBar(viewModel: viewModel)
                     ProductGridView(viewModel: viewModel, products: shuffledProducts, onFavoriteToggle: { _ in })
                         .padding(.vertical)

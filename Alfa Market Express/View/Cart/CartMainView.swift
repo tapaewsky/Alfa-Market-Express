@@ -35,6 +35,22 @@ struct CartMainView: View {
             updateTotalPrice()
         }
     }
+    
+    private func loadCart() {
+        isFetching = true
+        viewModel.cartViewModel.fetchCart { success in
+            DispatchQueue.main.async {
+                isFetching = false
+                if success {
+                    updateTotalPrice() // Обновляем цену
+                    // Обновляем выбранные продукты, если это нужно
+                    productCount = selectedOrAllProducts().count
+                } else {
+                    print("Не удалось загрузить корзину")
+                }
+            }
+        }
+    }
 
 
     private var header: some View {
@@ -131,28 +147,15 @@ struct CartMainView: View {
                     .foregroundColor(.white)
                     .cornerRadius(15)
             }
+            .disabled(viewModel.cartViewModel.cartProduct.isEmpty)
+            .opacity(viewModel.cartViewModel.cartProduct.isEmpty ? 0.8 : 1)
         }
         .padding()
         .background(.white)
-        .shadow(radius: 10)
         .cornerRadius(10)
         .onChange(of: viewModel.cartViewModel.selectedTotalPrice) { newValue in
             totalPrice = newValue
             productCount = selectedOrAllProducts().count
-        }
-    }
-    
-    private func loadCart() {
-        isFetching = true
-        viewModel.cartViewModel.fetchCart { success in
-            DispatchQueue.main.async {
-                isFetching = false
-                if success {
-                    updateTotalPrice()
-                } else {
-                    print("Не удалось загрузить корзину")
-                }
-            }
         }
     }
 
@@ -195,6 +198,9 @@ struct CartMainView: View {
         } else {
             totalPrice = calculateTotalPrice()
         }
+    }
+    private func onCartUpdated() {
+        loadCart() 
     }
 }
 

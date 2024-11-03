@@ -109,7 +109,7 @@ struct CartItemView: View {
                         await toggleSelection()
                     }
                 } else {
-                    isNavigating = true // Активируем навигацию
+                    isNavigating = true 
                 }
             }) {
                 VStack(alignment: .leading, spacing: 8) {

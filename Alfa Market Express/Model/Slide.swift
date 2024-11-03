@@ -11,11 +11,13 @@ struct Slide: Codable, Identifiable {
     let title: String
     let image: String
     let link: String
+    var description: String?
     
     enum CodingKeys: String, CodingKey {
         case id
         case title
         case image
         case link
+        case description
     }
 }
