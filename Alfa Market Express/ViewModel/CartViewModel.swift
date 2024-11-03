@@ -8,13 +8,8 @@ import Foundation
 import Combine
 
 class CartViewModel: ObservableObject {
-    @Published var cartProduct: [CartProduct] = [] {
-        didSet {
-            updateTotalPrice()
-        }
-    }
+    @Published var cartProduct: [CartProduct] = []
     @Published var cart: [Product] = []
-    @Published var totalPrice: Double = 0.0
     @Published var selectedTotalPrice: Double = 0.0
     @Published var isLoading = false
     @Published var isError = false
@@ -24,15 +19,6 @@ class CartViewModel: ObservableObject {
     
     private let baseURL = "http://95.174.90.162:60/api/cart/"
     private var authManager = AuthManager.shared
-    private var cancellables = Set<AnyCancellable>()
-    
-    init() {
-        $cartProduct
-            .sink { [weak self] _ in
-                self?.updateTotalPrice()
-            }
-            .store(in: &cancellables)
-    }
     
     func fetchCart(completion: @escaping (Bool) -> Void) {
         guard let accessToken = authManager.accessToken else {
@@ -152,7 +138,6 @@ class CartViewModel: ObservableObject {
                     DispatchQueue.main.async {
                         if let index = self.cartProduct.firstIndex(where: { $0.id == productId }) {
                             self.cartProduct[index].quantity = quantity
-                            self.updateTotalPrice()
                         } else {
                             print("Product with ID \(productId) not found in cartProduct")
                         }
@@ -270,11 +255,6 @@ class CartViewModel: ObservableObject {
         }
     }
     
-    func calculateTotalPrice() -> Double {
-        return cartProduct.reduce(0) { $0 + $1.getTotalPrice }
-        
-    }
-    
     func clearSelection() {
         for product in cart {
             selectedProducts[product.id] = false
@@ -373,10 +353,5 @@ class CartViewModel: ObservableObject {
         } else {
             print("Failed to decode response data")
         }
-    }
-    
-    
-    func updateTotalPrice() {
-        totalPrice = calculateTotalPrice()
     }
 }

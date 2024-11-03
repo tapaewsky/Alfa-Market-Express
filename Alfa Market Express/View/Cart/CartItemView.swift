@@ -16,8 +16,9 @@ struct CartItemView: View {
     @Binding var isSelected: Bool
     var onCartUpdated: () -> Void
     let isSelectionMode: Bool
+    var onTotalPriceUpdated: () -> Void
     
-    init(cartProduct: CartProduct, viewModel: MainViewModel, isSelected: Binding<Bool>, onCartUpdated: @escaping () -> Void, isSelectionMode: Bool) {
+    init(cartProduct: CartProduct, viewModel: MainViewModel, isSelected: Binding<Bool>, onCartUpdated: @escaping () -> Void, onTotalPriceUpdated: @escaping () -> Void, isSelectionMode: Bool) {
         self.cartProduct = cartProduct
         self.viewModel = viewModel
         self._quantity = State(initialValue: cartProduct.quantity)
@@ -25,6 +26,7 @@ struct CartItemView: View {
         self.onCartUpdated = onCartUpdated
         self._isSelected = isSelected
         self.isSelectionMode = isSelectionMode
+        self.onTotalPriceUpdated = onTotalPriceUpdated // Теперь это правильно
     }
     
     var body: some View {
@@ -39,11 +41,17 @@ struct CartItemView: View {
                 deleteButton
             }
         }
-        .onChange(of: quantity) { _ in
-                    Task { await updateQuantity() }
-                    viewModel.cartViewModel.updateTotalPrice()
-                }
-                .onAppear {
+        .onChange(of: quantity) { newValue in
+            if newValue < 1 {
+                quantity = 1
+            } else if newValue > 1000 {
+                quantity = 1000
+            }
+            Task { await calculateTotalPrice() }
+            onTotalPriceUpdated()
+        }
+        
+        .onAppear {
                     Task {
                         await updateSelection()
                     }
@@ -129,6 +137,7 @@ struct CartItemView: View {
                     } else if newValue > 1000 {
                         quantity = 1000
                     }
+                    Task { await updateQuantity() } // Добавьте этот вызов
                 }
 
             controlButton(systemName: "plus") {
@@ -190,19 +199,18 @@ struct CartItemView: View {
     }
     
     private func updateQuantity() async {
-        Task {
-            await viewModel.cartViewModel.updateProductQuantity(productId: cartProduct.id, newQuantity: quantity)
-            await calculateTotalPrice()
-            onCartUpdated()
-                   
-                    print("Updated quantity for product \(cartProduct.product.name) to \(quantity)")
-                
-        }
+        await viewModel.cartViewModel.updateProductQuantity(productId: cartProduct.id, newQuantity: quantity)
+        await calculateTotalPrice() // Эта функция должна обновлять totalPriceForProduct
+        onCartUpdated()
+        onTotalPriceUpdated() // Убедитесь, что это вызывается после обновления
+        print("Updated quantity for product \(cartProduct.product.name) to \(quantity)")
     }
+  
     
     private func calculateTotalPrice() async {
         totalPriceForProduct = (Double(cartProduct.product.price) ?? 0) * Double(quantity)
         print("Calculated total price for product \(cartProduct.product.name): \(totalPriceForProduct)")
+        onTotalPriceUpdated() // Убедитесь, что это вызывается после обновления
     }
     
     private func toggleSelection() async {

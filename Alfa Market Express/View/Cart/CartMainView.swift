@@ -25,7 +25,6 @@ struct CartMainView: View {
         .padding(0)
         .onAppear {
             loadCart()
-            viewModel.cartViewModel.updateTotalPrice()
         }
         .onTapGesture {
             UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
@@ -84,13 +83,14 @@ struct CartMainView: View {
         .frame(maxHeight: .infinity)
     }
 
+    // Добавьте это в CartMainView
     private func cartItemRow(for cartProduct: CartProduct) -> some View {
         let isSelected = Binding<Bool>(
             get: { viewModel.cartViewModel.selectedProducts[cartProduct.id] ?? false },
             set: { newValue in
                 viewModel.cartViewModel.selectedProducts[cartProduct.id] = newValue
                 viewModel.cartViewModel.updateSelectedTotalPrice()
-                updateTotalPrice()
+                updateTotalPrice() // Убедитесь, что вы вызываете это
                 productCount = selectedOrAllProducts().count
             }
         )
@@ -100,15 +100,14 @@ struct CartMainView: View {
             viewModel: viewModel,
             isSelected: isSelected,
             onCartUpdated: {
-                viewModel.cartViewModel.updateTotalPrice()
                 productCount = selectedOrAllProducts().count
             },
+            onTotalPriceUpdated: updateTotalPrice, // Проверьте здесь
             isSelectionMode: isSelectionMode
         )
         .padding(.vertical, 2)
         .padding(.horizontal, 15)
     }
-
     private var footer: some View {
         HStack {
             Text("\(Int(totalPrice)) ₽")
@@ -150,7 +149,6 @@ struct CartMainView: View {
             DispatchQueue.main.async {
                 isFetching = false
                 if success {
-                    viewModel.cartViewModel.updateTotalPrice()
                     updateTotalPrice()
                 } else {
                     print("Не удалось загрузить корзину")
