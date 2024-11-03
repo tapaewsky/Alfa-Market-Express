@@ -92,4 +92,28 @@ class ProductViewModel: ObservableObject {
             }
         }.resume()
     }
+    
+    func fetchPromotions(completion: @escaping ([PromotionData]?) -> Void) {
+        guard let url = URL(string: "http://192.168.137.1:8000/api/products/with-promotions/") else {
+            completion(nil)
+            return
+        }
+
+        let task = URLSession.shared.dataTask(with: url) { data, response, error in
+            guard let data = data, error == nil else {
+                print("Error fetching data: \(error?.localizedDescription ?? "No error description")")
+                completion(nil)
+                return
+            }
+
+            do {
+                let promotions = try JSONDecoder().decode([PromotionData].self, from: data)
+                completion(promotions)
+            } catch {
+                print("Error decoding JSON: \(error)")
+                completion(nil)
+            }
+        }
+        task.resume()
+    }
 }

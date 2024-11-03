@@ -16,7 +16,6 @@ struct FavoritesView: View {
         VStack {
             HeaderView {
                 SearchBar(viewModel: viewModel)
-                    
             }
 
             ScrollView {

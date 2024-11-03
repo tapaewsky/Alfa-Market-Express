@@ -24,7 +24,7 @@ struct OrderItem: Codable {
     let productId: Int
     let quantity: Int
     let price: Double
-    let image: String
+    let image: String?
 
     enum CodingKeys: String, CodingKey {
         case product

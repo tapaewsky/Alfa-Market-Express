@@ -91,10 +91,11 @@ struct CartItemView: View {
             )
         } else {
             return AnyView(
-                Image(systemName: "photo")
+                Image("plaseholder")
                     .resizable()
                     .scaledToFill()
                     .frame(maxWidth: 115, maxHeight: 150)
+                    .cornerRadius(15)
             )
         }
     }

@@ -35,19 +35,25 @@ struct ProductCardView: View {
     
     private var productImageAndFavoriteButton: some View {
         ZStack(alignment: .topTrailing) {
+            Group {
                 if let imageUrl = product.imageUrl, let url = URL(string: imageUrl) {
                     KFImage(url)
                         .placeholder {
-                            Image("plaseholder")
-                                .resizable()
-                                .cornerRadius(20)
-                                .scaledToFit()
+                            ProgressView()
                         }
-                        .resizable() 
+                        .resizable()
                         .cornerRadius(20)
                         .scaledToFit()
+                        .overlay(discountPercentageView, alignment: .bottomLeading)
+                } else {
+                    Image("plaseholder")
+                        .resizable()
+                        .cornerRadius(20)
+                        .scaledToFit()
+                        .overlay(discountPercentageView, alignment: .bottomLeading)
                 }
-                
+            }
+
             Button(action: {
                 Task {
                     await someFunctionThatCallsToggleFavorite()
@@ -59,9 +65,25 @@ struct ProductCardView: View {
             }
             .padding()
         }
-       
     }
-  
+
+    private var discountPercentageView: some View {
+        VStack {
+            if let originalPrice = Double(product.price),
+               let discountedPrice = product.discountedPrice,
+               discountedPrice < originalPrice {
+                let discountPercentage = (1 - discountedPrice / originalPrice) * 100
+                Text(String(format: "-%.0f%%", discountPercentage))
+                    .font(.caption)
+                    .foregroundColor(.black)
+                    .padding(5)
+                    .background(.white.opacity(0.8))
+                    .cornerRadius(3)
+            }
+        }
+        .padding(0)
+    }
+    
     private var productDetails: some View {
         VStack(alignment: .leading) {
             Text(product.name)
@@ -78,13 +100,32 @@ struct ProductCardView: View {
     }
 
     private var productPriceAndCartButton: some View {
-        VStack {
-            Text(String(format: "%.0f₽", Double(product.price) ?? 0))
-                .font(.headline)
-                .foregroundColor(.colorRed)
-        }
-    }
-
+          VStack {
+              if let originalPrice = Double(product.price) {
+                  if let discountedPrice = product.discountedPrice, discountedPrice < originalPrice {
+                      HStack {
+                          Text(String(format: "%.0f₽", discountedPrice))
+                              .font(.headline)
+                              .foregroundColor(.colorRed)
+                          
+                          Text(String(format: "%.0f₽", originalPrice))
+                              .font(.subheadline)
+                              .foregroundColor(.gray)
+                              .strikethrough()
+                      }
+                  } else {
+                      Text(String(format: "%.0f₽", originalPrice))
+                          .font(.headline)
+                          .foregroundColor(.colorRed)
+                  }
+              } else {
+                  Text("Цена недоступна")
+                      .font(.headline)
+                      .foregroundColor(.gray)
+              }
+          }
+      }
+    
     private var cartButton: some View {
         VStack {
             HStack {

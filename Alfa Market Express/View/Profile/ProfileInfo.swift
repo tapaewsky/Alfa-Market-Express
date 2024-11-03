@@ -119,7 +119,6 @@ struct ProfileInfo: View {
         .padding()
     }
     
-    
     private var ordersButton: some View {
         Button(action: {
             showOrders = true
@@ -132,7 +131,7 @@ struct ProfileInfo: View {
                 .background(.white)
                 .cornerRadius(10)
         }
-        .shadow(radius: 3)
+        .shadow(radius: 1)
     }
 
     

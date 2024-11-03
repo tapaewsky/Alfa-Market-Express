@@ -46,10 +46,11 @@ struct FavoritesCardView: View {
                     .frame(maxWidth: 115, maxHeight: 150)
                     .cornerRadius(15)
             } else {
-                Image(systemName: "photo")
+                Image("plaseholder")
                     .resizable()
                     .scaledToFill()
                     .frame(maxWidth: 115, maxHeight: 150)
+                    .cornerRadius(15)
             }
         }
     }

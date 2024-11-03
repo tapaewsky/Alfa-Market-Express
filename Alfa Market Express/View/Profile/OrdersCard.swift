@@ -33,19 +33,29 @@ struct OrdersCard: View {
         .shadow(radius: 2)
     }
     
-    
     private var productImage: some View {
-        KFImage(URL(string: orderItem.image))
-            .placeholder {
-                Image(systemName: "photo")
+        Group {
+            if let imageUrlString = orderItem.image,
+               let imageUrl = URL(string: imageUrlString) {
+                KFImage(imageUrl)
+                    .placeholder {
+                        Image(systemName: "photo")
+                            .resizable()
+                            .scaledToFit()
+                            .frame(maxWidth: 50, maxHeight: 50)
+                            .foregroundColor(.gray)
+                    }
                     .resizable()
                     .scaledToFit()
-                    .frame(maxWidth: 50, maxHeight: 50)
+                    .frame(maxWidth: 75, maxHeight: 100)
+            } else {
+                Image("placeholder")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(maxWidth: 75, maxHeight: 100)
                     .foregroundColor(.gray)
             }
-            .resizable()
-            .scaledToFit()
-            .frame(maxWidth: 75, maxHeight: 100)
+        }
     }
     
     private var productInfo: some View {
@@ -62,9 +72,9 @@ struct OrdersCard: View {
     }
     
     private var priceInfo: some View {
-        Text(String(format: "%.0f₽", Double(orderItem.price) ?? 0))
+        Text(String(format: "%.0f₽", orderItem.price))
             .font(.subheadline)
-            .foregroundColor(.colorRed)
+            .foregroundColor(.red)
     }
     
     private var createdAtInfo: some View {
@@ -78,7 +88,6 @@ struct OrdersCard: View {
             .font(.footnote)
             .foregroundColor(statusColor(for: status))
     }
-    
     
     private func statusColor(for status: String) -> Color {
         switch status {
@@ -111,16 +120,16 @@ struct OrdersCard: View {
     }
 }
 
-struct Preview_OrdersCard: PreviewProvider {
-    static var previews: some View {
-        OrdersCard(orderItem: OrderItem(product: "Pepsi",
-                                        productId: 3,
-                                        quantity: 1,
-                                        price: 50.0,
-                                        image: "https://avatars.mds.yandex.net/get-mpic/6559549/2a0000018ac1d8e3008a371458cfe88c20e7/orig"),
-                   createdAt: "2024-10-10T23:27:13.650331Z",
-                   status: "обработка",
-                   orderId: 12)
-            .padding()
-    }
-}
+//// Пример использования OrdersView с массивом OrderItem
+//struct Preview_OrdersView: PreviewProvider {
+//    static var previews: some View {
+//        let orderItems = [
+//            OrderItem(product: "Pepsi", productId: 3, quantity: 1, price: 50.0, image: "https://avatars.mds.yandex.net/get-mpic/6559549/2a0000018ac1d8e3008a371458cfe88c20e7/orig"),
+//            OrderItem(product: "Coca Cola", productId: 4, quantity: 1, price: 55.0, image: "https://avatars.mds.yandex.net/get-mpic/6559549/2a0000018ac1d8e3008a371458cfe88c20e7/orig"),
+//            OrderItem(product: "Sprite", productId: 5, quantity: 1, price: 45.0, image: "https://avatars.mds.yandex.net/get-mpic/6559549/2a0000018ac1d8e3008a371458cfe88c20e7/orig")
+//        ]
+//        
+//        OrdersView(orderItems: orderItems, createdAt: "2024-10-10T23:27:13.650331Z", status: "обработка", orderId: 12)
+//            .padding()
+//    }
+//}
