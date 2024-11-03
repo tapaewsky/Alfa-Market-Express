@@ -40,19 +40,19 @@ class ProfileViewModel: ObservableObject {
         isLoading = true
         isError = false
 
-        guard let token = authManager.accessToken else {
-            print("Токен доступа не найден, обновляем токен")
-            authManager.refreshAccessToken { [weak self] success in
-                if success {
-                    self?.fetchUserProfile(completion: completion)
-                } else {
-                    self?.isLoading = false
-                    self?.isError = true
-                    completion(false)
-                }
-            }
-            return
-        }
+//        guard let token = authManager.accessToken else {
+//            print("Токен доступа не найден, обновляем токен")
+//            authManager.refreshAccessToken { [weak self] success in
+//                if success {
+//                    self?.fetchUserProfile(completion: completion)
+//                } else {
+//                    self?.isLoading = false
+//                    self?.isError = true
+//                    completion(false)
+//                }
+//            }
+//            return
+//        }
 
         guard let url = URL(string: "\(baseURL)/me/") else {
             isLoading = false
@@ -63,7 +63,7 @@ class ProfileViewModel: ObservableObject {
 
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
-        request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        request.setValue("Bearer \(authManager.accessToken!)", forHTTPHeaderField: "Authorization")
         
         print("Запрос на сервер: \(url.absoluteString)")
 

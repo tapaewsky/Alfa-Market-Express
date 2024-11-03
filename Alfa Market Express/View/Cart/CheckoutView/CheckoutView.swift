@@ -39,7 +39,6 @@ struct CheckoutView: View {
             .padding()
             .navigationBarItems(leading: backButton)
         }
-        .onAppear { setupView() }
         .navigationBarBackButtonHidden(true)
     }
 
@@ -150,11 +149,6 @@ struct CheckoutView: View {
                 EmptyView()
             }
         )
-    }
-    
-
-    private func setupView() {
-        viewModel.profileViewModel.fetchUserProfile { _ in }
     }
     
     private func placeOrder() {

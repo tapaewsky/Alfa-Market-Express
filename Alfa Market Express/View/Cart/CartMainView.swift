@@ -147,6 +147,9 @@ struct CartMainView: View {
                     .foregroundColor(.white)
                     .cornerRadius(15)
             }
+            .onAppear {
+                viewModel.profileViewModel.fetchUserProfile(completion: { _ in })
+            }
             .disabled(viewModel.cartViewModel.cartProduct.isEmpty)
             .opacity(viewModel.cartViewModel.cartProduct.isEmpty ? 0.8 : 1)
         }
