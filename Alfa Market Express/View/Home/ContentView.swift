@@ -52,7 +52,6 @@ struct ContentView: View {
             .tag(4)
         }
         .onReceive(NotificationCenter.default.publisher(for: Notification.Name("SwitchToHome"))) { _ in
-            print("Switching to Home tab")
             selectedTab = 0
         }
     }

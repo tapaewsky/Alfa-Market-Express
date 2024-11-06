@@ -68,11 +68,14 @@ struct ProductImageView: View {
                     .scaledToFill()
                     .frame(maxWidth: 115, maxHeight: 150)
                     .cornerRadius(15)
+                
             } else {
-                Image(systemName: "photo")
-                    .resizable()
-                    .scaledToFill()
-                    .frame(maxWidth: 115, maxHeight: 150)
+                    Image("plaseholderProduct")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(maxWidth: 115, maxHeight: 150)
+                        .cornerRadius(15)
+                
             }
         }
     }

@@ -50,7 +50,7 @@ struct ProductDetailView: View {
                     .cornerRadius(20)
                     .scaledToFit()
             } else {
-                Image("plaseholder")
+                Image("plaseholderProduct")
                     .resizable()
                     .cornerRadius(20)
                     .scaledToFit()

@@ -23,7 +23,7 @@ struct CategoryCardView: View {
                     .clipped()
                     .padding(0)
             } else {
-                Image(systemName: "photo")
+                Image("placeholderCategory")
                     .resizable()
                     .scaledToFit()
                     .clipped()

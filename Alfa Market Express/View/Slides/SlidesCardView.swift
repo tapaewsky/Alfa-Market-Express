@@ -22,15 +22,20 @@ struct SlidesCardView: View {
                         if let imageUrl = URL(string: singleSlide.image) {
                             KFImage(imageUrl)
                                 .placeholder {
-                                    ProgressView()
-                                        .frame(width: 300, height: 100)
+                                    Image("placeholderSlide")
+                                        .resizable()
+                                        .scaledToFill()
+                                        .frame(width: 300, height: 150)
+                                        .cornerRadius(10)
                                 }
                                 .resizable()
                                 .scaledToFill()
                                 .frame(width: 300, height: 150)
                                 .cornerRadius(10)
                         } else {
-                            Color.gray
+                            Image("placeholderSlide")
+                                .resizable()
+                                .scaledToFill()
                                 .frame(width: 300, height: 150)
                                 .cornerRadius(10)
                                 .overlay(Text("Invalid URL").foregroundColor(.white))

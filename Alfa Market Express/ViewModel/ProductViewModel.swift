@@ -15,36 +15,30 @@ class ProductViewModel: ObservableObject {
     private let baseURL = "http://95.174.90.162:60/api/products/"
     
     func fetchProducts(completion: @escaping (Bool) -> Void) {
+        guard let accessToken = authManager.accessToken else {
+            authManager.refreshAccessToken { [weak self] success in
+                if success {
+                    self?.fetchProducts(completion: completion)
+                } else {
+                    print("Не удалось обновить токен")
+                    completion(false)
+                }
+            }
+            return
+        }
+        
         guard !isLoading else {
             print("Загрузка уже выполняется")
             return
         }
         
         isLoading = true
+        isError = false
         
-        // Проверяем, есть ли access токен
-        if (authManager.accessToken != nil) {
-            // Если токен действителен, загружаем продукты
-            loadProducts(completion: completion)
-        } else {
-            // Если токена нет, обновляем его
-            print("Токен доступа не найден, обновляем токен")
-            authManager.refreshAccessToken { [weak self] success in
-                guard let self = self else { return }
-                if success {
-                    // После успешного обновления токена, получаем продукты
-                    self.loadProducts(completion: completion)
-                } else {
-                    // Обработка ошибки обновления токена
-                    self.isLoading = false
-                    self.isError = true
-                    completion(false)
-                }
-            }
-        }
+        loadProducts(accessToken: accessToken, completion: completion)
     }
-    
-    private func loadProducts(completion: @escaping (Bool) -> Void) {
+
+    private func loadProducts(accessToken: String, completion: @escaping (Bool) -> Void) {
         guard let url = URL(string: baseURL) else {
             print("Неверный URL")
             isLoading = false
@@ -53,9 +47,10 @@ class ProductViewModel: ObservableObject {
         }
         
         var request = URLRequest(url: url)
-        request.setValue("Bearer \(authManager.accessToken!)", forHTTPHeaderField: "Authorization")
+       
         
         print("Запрос на сервер: \(url.absoluteString)")
+        
         URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
             defer { self?.isLoading = false }
             
@@ -64,6 +59,29 @@ class ProductViewModel: ObservableObject {
                 DispatchQueue.main.async {
                     self?.isError = true
                     completion(false)
+                }
+                return
+            }
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
+                print("Нет HTTP-ответа")
+                DispatchQueue.main.async {
+                    self?.isError = true
+                    completion(false)
+                }
+                return
+            }
+            
+            if httpResponse.statusCode == 401 {
+                self?.authManager.refreshAccessToken { success in
+                    if success {
+                        self?.fetchProducts(completion: completion)
+                    } else {
+                        DispatchQueue.main.async {
+                            self?.isError = true
+                            completion(false)
+                        }
+                    }
                 }
                 return
             }
@@ -93,27 +111,5 @@ class ProductViewModel: ObservableObject {
         }.resume()
     }
     
-    func fetchPromotions(completion: @escaping ([PromotionData]?) -> Void) {
-        guard let url = URL(string: "http://192.168.137.1:8000/api/products/with-promotions/") else {
-            completion(nil)
-            return
-        }
 
-        let task = URLSession.shared.dataTask(with: url) { data, response, error in
-            guard let data = data, error == nil else {
-                print("Error fetching data: \(error?.localizedDescription ?? "No error description")")
-                completion(nil)
-                return
-            }
-
-            do {
-                let promotions = try JSONDecoder().decode([PromotionData].self, from: data)
-                completion(promotions)
-            } catch {
-                print("Error decoding JSON: \(error)")
-                completion(nil)
-            }
-        }
-        task.resume()
-    }
 }

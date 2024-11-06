@@ -46,7 +46,7 @@ struct ProductCardView: View {
                         .scaledToFit()
                         .overlay(discountPercentageView, alignment: .bottomLeading)
                 } else {
-                    Image("plaseholder")
+                    Image("plaseholderProduct")
                         .resizable()
                         .cornerRadius(20)
                         .scaledToFit()

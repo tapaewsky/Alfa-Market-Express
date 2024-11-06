@@ -40,19 +40,6 @@ class ProfileViewModel: ObservableObject {
         isLoading = true
         isError = false
 
-//        guard let token = authManager.accessToken else {
-//            print("Токен доступа не найден, обновляем токен")
-//            authManager.refreshAccessToken { [weak self] success in
-//                if success {
-//                    self?.fetchUserProfile(completion: completion)
-//                } else {
-//                    self?.isLoading = false
-//                    self?.isError = true
-//                    completion(false)
-//                }
-//            }
-//            return
-//        }
 
         guard let url = URL(string: "\(baseURL)/me/") else {
             isLoading = false
@@ -89,20 +76,6 @@ class ProfileViewModel: ObservableObject {
                 return
             }
 
-            if httpResponse.statusCode == 401 {
-                self.authManager.refreshAccessToken { success in
-                    if success {
-                        self.fetchUserProfile(completion: completion)
-                    } else {
-                        DispatchQueue.main.async {
-                            self.isLoading = false
-                            self.isError = true
-                            completion(false)
-                        }
-                    }
-                }
-                return
-            }
 
             guard let data = data else {
                 DispatchQueue.main.async {
