@@ -32,7 +32,7 @@ struct CartMainView: View {
         .onChange(of: viewModel.cartViewModel.selectedTotalPrice) { newValue in
             totalPrice = newValue
             productCount = selectedOrAllProducts().count
-            updateTotalPrice()
+            onCartUpdated()
         }
     }
     
@@ -115,6 +115,7 @@ struct CartMainView: View {
             isSelected: isSelected,
             onCartUpdated: {
                 productCount = selectedOrAllProducts().count
+                
             },
             onTotalPriceUpdated: updateTotalPrice,
             isSelectionMode: isSelectionMode

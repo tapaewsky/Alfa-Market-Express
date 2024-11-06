@@ -46,6 +46,6 @@ struct SlidesCardView: View {
             .scrollTargetLayout()
         }
         .scrollTargetBehavior(.viewAligned)
-        .safeAreaPadding(.horizontal, 40)
+        .safeAreaPadding(.horizontal, 50)
     }
 }

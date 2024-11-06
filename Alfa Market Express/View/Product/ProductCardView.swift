@@ -53,15 +53,17 @@ struct ProductCardView: View {
                         .overlay(discountPercentageView, alignment: .bottomLeading)
                 }
             }
-
+            
             Button(action: {
                 Task {
                     await someFunctionThatCallsToggleFavorite()
                     isFavorite.toggle()
                 }
             }) {
-                Image(systemName: isFavorite ? "heart.fill" : "heart")
-                    .foregroundColor(isFavorite ? .colorGreen : .gray)
+                Image(isFavorite ? "favorites_green_heart" : "favorites_white_heart")
+                    .resizable()
+                    .scaledToFit()
+                    .frame(width: 20, height: 20)
             }
             .padding()
         }
