@@ -215,6 +215,7 @@ class CartViewModel: ObservableObject {
         }
         
         
+        
         var token = await getToken()
         guard token != nil else {
             print("Error: Unable to get token")

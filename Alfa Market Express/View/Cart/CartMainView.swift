@@ -113,10 +113,7 @@ struct CartMainView: View {
             cartProduct: cartProduct,
             viewModel: viewModel,
             isSelected: isSelected,
-            onCartUpdated: {
-                productCount = selectedOrAllProducts().count
-                
-            },
+            onCartUpdated: onCartUpdated, 
             onTotalPriceUpdated: updateTotalPrice,
             isSelectionMode: isSelectionMode
         )
