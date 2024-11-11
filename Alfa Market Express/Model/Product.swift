@@ -11,7 +11,7 @@ struct Product: Identifiable, Decodable, Hashable, Encodable {
     var name: String
     var description: String
     var price: String
-    var discountedPrice: Double? // Добавлено поле для скидочной цены
+    var discountedPrice: Double? 
     var imageUrl: String?
     var category: Int
     var isFavorite: Bool
@@ -22,7 +22,7 @@ struct Product: Identifiable, Decodable, Hashable, Encodable {
         case name
         case description
         case price
-        case discountedPrice = "discounted_price" // Используем ключ из JSON
+        case discountedPrice = "discounted_price"
         case imageUrl = "image"
         case category
         case isFavorite
@@ -35,7 +35,7 @@ struct Product: Identifiable, Decodable, Hashable, Encodable {
         name = try container.decode(String.self, forKey: .name)
         description = try container.decode(String.self, forKey: .description)
         price = try container.decode(String.self, forKey: .price)
-        discountedPrice = try container.decodeIfPresent(Double.self, forKey: .discountedPrice) // Декодируем скидочную цену
+        discountedPrice = try container.decodeIfPresent(Double.self, forKey: .discountedPrice)
         imageUrl = try container.decodeIfPresent(String.self, forKey: .imageUrl)
         category = try container.decodeIfPresent(Int.self, forKey: .category) ?? 0
         isFavorite = try container.decodeIfPresent(Bool.self, forKey: .isFavorite) ?? false
@@ -48,7 +48,7 @@ struct Product: Identifiable, Decodable, Hashable, Encodable {
         try container.encode(name, forKey: .name)
         try container.encode(description, forKey: .description)
         try container.encode(price, forKey: .price)
-        try container.encode(discountedPrice, forKey: .discountedPrice) // Кодируем скидочную цену
+        try container.encode(discountedPrice, forKey: .discountedPrice)
         try container.encode(imageUrl, forKey: .imageUrl)
         try container.encode(category, forKey: .category)
         try container.encode(isFavorite, forKey: .isFavorite)

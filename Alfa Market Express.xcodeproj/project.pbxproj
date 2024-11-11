@@ -12,7 +12,6 @@
 		8F2137D92C6669BA00A42845 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F2137D82C6669BA00A42845 /* Category.swift */; };
 		8F2137DE2C666E1B00A42845 /* Network.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8F2137DC2C666E0300A42845 /* Network.framework */; };
 		8F35BF8F2C4EA45F00A77E77 /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F35BF8E2C4EA45F00A77E77 /* SearchBar.swift */; };
-		8F428ACD2CD7F0B800B6796D /* Promotion.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F428ACC2CD7F0B800B6796D /* Promotion.swift */; };
 		8F4366882CC191540074A475 /* CacheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F4366872CC191540074A475 /* CacheManager.swift */; };
 		8F43668A2CC316FB0074A475 /* ImagePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F4366892CC316FB0074A475 /* ImagePicker.swift */; };
 		8F4D1EFD2CB85B8500DF89B8 /* OrdersCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F4D1EFC2CB85B8500DF89B8 /* OrdersCard.swift */; };
@@ -79,7 +78,6 @@
 		8F2137DA2C666DB000A42845 /* Alfa Market Express.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Alfa Market Express.entitlements"; sourceTree = "<group>"; };
 		8F2137DC2C666E0300A42845 /* Network.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Network.framework; path = System/Library/Frameworks/Network.framework; sourceTree = SDKROOT; };
 		8F35BF8E2C4EA45F00A77E77 /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
-		8F428ACC2CD7F0B800B6796D /* Promotion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Promotion.swift; sourceTree = "<group>"; };
 		8F4366872CC191540074A475 /* CacheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CacheManager.swift; sourceTree = "<group>"; };
 		8F4366892CC316FB0074A475 /* ImagePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImagePicker.swift; sourceTree = "<group>"; };
 		8F4D1EFC2CB85B8500DF89B8 /* OrdersCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrdersCard.swift; sourceTree = "<group>"; };
@@ -206,7 +204,6 @@
 			isa = PBXGroup;
 			children = (
 				8F6A23B22C3972D8005A3320 /* Product.swift */,
-				8F428ACC2CD7F0B800B6796D /* Promotion.swift */,
 				8F6A23B42C397350005A3320 /* NetworkManager.swift */,
 				8F2137D82C6669BA00A42845 /* Category.swift */,
 				8FB1CC442C6E44FD002C054C /* UserProfile.swift */,
@@ -508,7 +505,6 @@
 				8F501BEC2CC0663A00280C3C /* customBackButton.swift in Sources */,
 				8FFA9D7B2C78B07E00115DFE /* LoginView.swift in Sources */,
 				8F6A23B72C39736C005A3320 /* ProductViewModel.swift in Sources */,
-				8F428ACD2CD7F0B800B6796D /* Promotion.swift in Sources */,
 				8FAACD932CD707EC00A35EE6 /* SlidesView.swift in Sources */,
 				8F4366882CC191540074A475 /* CacheManager.swift in Sources */,
 			);
@@ -641,6 +637,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = "Alfa Market Express/Alfa Market Express.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
@@ -682,6 +679,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = YES;
 				CODE_SIGN_ENTITLEMENTS = "Alfa Market Express/Alfa Market Express.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;

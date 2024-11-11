@@ -4,6 +4,7 @@
 //
 //  Created by Said Tapaev on 06.07.2024.
 //
+
 import SwiftUI
 import Kingfisher
 
@@ -35,7 +36,6 @@ struct ProductCardView: View {
     
     private var productImageAndFavoriteButton: some View {
         ZStack(alignment: .topTrailing) {
-            Group {
                 if let imageUrl = product.imageUrl, let url = URL(string: imageUrl) {
                     KFImage(url)
                         .placeholder {
@@ -44,48 +44,25 @@ struct ProductCardView: View {
                         .resizable()
                         .cornerRadius(20)
                         .scaledToFit()
-                        .overlay(discountPercentageView, alignment: .bottomLeading)
                 } else {
                     Image("plaseholderProduct")
                         .resizable()
                         .cornerRadius(20)
                         .scaledToFit()
-                        .overlay(discountPercentageView, alignment: .bottomLeading)
                 }
-            }
-            
             Button(action: {
                 Task {
                     await someFunctionThatCallsToggleFavorite()
                     isFavorite.toggle()
                 }
             }) {
-                Image(isFavorite ? "favorites_green_heart" : "favorites_white_heart")
-                    .resizable()
-                    .scaledToFit()
-                    .frame(width: 20, height: 20)
+                Image(systemName: isFavorite ? "heart.fill" : "heart")
+                    .foregroundColor(isFavorite ? .colorGreen : .gray)
             }
             .padding()
-        }
+        }       
     }
-
-    private var discountPercentageView: some View {
-        VStack {
-            if let originalPrice = Double(product.price),
-               let discountedPrice = product.discountedPrice,
-               discountedPrice < originalPrice {
-                let discountPercentage = (1 - discountedPrice / originalPrice) * 100
-                Text(String(format: "-%.0f%%", discountPercentage))
-                    .font(.caption)
-                    .foregroundColor(.black)
-                    .padding(5)
-                    .background(.white.opacity(0.8))
-                    .cornerRadius(3)
-            }
-        }
-        .padding(0)
-    }
-    
+  
     private var productDetails: some View {
         VStack(alignment: .leading) {
             Text(product.name)
@@ -102,32 +79,13 @@ struct ProductCardView: View {
     }
 
     private var productPriceAndCartButton: some View {
-          VStack {
-              if let originalPrice = Double(product.price) {
-                  if let discountedPrice = product.discountedPrice, discountedPrice < originalPrice {
-                      HStack {
-                          Text(String(format: "%.0f₽", discountedPrice))
-                              .font(.headline)
-                              .foregroundColor(.colorRed)
-                          
-                          Text(String(format: "%.0f₽", originalPrice))
-                              .font(.subheadline)
-                              .foregroundColor(.gray)
-                              .strikethrough()
-                      }
-                  } else {
-                      Text(String(format: "%.0f₽", originalPrice))
-                          .font(.headline)
-                          .foregroundColor(.colorRed)
-                  }
-              } else {
-                  Text("Цена недоступна")
-                      .font(.headline)
-                      .foregroundColor(.gray)
-              }
-          }
-      }
-    
+        VStack {
+            Text(String(format: "%.0f₽", Double(product.price) ?? 0))
+                .font(.headline)
+                .foregroundColor(.colorRed)
+        }
+    }
+
     private var cartButton: some View {
         VStack {
             HStack {
@@ -136,7 +94,7 @@ struct ProductCardView: View {
                         await toggleCart()
                     }
                 }) {
-                    Text(isAddedToCart ? "В корзине" : "В корзину")        
+                    Text(isAddedToCart ? "В корзине" : "В корзину")
                     Image(systemName: isAddedToCart ? "cart.fill" : "cart")
                 }
             }
@@ -169,20 +127,20 @@ struct ProductCardView: View {
 //struct ProductCardViewPreview_Previews: PreviewProvider {
 //    static var previews: some View {
 //        let mainViewModel = MainViewModel()
-//        
-//       
+//
+//
 //        let previewProduct = Product(
 //            id: 1,
 //            name: "Gorilla Mango",
 //            description: "A delicious tropical fruit drink.",
-//            price: "150", 
+//            price: "150",
 //            imageUrl: "https://avatars.mds.yandex.net/i?id=8e94bb0804af03474956f3d282b1f3b62a783e17-10639895-images-thumbs&n=13",
 //            category: 2,
 //            isFavorite: false,
 
 //            quantity: 1
 //        )
-//        
+//
 //        return ProductCardView(
 //            product: previewProduct,
 //            viewModel: mainViewModel,
