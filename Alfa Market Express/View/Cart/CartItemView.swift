@@ -68,7 +68,7 @@ struct CartItemView: View {
             loadImage()
             
             if isSelectionMode {
-                selectButton
+//                selectButton
             } else {
                 NavigationLink(destination: ProductDetailView(viewModel: viewModel, product: cartProduct.product)) {
                     EmptyView()

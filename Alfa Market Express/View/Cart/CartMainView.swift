@@ -15,6 +15,7 @@ struct CartMainView: View {
     @State private var selectedTab: Int = 0
     @State private var totalPrice: Double = 0
     @State private var productCount: Int = 0
+    @State private var cardOffset: CGFloat = 0
 
     var body: some View {
         VStack(spacing: 0) {
@@ -108,17 +109,36 @@ struct CartMainView: View {
                 productCount = selectedOrAllProducts().count
             }
         )
-
-        return CartItemView(
-            cartProduct: cartProduct,
-            viewModel: viewModel,
-            isSelected: isSelected,
-            onCartUpdated: onCartUpdated, 
-            onTotalPriceUpdated: updateTotalPrice,
-            isSelectionMode: isSelectionMode
-        )
-        .padding(.vertical, 2)
-        .padding(.horizontal, 15)
+        
+        return ZStack {
+            HStack {
+                if isSelectionMode {
+                    Button(action: {
+                        isSelected.wrappedValue.toggle()
+                    }) {
+                        Image(systemName: isSelected.wrappedValue ? "checkmark.square.fill" : "square")
+                            .resizable()
+                            .frame(width: 15, height: 15)
+                            .foregroundColor(isSelected.wrappedValue ? .colorGreen : .gray)
+                    }
+                    .padding(.trailing, 10)
+                    .transition(.opacity)
+                }
+                
+                CartItemView(
+                    cartProduct: cartProduct,
+                    viewModel: viewModel,
+                    isSelected: isSelected,
+                    onCartUpdated: onCartUpdated,
+                    onTotalPriceUpdated: updateTotalPrice,
+                    isSelectionMode: isSelectionMode
+                )
+                .offset(x: isSelectionMode ? 5 : 0)
+                .animation(.easeInOut, value: isSelectionMode)
+            }
+            .padding(.vertical, 2)
+            .padding(.horizontal, 15)
+        }
     }
     
     private var footer: some View {
