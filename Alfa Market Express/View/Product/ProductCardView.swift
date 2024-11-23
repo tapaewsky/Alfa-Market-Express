@@ -44,11 +44,13 @@ struct ProductCardView: View {
                         .resizable()
                         .cornerRadius(20)
                         .scaledToFit()
+                        .overlay(discountPercentageView, alignment: .bottomLeading)
                 } else {
                     Image("plaseholderProduct")
                         .resizable()
                         .cornerRadius(20)
                         .scaledToFit()
+                        .overlay(discountPercentageView, alignment: .bottomLeading)
                 }
             Button(action: {
                 Task {
@@ -70,23 +72,58 @@ struct ProductCardView: View {
             Text(product.name)
                 .font(.subheadline)
                 .lineLimit(1)
-                .minimumScaleFactor(0.5)
+                .truncationMode(.tail)
                 .foregroundColor(.primary)
-
-            
 
             Text("Цена за 1 шт")
                 .foregroundStyle(.gray)
         }
     }
+    private var discountPercentageView: some View {
+        VStack {
+            if let originalPrice = Double(product.price),
+               let discountedPrice = product.discountedPrice,
+               discountedPrice < originalPrice {
+                let discountPercentage = (1 - discountedPrice / originalPrice) * 100
+                Text(String(format: "-%.0f%%", discountPercentage))
+                    .font(.caption)
+                    .foregroundColor(.black)
+                    .padding(5)
+                    .background(.white.opacity(0.8))
+                    .cornerRadius(3)
+            }
+        }
+        .padding(0)
+    }
 
     private var productPriceAndCartButton: some View {
-        VStack {
-            Text(String(format: "%.0f₽", Double(product.price) ?? 0))
-                .font(.headline)
-                .foregroundColor(.colorRed)
-        }
-    }
+        
+              VStack {
+                  if let originalPrice = Double(product.price) {
+                      if let discountedPrice = product.discountedPrice, discountedPrice < originalPrice {
+                          HStack {
+                              Text(String(format: "%.0f₽", discountedPrice))
+                                  .font(.headline)
+                                  .foregroundColor(.colorRed)
+                              
+                              Text(String(format: "%.0f₽", originalPrice))
+                                  .font(.subheadline)
+                                  .foregroundColor(.gray)
+                                  .strikethrough()
+                          }
+                      } else {
+                          Text(String(format: "%.0f₽", originalPrice))
+                              .font(.headline)
+                              .foregroundColor(.colorRed)
+                      }
+                  } else {
+                      Text("Цена недоступна")
+                          .font(.headline)
+                          .foregroundColor(.gray)
+                  }
+              }
+          }
+    
 
     private var cartButton: some View {
         VStack {

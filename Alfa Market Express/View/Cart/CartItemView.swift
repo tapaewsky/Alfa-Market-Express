@@ -18,6 +18,8 @@ struct CartItemView: View {
     let isSelectionMode: Bool
     var onTotalPriceUpdated: () -> Void
     @State private var isNavigating = false
+    private var product: Product
+    @State private var totalPriceForProductWithDiscounted: Double
     
     init(cartProduct: CartProduct, viewModel: MainViewModel, isSelected: Binding<Bool>, onCartUpdated: @escaping () -> Void, onTotalPriceUpdated: @escaping () -> Void, isSelectionMode: Bool) {
         self.cartProduct = cartProduct
@@ -27,7 +29,9 @@ struct CartItemView: View {
         self.onCartUpdated = onCartUpdated
         self._isSelected = isSelected
         self.isSelectionMode = isSelectionMode
-        self.onTotalPriceUpdated = onTotalPriceUpdated 
+        self.onTotalPriceUpdated = onTotalPriceUpdated
+        self.product = cartProduct.product
+        self._totalPriceForProductWithDiscounted = State(initialValue: cartProduct.getTotalPrice)
     }
     
     var body: some View {
@@ -122,13 +126,33 @@ struct CartItemView: View {
                         Button(action: { Task { await toggleCart() } }) {
                             Image(systemName: "trash")
                                 .foregroundColor(.colorGreen)
-                                .padding(.trailing, 8) 
+                                .padding(.trailing, 8)
                         }
                     }
 
-                    Text("\(Int(totalPriceForProduct)) ₽")
-                        .font(.subheadline)
-                        .foregroundColor(.colorRed)
+                    // Проверяем наличие скидки
+                    if let originalPrice = Double(cartProduct.product.price) {
+                        if let discountedPrice = cartProduct.product.discountedPrice, discountedPrice < originalPrice {
+                            HStack {
+                                Text("\(Int(totalPriceForProductWithDiscounted)) ₽")
+                                    .font(.headline)
+                                    .foregroundColor(.colorRed)
+                                
+                                Text("\(Int(totalPriceForProduct)) ₽")
+                                    .font(.subheadline)
+                                    .foregroundColor(.gray)
+                                    .strikethrough()
+                            }
+                        } else {
+                            Text("\(Int(totalPriceForProduct)) ₽")
+                                .font(.headline)
+                                .foregroundColor(.colorRed)
+                        }
+                    } else {
+                        Text("Цена недоступна")
+                            .font(.headline)
+                            .foregroundColor(.gray)
+                    }
 
                     Text(cartProduct.product.description)
                         .font(.footnote)
@@ -159,8 +183,8 @@ struct CartItemView: View {
                 .onChange(of: quantity) { newValue in
                     if newValue < 1 {
                         quantity = 1
-                    } else if newValue > 1000 {
-                        quantity = 1000
+                    } else if newValue > cartProduct.product.quantity {
+                        quantity = cartProduct.product.quantity
                     }
                     Task { await updateQuantity() }
                 }
@@ -223,8 +247,17 @@ struct CartItemView: View {
   
     
     private func calculateTotalPrice() async {
-        totalPriceForProduct = (Double(cartProduct.product.price) ?? 0) * Double(quantity)
-        print("Calculated total price for product \(cartProduct.product.name): \(totalPriceForProduct)")
+        let discountedPrice = Decimal(cartProduct.product.discountedPrice ?? 0)
+        let fallbackPrice = Decimal(Double(cartProduct.product.price) ?? 0)
+        let totalQuantity = Decimal(quantity)
+        let totalPrice = fallbackPrice * totalQuantity
+        let totalPriceWithDiscounted = discountedPrice > 0 ? discountedPrice * totalQuantity : 0
+
+        totalPriceForProduct = NSDecimalNumber(decimal: totalPrice).doubleValue
+        totalPriceForProductWithDiscounted = NSDecimalNumber(decimal: totalPriceWithDiscounted).doubleValue
+
+        print("Calculated total price for product \(cartProduct.product.name): \(totalPriceForProduct), with discount: \(totalPriceForProductWithDiscounted)")
+
         onTotalPriceUpdated()
     }
     

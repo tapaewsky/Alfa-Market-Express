@@ -8,7 +8,6 @@
 import SwiftUI
 import Kingfisher
 
-
 struct CartItemCheckout: View {
     @Binding var cartProduct: CartProduct
     
@@ -18,7 +17,6 @@ struct CartItemCheckout: View {
             HStack {
                 productImage
                 productDetails
-//                Spacer()
             }
         }
     }
@@ -40,9 +38,24 @@ struct CartItemCheckout: View {
                 .lineLimit(1)
                 .foregroundColor(.black)
             
-            Text("\(Int(totalPriceForProduct)) ₽")
-                .font(.subheadline)
-                .foregroundColor(.colorRed)
+            // Проверка скидки
+            if let discountedPrice = cartProduct.product.discountedPrice, discountedPrice < Double(cartProduct.product.price) ?? 0.0 {
+                // Показываем цену со скидкой
+                HStack {
+                    Text("\(Int(totalPriceForProductWithDiscounted)) ₽")
+                        .font(.subheadline)
+                        .foregroundColor(.colorRed)
+                    Text("\(Int(totalPriceForProduct)) ₽")
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                        .strikethrough()
+                }
+            } else {
+                // Показываем только оригинальную цену
+                Text("\(Int(totalPriceForProduct)) ₽")
+                    .font(.subheadline)
+                    .foregroundColor(.colorRed)
+            }
             
             ProductDescriptionView(description: cartProduct.product.description)
             QuantityView(quantity: cartProduct.quantity)
@@ -52,6 +65,11 @@ struct CartItemCheckout: View {
     
     private var totalPriceForProduct: Double {
         Double(cartProduct.quantity) * (Double(cartProduct.product.price) ?? 0.0)
+    }
+    
+    private var totalPriceForProductWithDiscounted: Double {
+        let discountedPrice = cartProduct.product.discountedPrice ?? 0.0
+        return Double(cartProduct.quantity) * discountedPrice
     }
 }
 
