@@ -56,8 +56,8 @@ struct FavoritesView: View {
     }
 }
 
-struct FavoritesView_Previews: PreviewProvider {
-    static var previews: some View {
-        FavoritesView(viewModel: MainViewModel())
-    }
-}
+//struct FavoritesView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        FavoritesView(viewModel: MainViewModel(context: context))
+//    }
+//}

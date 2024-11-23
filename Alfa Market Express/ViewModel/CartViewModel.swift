@@ -55,6 +55,9 @@ class CartViewModel: ObservableObject {
                 }
                 return
             }
+            if let jsonString = String(data: data, encoding: .utf8) {
+                print("Полученные данные JSON: \(jsonString)")
+            }
             
             do {
                 let cartProducts = try JSONDecoder().decode([CartProduct].self, from: data)

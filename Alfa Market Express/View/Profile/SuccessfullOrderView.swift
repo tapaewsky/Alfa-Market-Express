@@ -40,9 +40,16 @@ struct SuccessfullOrderView: View {
                
                 OrdersButton {
                     showOrders = true
+//                    viewModel.ordersViewModel!.fetchOrders(completion: { _ in})
                 }
                 .background(
-                    NavigationLink(destination: OrdersView(viewModel: viewModel), isActive: $showOrders) {
+                    NavigationLink(
+                        destination: OrdersView(viewModel: viewModel),
+//                            .onAppear {
+//                                viewModel.ordersViewModel!.fetchOrders(completion: { _ in})
+//                            },
+                        isActive: $showOrders
+                    ) {
                         EmptyView()
                     }
                 )

@@ -34,23 +34,19 @@ struct OrdersCard: View {
     }
     
     private var productImage: some View {
-        Group {
+        ZStack {
             if let imageUrlString = orderItem.image,
                let imageUrl = URL(string: imageUrlString) {
                 KFImage(imageUrl)
                     .placeholder {
-                        Image(systemName: "photo")
-                            .resizable()
-                            .scaledToFit()
-                            .frame(maxWidth: 50, maxHeight: 50)
-                            .foregroundColor(.gray)
+                        ProgressView()
                     }
                     .resizable()
                     .scaledToFit()
                     .frame(maxWidth: 75, maxHeight: 100)
             } else {
-                Image("placeholder")
-                    .resizable()
+                Image("plaseholderProduct")
+                    .resizable() 
                     .scaledToFit()
                     .frame(maxWidth: 75, maxHeight: 100)
                     .foregroundColor(.gray)
@@ -62,6 +58,9 @@ struct OrdersCard: View {
         HStack {
             Text(orderItem.product)
                 .font(.headline)
+                .lineLimit(1)
+                .truncationMode(.tail)
+                .foregroundColor(.primary)
             
             Spacer()
             

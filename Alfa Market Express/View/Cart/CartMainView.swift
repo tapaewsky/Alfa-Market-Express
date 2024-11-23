@@ -131,7 +131,7 @@ struct CartMainView: View {
                     isSelected: isSelected,
                     onCartUpdated: onCartUpdated,
                     onTotalPriceUpdated: updateTotalPrice,
-                    isSelectionMode: isSelectionMode
+                    isSelectionMode: isSelectionMode                    
                 )
                 .offset(x: isSelectionMode ? 5 : 0)
                 .animation(.easeInOut, value: isSelectionMode)

@@ -37,7 +37,7 @@ class ProductViewModel: ObservableObject {
         
         loadProducts(accessToken: accessToken, completion: completion)
     }
-
+    
     private func loadProducts(accessToken: String, completion: @escaping (Bool) -> Void) {
         guard let url = URL(string: baseURL) else {
             print("Неверный URL")
@@ -48,7 +48,6 @@ class ProductViewModel: ObservableObject {
         
         var request = URLRequest(url: url)
         request.setValue("Bearer \(authManager.accessToken!)", forHTTPHeaderField: "Authorization")
-       
         
         print("Запрос на сервер: \(url.absoluteString)")
         
@@ -96,6 +95,11 @@ class ProductViewModel: ObservableObject {
                 return
             }
             
+            // Принт для JSON
+            if let jsonString = String(data: data, encoding: .utf8) {
+                print("Полученные данные JSON: \(jsonString)")
+            }
+            
             do {
                 let products = try JSONDecoder().decode([Product].self, from: data)
                 DispatchQueue.main.async {
@@ -111,6 +115,4 @@ class ProductViewModel: ObservableObject {
             }
         }.resume()
     }
-    
-
 }
