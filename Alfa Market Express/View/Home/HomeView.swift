@@ -12,7 +12,7 @@ struct HomeView: View {
     @StateObject private var networkMonitor = NetworkMonitor()
     @State private var shuffledProducts: [Product] = []
     @State var isFetching = false
-    
+  
     var body: some View {
         NavigationView {
             ZStack {
@@ -57,7 +57,7 @@ struct HomeView: View {
             }
         }
     }
-    
+
     private func updateShuffledProducts() {
         shuffledProducts = viewModel.productViewModel.products.shuffled()
     }

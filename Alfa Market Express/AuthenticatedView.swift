@@ -17,13 +17,13 @@ struct AuthenticatedView: View {
                 SplashLogoView()
             } else if authManager.isAuthenticated {
                 ContentView()
-                   
             } else {
                 LoginView(viewModel: viewModel)
             }
         }
     }
 }
+
 struct SplashLogoView: View {
     var body: some View {
         ZStack {
