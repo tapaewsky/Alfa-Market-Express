@@ -12,14 +12,16 @@ class SearchViewModel: ObservableObject {
     @Published var searchText: String = ""
     private let baseURL: String = "http://95.174.90.162:60/api/products/"
     private var cancellables = Set<AnyCancellable>()
-    var products: [Product] = []
+    @Published var products: [Product] = []
     
+    // Основная функция поиска продуктов
     func searchProducts(query: String, completion: @escaping () -> Void) {
         guard !query.isEmpty else {
             self.products = []
             completion()
             return
         }
+        
         let searchUrl = "\(baseURL)?search=\(query)"
         guard let encodedUrlString = searchUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
               let url = URL(string: encodedUrlString) else {
@@ -27,28 +29,30 @@ class SearchViewModel: ObservableObject {
             completion()
             return
         }
-        var request = URLRequest(url: url)
         
+        var request = URLRequest(url: url)
         print("Запрос на сервер: \(url.absoluteString)")
-
+        
+        // Выполняем запрос
         URLSession.shared.dataTask(with: request) { data, response, error in
             if let error = error {
                 print("Error searching products: \(error.localizedDescription)")
                 completion()
                 return
             }
-
+            
             guard let data = data else {
                 print("No data in response")
                 completion()
                 return
             }
-
+            
             do {
-                let products = try JSONDecoder().decode([Product].self, from: data)
+                let productResponse = try JSONDecoder().decode(ProductResponse.self, from: data)
                 DispatchQueue.main.async {
-                    self.products = products
-                    completion()  
+
+                    self.products = productResponse.results
+                    completion()
                 }
             } catch {
                 print("Error decoding products: \(error.localizedDescription)")
