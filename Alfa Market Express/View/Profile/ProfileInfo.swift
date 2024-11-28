@@ -14,7 +14,7 @@ struct ProfileInfo: View {
 
     var body: some View {
         VStack {
-            ScrollView {
+            ScrollView(showsIndicators: false) {
                 if isFetching {
                 } else if viewModel.profileViewModel.userProfile == nil {
                     Text("Нет данных о профиле")

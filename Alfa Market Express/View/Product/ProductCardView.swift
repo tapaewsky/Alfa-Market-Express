@@ -80,7 +80,7 @@ struct ProductCardView: View {
 
     private var productPriceAndCartButton: some View {
         VStack {
-            Text(String(format: "%.0f₽", Double(product.price) ?? 0))
+            Text("\(Int(Double(product.price) ?? 0)) ₽")
                 .font(.headline)
                 .foregroundColor(.colorRed)
         }

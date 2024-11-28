@@ -11,10 +11,9 @@ struct EditProfile: View {
     @ObservedObject var viewModel: MainViewModel
     @State private var showImagePicker: Bool = false
     @Environment(\.presentationMode) var presentationMode
-    
-    
+
     var body: some View {
-        ScrollView {
+        ScrollView(showsIndicators: false) {
             VStack {
                 navBar
                 imagePickerButton
@@ -83,7 +82,7 @@ struct EditProfile: View {
             editTextField(placeholder: viewModel.profileViewModel.userProfile.storeName, text: $viewModel.profileViewModel.userProfile.storeName)
             editTextField(placeholder: viewModel.profileViewModel.userProfile.storeAddress, text: $viewModel.profileViewModel.userProfile.storeAddress)
             editTextField(placeholder: viewModel.profileViewModel.userProfile.storePhoneNumber, text: $viewModel.profileViewModel.userProfile.storePhoneNumber)
-        } 
+        }
     }
     
     private func editTextField(placeholder: String, text: Binding<String>) -> some View {
@@ -95,9 +94,17 @@ struct EditProfile: View {
     private var saveButton: some View {
         Button(action: {
             Task {
+                // Обеспечиваем, что выполнение сохранения пройдет в главном потоке.
                 await viewModel.profileViewModel.updateProfile { success in
-                    if !success {
-                        print("Ошибка при сохранении профиля")
+                    DispatchQueue.main.async {
+                        if success {
+                            // Проверяем, не было ли уже закрыто представление
+                            if self.presentationMode.wrappedValue.isPresented {
+                                self.presentationMode.wrappedValue.dismiss()
+                            }
+                        } else {
+                            print("Ошибка при сохранении профиля")
+                        }
                     }
                 }
             }

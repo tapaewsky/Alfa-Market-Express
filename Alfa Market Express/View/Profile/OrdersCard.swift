@@ -9,21 +9,17 @@ import SwiftUI
 import Kingfisher
 
 struct OrdersCard: View {
-    var orderItem: OrderItem
-    var createdAt: String
-    var status: String
-    var orderId: Int
-    
+    var order: Order
+  
+
     var body: some View {
         HStack {
-            productImage
-            
             VStack(alignment: .leading) {
-                productInfo
+                orderInfo
                 priceInfo
                 createdAtInfo
-                statusInfo
             }
+            .padding()
             
             Spacer()
         }
@@ -32,77 +28,33 @@ struct OrdersCard: View {
         .cornerRadius(15)
         .shadow(radius: 2)
     }
-    
-    private var productImage: some View {
-        ZStack {
-            if let imageUrlString = orderItem.image,
-               let imageUrl = URL(string: imageUrlString) {
-                KFImage(imageUrl)
-                    .placeholder {
-                        ProgressView()
-                    }
-                    .resizable()
-                    .scaledToFit()
-                    .frame(maxWidth: 75, maxHeight: 100)
-            } else {
-                Image("plaseholderProduct")
-                    .resizable() 
-                    .scaledToFit()
-                    .frame(maxWidth: 75, maxHeight: 100)
-                    .foregroundColor(.gray)
-            }
-        }
-    }
-    
-    private var productInfo: some View {
+
+    private var orderInfo: some View {
         HStack {
-            Text(orderItem.product)
+            Text("Заказ №\(order.id)")
                 .font(.headline)
-                .lineLimit(1)
-                .truncationMode(.tail)
                 .foregroundColor(.primary)
             
             Spacer()
-            
-            Text("ID: \(orderId)")
-                .font(.subheadline)
-                .foregroundColor(.gray)
         }
     }
     
     private var priceInfo: some View {
-        Text(String(format: "%.0f₽", orderItem.price))
+        Text("Сумма: \(Int(orderTotalPrice())) ₽")
             .font(.subheadline)
             .foregroundColor(.red)
     }
     
     private var createdAtInfo: some View {
-        Text(formattedDate(from: createdAt))
+        Text(formattedDate(from: order.createdAt))
             .font(.footnote)
             .foregroundColor(.gray)
     }
     
-    private var statusInfo: some View {
-        Text("Статус: \(status)")
-            .font(.footnote)
-            .foregroundColor(statusColor(for: status))
+    private func orderTotalPrice() -> Double {
+        order.items.reduce(0) { $0 + $1.price * Double($1.quantity) }
     }
-    
-    private func statusColor(for status: String) -> Color {
-        switch status {
-        case "обработка":
-            return .orange
-        case "сборка":
-            return .yellow
-        case "доставка":
-            return .blue
-        case "получен":
-            return .green
-        default:
-            return .red
-        }
-    }
-    
+
     private func formattedDate(from isoDate: String) -> String {
         let cleanDate = String(isoDate.prefix(10))
         

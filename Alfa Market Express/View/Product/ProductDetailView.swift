@@ -86,7 +86,7 @@ struct ProductDetailView: View {
     }
     
     private var productPrice: some View {
-        Text(String(format: "%.0f₽", Double(product.price) ?? 0))
+        Text("\(Int(Double(product.price) ?? 0)) ₽")
             .font(.title)
             .padding(.horizontal)
             .foregroundColor(.colorRed)

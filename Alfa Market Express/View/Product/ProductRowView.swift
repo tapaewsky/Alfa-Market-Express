@@ -70,7 +70,7 @@ struct ProductRowView: View {
     private var priceText: some View {
         if let price = Double(product.price) {
             return AnyView(
-                Text(String(format: "%.0f ₽", price))
+                Text("\(Int(Double(product.price) ?? 0)) ₽")
                     .font(.subheadline)
                     .foregroundColor(.black)
             )

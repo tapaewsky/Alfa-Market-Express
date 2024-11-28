@@ -61,7 +61,7 @@ struct FavoritesCardView: View {
                 .font(.system(size: 14, weight: .semibold))
                 .multilineTextAlignment(.leading)
                 .foregroundColor(.black)
-            Text(String(format: "%.0f₽", Double(product.price) ?? 0))
+            Text("\(Int(Double(product.price) ?? 0)) ₽")
                 .font(.headline)
                 .foregroundColor(.black)
         }

@@ -16,7 +16,7 @@ struct HomeView: View {
     var body: some View {
         NavigationView {
             ZStack {
-                ScrollView {
+                ScrollView(showsIndicators: false) {
                     SlidesCardView(viewModel: viewModel)
                     SearchBar(viewModel: viewModel)
                     ProductGridView(viewModel: viewModel, products: shuffledProducts, onFavoriteToggle: { _ in })

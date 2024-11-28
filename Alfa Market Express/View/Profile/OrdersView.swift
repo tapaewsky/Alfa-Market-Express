@@ -11,46 +11,52 @@ struct OrdersView: View {
     @StateObject var viewModel: MainViewModel
     @State private var isFetching: Bool = false
     @Environment(\.presentationMode) var presentationMode
-    
+
     var body: some View {
         VStack {
-            if viewModel.ordersViewModel!.orders.isEmpty  && !isFetching {
-                Text("Заказы отсутствуют")
+            if isFetching {
+                Text("Загрузка заказов...")
+                    .font(.subheadline)
+                    .foregroundColor(.gray)
+                    .padding()
+            } else if let orders = viewModel.ordersViewModel?.orders, orders.isEmpty {
+                Text("Вы еще не сделали ни одного заказа.")
                     .font(.headline)
                     .padding()
-            } else {
+            } else if let orders = viewModel.ordersViewModel?.orders {
                 ScrollView {
                     Spacer()
-                    ForEach(viewModel.ordersViewModel!.orders, id: \.id) { order in
-                        if let firstItem = order.items.first {
-                            OrdersCard(orderItem: firstItem,
-                                       createdAt: order.createdAt,
-                                       status: order.status, orderId: order.id)
-                            .padding(.vertical, 2)
-                            .padding(.horizontal, 15)
+                    ForEach(orders, id: \.id) { order in
+                        NavigationLink(destination: OrdersDetail(order: order, viewModel: viewModel)) {
+                            OrdersCard(order: order)
+                                .padding(.vertical, 2)
+                                .padding(.horizontal, 15)
                         }
-                        
+                        .buttonStyle(PlainButtonStyle())
                     }
                 }
+            } else {
+                Text("Произошла ошибка при загрузке заказов.")
+                    .foregroundColor(.red)
+                    .font(.headline)
+                    .padding()
             }
         }
-        .navigationBarItems(leading: CustomBackButton() {
+        .navigationBarItems(leading: CustomBackButton {
             self.presentationMode.wrappedValue.dismiss()
         })
         .navigationBarBackButtonHidden(true)
-        
         .onAppear {
             loadOrders()
         }
     }
-    
+
     private func loadOrders() {
         isFetching = true
-        viewModel.ordersViewModel!.fetchOrders { success in
+        viewModel.ordersViewModel?.fetchOrders { success in
             DispatchQueue.main.async {
                 isFetching = false
-                if success {
-                } else {
+                if !success {
                     print("Не удалось загрузить заказы")
                 }
             }
