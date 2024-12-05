@@ -45,6 +45,8 @@ struct LoginView: View {
         .onDisappear {
             removeKeyboardObservers()
         }
+        .navigationBarBackButtonHidden(true)
+        .toolbar(.hidden, for: .tabBar)
     }
 
     private var loginForm: some View {

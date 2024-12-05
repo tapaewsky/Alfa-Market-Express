@@ -64,6 +64,25 @@ struct HomeView: View {
         }
     }
     
+    private func loadMoreProducts() {
+        guard !isFetching, hasMoreData else { return }
+        
+        isFetching = true
+        viewModel.productViewModel.fetchProducts { success in
+            DispatchQueue.main.async {
+                if success {
+                    if viewModel.productViewModel.baseURL == nil {
+                        hasMoreData = false
+                    }
+                } else {
+                    print("Не удалось загрузить следующую страницу")
+                    hasMoreData = false
+                }
+                isFetching = false
+            }
+        }
+    }
+    
     private func loadInitialProducts() {
         guard !isFetching else { return }
         isFetching = true
@@ -92,25 +111,6 @@ struct HomeView: View {
         
         group.notify(queue: .main) {
             isFetching = false
-        }
-    }
-    
-    private func loadMoreProducts() {
-        guard !isFetching, hasMoreData else { return }
-        
-        isFetching = true
-        viewModel.productViewModel.fetchProducts { success in
-            DispatchQueue.main.async {
-                if success {
-                    if viewModel.productViewModel.baseURL == nil {
-                        hasMoreData = false
-                    }
-                } else {
-                    print("Не удалось загрузить следующую страницу")
-                    hasMoreData = false
-                }
-                isFetching = false
-            }
         }
     }
 }

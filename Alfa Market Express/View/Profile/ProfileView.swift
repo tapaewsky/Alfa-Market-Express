@@ -15,7 +15,6 @@ struct ProfileView: View {
      
             HStack {
                 Spacer()
-
                 NavigationLink(destination: EditProfile(viewModel: viewModel)) {
                     ZStack {
                         Image(systemName: "person")

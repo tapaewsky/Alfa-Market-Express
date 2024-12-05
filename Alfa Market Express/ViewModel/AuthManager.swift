@@ -179,4 +179,14 @@ class AuthManager: ObservableObject {
         UserDefaults.standard.removeObject(forKey: accessTokenKey)
         UserDefaults.standard.removeObject(forKey: refreshTokenKey)
     }
+
+    func logOut() {
+        print("Logging out...")
+        clearTokens()
+        
+        DispatchQueue.main.async {
+            self.isAuthenticated = false
+            self.isCheckingAuth = false
+        }
+    }
 }

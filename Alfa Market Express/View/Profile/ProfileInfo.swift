@@ -11,7 +11,9 @@ struct ProfileInfo: View {
     @ObservedObject var viewModel: MainViewModel
     @State private var isFetching: Bool = false
     @State private var showOrders = false
-
+    @State private var showLogin = false
+    @State private var showAlert = false
+    
     var body: some View {
         VStack {
             ScrollView(showsIndicators: false) {
@@ -74,48 +76,53 @@ struct ProfileInfo: View {
             }
             .foregroundColor(.gray)
             .bold()
-            
+
             Text(viewModel.profileViewModel.userProfile.storeName)
                 .foregroundColor(.black)
                 .bold()
-            
+
             Text("Адрес: ")
                 .foregroundColor(.gray)
                 .bold() +
             Text(viewModel.profileViewModel.userProfile.storeAddress)
                 .foregroundColor(.colorGreen)
                 .bold()
-            
+
             Text("Телефон: ")
                 .foregroundColor(.gray)
                 .bold() +
             Text(viewModel.profileViewModel.userProfile.storePhoneNumber)
                 .foregroundColor(.colorGreen)
                 .bold()
-            
+
             Text("Код магазина: \(viewModel.profileViewModel.userProfile.storeCode)")
                 .foregroundColor(.gray)
                 .bold()
-            
+
             Divider()
                 .background(.gray)
-            
+
             Text("Ваш менеджер \(viewModel.profileViewModel.userProfile.managerName)")
                 .foregroundColor(.black)
                 .bold()
-            
+
             Text(viewModel.profileViewModel.userProfile.managerPhoneNumber)
                 .foregroundColor(.colorGreen)
                 .bold()
-            
+
             Spacer()
-            
-            ordersButton
-            
+
+            VStack(spacing: 10) {
+                ordersButton
+                exitButton
+            }
+
             NavigationLink(destination: OrdersView(viewModel: viewModel), isActive: $showOrders) {
                 EmptyView()
             }
-        }
+            NavigationLink(destination: LoginView(viewModel: viewModel), isActive: $showLogin){
+                EmptyView()
+            }}
         .padding()
     }
     
@@ -132,6 +139,32 @@ struct ProfileInfo: View {
                 .cornerRadius(10)
         }
         .shadow(radius: 1)
+    }
+
+    private var exitButton: some View {
+        Button(action: {
+            showAlert = true
+        }) {
+            Text("Выйти из аккаунта")
+                .font(.subheadline)
+                .foregroundColor(.white)
+                .frame(maxWidth: .infinity)
+                .padding()
+                .background(.colorRed)
+                .cornerRadius(10)
+        }
+        .alert(isPresented: $showAlert) {
+            Alert(
+                title: Text("Выход из аккаунта"),
+                message: Text("Вы уверены, что хотите выйти из аккаунта?"),
+                primaryButton: .destructive(Text("Выйти")) {
+                    showLogin = true
+                    viewModel.authManager.logOut()
+                    print("Кнопка нажата")
+                },
+                secondaryButton: .cancel(Text("Отмена"))
+            )
+        }
     }
 
     

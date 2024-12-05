@@ -4,28 +4,28 @@
 //
 //  Created by Said Tapaev on 29.07.2024.
 //
-
 import SwiftUI
-
+ 
 struct CategoryProductsView: View {
     @StateObject var viewModel: MainViewModel
     @State private var selectedCategory: Category? = nil
     @State private var isFetching: Bool = false
     @State private var hasMoreData: Bool = true
     @State private var currentPage: Int = 1
-    @Environment(\.presentationMode) var presentationMode
-
+    
     var body: some View {
-        VStack {
-            if let category = selectedCategory {
-                backButton
-                productList(for: category)
-            } else {
-                categoryGrid
+        ScrollView {
+            VStack {
+                if let category = selectedCategory {
+                    backButton
+                    productList(for: category)
+                } else {
+                    categoryGrid
+                }
             }
         }
     }
-
+ 
     private var backButton: some View {
         HStack {
             Button(action: {
@@ -39,17 +39,14 @@ struct CategoryProductsView: View {
                 }
             }
             .padding()
-
+ 
             Spacer()
         }
     }
-
+ 
     private func productList(for category: Category) -> some View {
-        ScrollView {
             LazyVStack {
-                let filteredProducts = category.id == 0
-                    ? viewModel.productViewModel.products
-                    : viewModel.productViewModel.products.filter { $0.category == category.id }
+                let filteredProducts = filteredProducts(for: category)
                 
                 if filteredProducts.isEmpty && !isFetching {
                     Text("Нет доступных продуктов для категории: \(category.name)")
@@ -61,23 +58,20 @@ struct CategoryProductsView: View {
                         onFavoriteToggle: { _ in }
                     )
                 }
-
+                
                 if isFetching {
                     ProgressView()
                         .padding()
                         .frame(maxWidth: .infinity, alignment: .center)
                 }
-
+                
                 if hasMoreData {
                     GeometryReader { proxy in
                         Color.clear
                             .frame(height: 1)
                             .onAppear {
-                                if !isFetching {
-                                    if proxy.frame(in: .global).maxY <= UIScreen.main.bounds.height {
-                                        print("Загружаем следующую страницу... Текущая страница: \(currentPage)")
-                                        loadMoreProducts(for: category)
-                                    }
+                                if proxy.frame(in: .global).maxY <= UIScreen.main.bounds.height {
+                                    loadMoreProducts()
                                 }
                             }
                     }
@@ -85,41 +79,51 @@ struct CategoryProductsView: View {
                 }
             }
         }
-    }
-
-    private func loadMoreProducts(for category: Category) {
-        guard !isFetching else {
-            print("Загрузка уже в процессе, пропускаем запрос")
-            return
-        }
+ 
+    private func loadMoreProducts() {
+        guard !isFetching, hasMoreData else { return }
         
         isFetching = true
-        print("Начинаем загрузку... Страница: \(currentPage), категория: \(category.name)")
-
-        viewModel.productViewModel.fetchProducts() { success in
+        viewModel.productViewModel.fetchProducts { success in
             DispatchQueue.main.async {
                 if success {
-                    print("Загрузка успешна. Страница \(currentPage) подгружена.")
-                    hasMoreData = viewModel.productViewModel.baseURL != nil
-                    currentPage += 1
+                    if viewModel.productViewModel.baseURL == nil {
+                        hasMoreData = false
+                    }
                 } else {
-                    print("Ошибка при загрузке. Остановили пагинацию.")
+                    print("Не удалось загрузить следующую страницу")
                     hasMoreData = false
                 }
                 isFetching = false
             }
         }
     }
-
+ 
+    private func loadInitialProducts() {
+        guard !isFetching else { return }
+        isFetching = true
+        
+        viewModel.productViewModel.fetchProducts { success in
+            DispatchQueue.main.async {
+                if !success {
+                    print("Не удалось загрузить продукты")
+                }
+            }
+        }
+    }
+    
+    private func filteredProducts(for category: Category) -> [Product] {
+        return category.id == 0
+            ? viewModel.productViewModel.products
+            : viewModel.productViewModel.products.filter { $0.category == category.id }
+    }
+ 
     private var categoryGrid: some View {
-        LazyVGrid(columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 1)], spacing: 10) {
+        LazyVGrid(columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)], spacing: 10) {
             ForEach(viewModel.categoryViewModel.categories, id: \.id) { category in
                 Button(action: {
                     selectedCategory = category
-                    currentPage = 1
-                    hasMoreData = true
-                    isFetching = false
-                    print("Категория выбрана: \(category.name)")
+                    loadInitialProducts()
                 }) {
                     CategoryCardView(category: category)
                 }

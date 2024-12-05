@@ -20,7 +20,7 @@ struct CategoryView: View {
                         Text("Нет доступных категорий")
                             .padding()
                     } else {
-                        CategoryProductsView(viewModel: viewModel)         
+                        CategoryProductsView(viewModel: viewModel)    
                     }
                 }
             }
