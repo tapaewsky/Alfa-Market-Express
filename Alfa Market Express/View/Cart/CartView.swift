@@ -8,10 +8,18 @@ import SwiftUI
 
 struct CartView: View {
     @ObservedObject var viewModel: MainViewModel
-    
+    @StateObject var networkMonitor: NetworkMonitor = NetworkMonitor()
+
     var body: some View {
-        CartMainView(viewModel: viewModel)
-            .navigationBarBackButtonHidden(true)
+        VStack {
+            if networkMonitor.isConnected {
+                CartMainView(viewModel: viewModel)
+                    .navigationBarBackButtonHidden(true)
+            } else {
+                NoInternetView(viewModel: viewModel)
+                    .padding()
+            }
+        }
     }
 }
 
