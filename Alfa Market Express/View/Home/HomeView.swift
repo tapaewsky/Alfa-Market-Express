@@ -9,27 +9,36 @@ import SwiftUI
 
 struct HomeView: View {
     @StateObject var viewModel: MainViewModel
+    @StateObject var networkMonitor: NetworkMonitor = NetworkMonitor()
+    
     @State private var isFetching: Bool = false
     @State private var hasMoreData: Bool = true
     @State private var currentPage: Int = 1
     
     var body: some View {
         NavigationView {
-            ZStack {
-                ScrollView(showsIndicators: false) {
+            ScrollView(showsIndicators: false) {
+                VStack {
                     SlidesCardView(viewModel: viewModel)
                     SearchBar(viewModel: viewModel)
-                    productList
-                        .padding(.vertical)
+                    
+                    if networkMonitor.isConnected {
+                        productList
+                            .padding(.vertical)
+                    } else {
+                        NoInternetView(viewModel: viewModel)
+                            .padding(.vertical)
+                    }
                 }
             }
             .navigationBarBackButtonHidden(true)
             .onAppear {
+                
                 loadInitialProducts()
             }
         }
     }
-
+    
     private var productList: some View {
         LazyVStack {
             if viewModel.productViewModel.products.isEmpty && !isFetching {
@@ -44,7 +53,7 @@ struct HomeView: View {
             }
             
             if isFetching {
-                ProgressView()
+                ProgressView("Загрузка...")
                     .padding()
                     .frame(maxWidth: .infinity, alignment: .center)
             }
@@ -83,12 +92,10 @@ struct HomeView: View {
         }
     }
     
-    private func loadInitialProducts() {
+    private func loadInitialProducts(isRefreshing: Bool = false) {
         guard !isFetching else { return }
         isFetching = true
-        
         let group = DispatchGroup()
-        
         group.enter()
         viewModel.productViewModel.fetchProducts { success in
             DispatchQueue.main.async {
@@ -108,7 +115,6 @@ struct HomeView: View {
                 group.leave()
             }
         }
-        
         group.notify(queue: .main) {
             isFetching = false
         }
