@@ -33,7 +33,6 @@ struct HomeView: View {
             }
             .navigationBarBackButtonHidden(true)
             .onAppear {
-                
                 loadInitialProducts()
             }
         }

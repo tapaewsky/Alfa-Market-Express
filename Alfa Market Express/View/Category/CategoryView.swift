@@ -9,23 +9,31 @@ import Kingfisher
 
 struct CategoryView: View {
     @StateObject var viewModel: MainViewModel
+    @StateObject var networkMonitor: NetworkMonitor = NetworkMonitor()
     @State var isFetching: Bool = false
+    
     var body: some View {
-            VStack {
-                HeaderView {
-                    SearchBar(viewModel: viewModel)
-                }
+        VStack {
+            HeaderView {
+                SearchBar(viewModel: viewModel)
+            }
+            
+            if networkMonitor.isConnected {
                 ScrollView {
                     if viewModel.categoryViewModel.categories.isEmpty && !isFetching {
                         Text("Нет доступных категорий")
                             .padding()
                     } else {
-                        CategoryProductsView(viewModel: viewModel)    
+                        CategoryProductsView(viewModel: viewModel)
                     }
                 }
+                .onAppear {
+                    loadCategories()
+                }
+            } else {
+                NoInternetView(viewModel: viewModel)
+                    .padding()
             }
-        .onAppear {
-            loadCategories()
         }
     }
 
