@@ -11,6 +11,7 @@ import Combine
 struct FavoritesView: View {
     @ObservedObject var viewModel: MainViewModel
     @State private var isFetching: Bool = false
+    @StateObject var networkMonitor: NetworkMonitor = NetworkMonitor()
 
     var body: some View {
         VStack {
@@ -19,21 +20,26 @@ struct FavoritesView: View {
             }
 
             ScrollView {
-                if viewModel.favoritesViewModel.favorites.isEmpty && !isFetching {
-                    Text("Нет избранных товаров")
-                        .padding()
-                        .foregroundColor(.gray)
-                } else {
-                    VStack {
-                        ForEach(viewModel.favoritesViewModel.favorites, id: \.id) { product in
-                            NavigationLink(destination: ProductDetailView(viewModel: viewModel, product: product)) {
-                                FavoritesCardView(product: product, viewModel: viewModel)
+                if networkMonitor.isConnected {
+                    if viewModel.favoritesViewModel.favorites.isEmpty && !isFetching {
+                        Text("Нет избранных товаров")
+                            .padding()
+                            .foregroundColor(.gray)
+                    } else {
+                        VStack {
+                            ForEach(viewModel.favoritesViewModel.favorites, id: \.id) { product in
+                                NavigationLink(destination: ProductDetailView(viewModel: viewModel, product: product)) {
+                                    FavoritesCardView(product: product, viewModel: viewModel)
+                                }
+                                .buttonStyle(PlainButtonStyle())
+                                .padding(.vertical, 2)
+                                .padding(.horizontal, 15)
                             }
-                            .buttonStyle(PlainButtonStyle())
-                            .padding(.vertical, 2)
-                            .padding(.horizontal, 15)
                         }
                     }
+                } else {
+                    NoInternetView(viewModel: viewModel)
+                        .padding()
                 }
             }
             .onAppear {
@@ -55,9 +61,3 @@ struct FavoritesView: View {
         }
     }
 }
-
-//struct FavoritesView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        FavoritesView(viewModel: MainViewModel(context: context))
-//    }
-//}
