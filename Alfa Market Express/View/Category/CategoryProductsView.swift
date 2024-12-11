@@ -4,82 +4,75 @@
 //
 //  Created by Said Tapaev on 29.07.2024.
 //
+
 import SwiftUI
- 
+
 struct CategoryProductsView: View {
     @StateObject var viewModel: MainViewModel
     @State private var selectedCategory: Category? = nil
     @State private var isFetching: Bool = false
     @State private var hasMoreData: Bool = true
     @State private var currentPage: Int = 1
+    @Environment(\.presentationMode) var presentationMode
     
     var body: some View {
-        ScrollView {
-            VStack {
-                if let category = selectedCategory {
-                    backButton
-                    productList(for: category)
-                } else {
-                    categoryGrid
-                }
-            }
-        }
-    }
- 
-    private var backButton: some View {
-        HStack {
-            Button(action: {
-                selectedCategory = nil
-            }) {
-                HStack {
-                    Image(systemName: "chevron.left")
-                        .foregroundColor(.colorGreen)
-                    Text("Назад")
-                        .foregroundColor(.black)
-                }
-            }
-            .padding()
- 
-            Spacer()
-        }
-    }
- 
-    private func productList(for category: Category) -> some View {
-            LazyVStack {
-                let filteredProducts = filteredProducts(for: category)
-                
-                if filteredProducts.isEmpty && !isFetching {
-                    Text("Нет доступных продуктов для категории: \(category.name)")
-                        .padding()
-                } else {
-                    ProductGridView(
-                        viewModel: viewModel,
-                        products: filteredProducts,
-                        onFavoriteToggle: { _ in }
-                    )
-                }
-                
-                if isFetching {
-                    ProgressView()
-                        .padding()
-                        .frame(maxWidth: .infinity, alignment: .center)
-                }
-                
-                if hasMoreData {
-                    GeometryReader { proxy in
-                        Color.clear
-                            .frame(height: 1)
-                            .onAppear {
-                                if proxy.frame(in: .global).maxY <= UIScreen.main.bounds.height {
-                                    loadMoreProducts()
-                                }
+        NavigationView {
+            ScrollView {
+                VStack {
+                    if let category = selectedCategory {
+                        HStack {
+                            CustomBackButton {
+                                selectedCategory = nil
                             }
+                            Spacer()
+                        }
+                        .padding()
+                        productList(for: category)
+                    } else {
+                        categoryGrid
                     }
-                    .frame(height: 1)
                 }
             }
+            .navigationBarHidden(true)
         }
- 
+    }
+    
+    private func productList(for category: Category) -> some View {
+        LazyVStack {
+            let filteredProducts = filteredProducts(for: category)
+            
+            if filteredProducts.isEmpty && !isFetching {
+                Text("Нет доступных продуктов для категории: \(category.name)")
+                    .padding()
+            } else {
+                ProductGridView(
+                    viewModel: viewModel,
+                    products: filteredProducts,
+                    onFavoriteToggle: { _ in }
+                )
+            }
+            
+            if isFetching {
+                ProgressView("Загрузка...")
+                    .padding()
+                    .frame(maxWidth: .infinity, alignment: .center)
+            }
+            
+            if hasMoreData {
+                GeometryReader { proxy in
+                    Color.clear
+                        .frame(height: 1)
+                        .onAppear {
+                            if proxy.frame(in: .global).maxY <= UIScreen.main.bounds.height {
+                                loadMoreProducts()
+                            }
+                        }
+                }
+                .frame(height: 1)
+            }
+        }
+    }
+    
     private func loadMoreProducts() {
         guard !isFetching, hasMoreData else { return }
         
@@ -98,32 +91,36 @@ struct CategoryProductsView: View {
             }
         }
     }
- 
-    private func loadInitialProducts() {
+    
+    private func loadInitialProducts(isRefreshing: Bool = false) {
         guard !isFetching else { return }
         isFetching = true
-        
+        let group = DispatchGroup()
+        group.enter()
         viewModel.productViewModel.fetchProducts { success in
             DispatchQueue.main.async {
                 if !success {
                     print("Не удалось загрузить продукты")
                 }
+                group.leave()
             }
+        }
+        group.notify(queue: .main) {
+            isFetching = false
         }
     }
     
     private func filteredProducts(for category: Category) -> [Product] {
         return category.id == 0
-            ? viewModel.productViewModel.products
-            : viewModel.productViewModel.products.filter { $0.category == category.id }
+        ? viewModel.productViewModel.products
+        : viewModel.productViewModel.products.filter { $0.category == category.id }
     }
- 
+    
     private var categoryGrid: some View {
         LazyVGrid(columns: [GridItem(.flexible(), spacing: 10), GridItem(.flexible(), spacing: 10)], spacing: 10) {
             ForEach(viewModel.categoryViewModel.categories, id: \.id) { category in
                 Button(action: {
                     selectedCategory = category
-                    loadInitialProducts()
                 }) {
                     CategoryCardView(category: category)
                 }
@@ -132,3 +129,4 @@ struct CategoryProductsView: View {
         .padding()
     }
 }
+

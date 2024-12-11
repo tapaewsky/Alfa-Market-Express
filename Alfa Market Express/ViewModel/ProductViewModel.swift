@@ -63,7 +63,6 @@ class ProductViewModel: ObservableObject {
                 return
             }
             
-            // Проверка статуса ответа
             guard let httpResponse = response as? HTTPURLResponse else {
                 print("Нет HTTP-ответа")
                 DispatchQueue.main.async {
