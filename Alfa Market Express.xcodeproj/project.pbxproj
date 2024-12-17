@@ -40,6 +40,7 @@
 		8F6FE4742CF20B6F0019F2DC /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F6FE4732CF20B6F0019F2DC /* Model.swift */; };
 		8F6FE4762CF22AFF0019F2DC /* CasheManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F6FE4752CF22AFF0019F2DC /* CasheManager.swift */; };
 		8F718C452CC829E4000A3FE6 /* CartItemCheckout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F718C442CC829E4000A3FE6 /* CartItemCheckout.swift */; };
+		8F76A4DF2D11B00A006FF1B5 /* NavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F76A4DE2D11B00A006FF1B5 /* NavigationController.swift */; };
 		8F7DFA462CC43044005715BB /* SearchViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F7DFA452CC43044005715BB /* SearchViewModel.swift */; };
 		8F9001322C8F1E22006654C3 /* CartViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F9001312C8F1E22006654C3 /* CartViewModel.swift */; };
 		8F9001342C8F28C1006654C3 /* FavoritesViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F9001332C8F28C1006654C3 /* FavoritesViewModel.swift */; };
@@ -112,6 +113,7 @@
 		8F6FE4732CF20B6F0019F2DC /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		8F6FE4752CF22AFF0019F2DC /* CasheManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CasheManager.swift; sourceTree = "<group>"; };
 		8F718C442CC829E4000A3FE6 /* CartItemCheckout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartItemCheckout.swift; sourceTree = "<group>"; };
+		8F76A4DE2D11B00A006FF1B5 /* NavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationController.swift; sourceTree = "<group>"; };
 		8F7DFA452CC43044005715BB /* SearchViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewModel.swift; sourceTree = "<group>"; };
 		8F9001312C8F1E22006654C3 /* CartViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartViewModel.swift; sourceTree = "<group>"; };
 		8F9001332C8F28C1006654C3 /* FavoritesViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FavoritesViewModel.swift; sourceTree = "<group>"; };
@@ -347,6 +349,7 @@
 				8F501BEB2CC0663A00280C3C /* customBackButton.swift */,
 				8F4366892CC316FB0074A475 /* ImagePicker.swift */,
 				8FBC06962D060D4000EB45DE /* NoItnernetView.swift */,
+				8F76A4DE2D11B00A006FF1B5 /* NavigationController.swift */,
 			);
 			path = Another;
 			sourceTree = "<group>";
@@ -513,6 +516,7 @@
 				8F4D1EFF2CB8930300DF89B8 /* SuccessfullOrderView.swift in Sources */,
 				8F55D7212CF8FDFE00106F52 /* ProductResponse.swift in Sources */,
 				8FFA9D7D2C78B0AD00115DFE /* AuthManager.swift in Sources */,
+				8F76A4DF2D11B00A006FF1B5 /* NavigationController.swift in Sources */,
 				8FFAD55F2CA214B800734F6D /* EnvironmentKeys.swift in Sources */,
 				8F6A23BB2C39740A005A3320 /* ProductRowView.swift in Sources */,
 				8FA2B1582CBF138B00B42241 /* SlideViewModel.swift in Sources */,
@@ -670,7 +674,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Alfa Market Express/Preview Content\"";
-				DEVELOPMENT_TEAM = 3Y4SDXRXUW;
+				DEVELOPMENT_TEAM = JA4U3U99PS;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Alfa Market Express/Info.plist";
@@ -690,7 +694,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.AlfaMarketExpress;
+				PRODUCT_BUNDLE_IDENTIFIER = com.AlfaMarketExpres;
 				PRODUCT_NAME = "Alfa Marker Express";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
@@ -712,7 +716,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Alfa Market Express/Preview Content\"";
-				DEVELOPMENT_TEAM = 3Y4SDXRXUW;
+				DEVELOPMENT_TEAM = JA4U3U99PS;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "Alfa Market Express/Info.plist";
@@ -732,7 +736,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.AlfaMarketExpress;
+				PRODUCT_BUNDLE_IDENTIFIER = com.AlfaMarketExpres;
 				PRODUCT_NAME = "Alfa Marker Express";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
 				SUPPORTS_MACCATALYST = NO;
