@@ -5,6 +5,7 @@
 //  Created by Said Tapaev on 06.07.2024.
 //
 
+
 import SwiftUI
 
 struct HomeView: View {
@@ -17,17 +18,17 @@ struct HomeView: View {
     
     var body: some View {
         NavigationView {
-            ScrollView(showsIndicators: false) {
+            RefreshableScrollView(refreshAction: {
+                await refreshData()
+            }) {
                 VStack {
                     SlidesCardView(viewModel: viewModel)
                     SearchBar(viewModel: viewModel)
                     
                     if networkMonitor.isConnected {
                         productList
-                            .padding(.vertical)
                     } else {
                         NoInternetView(viewModel: viewModel)
-                            .padding(.vertical)
                     }
                 }
             }
@@ -91,10 +92,11 @@ struct HomeView: View {
         }
     }
     
-    private func loadInitialProducts(isRefreshing: Bool = false) {
+    private func loadInitialProducts() {
         guard !isFetching else { return }
         isFetching = true
         let group = DispatchGroup()
+        
         group.enter()
         viewModel.productViewModel.fetchProducts { success in
             DispatchQueue.main.async {
@@ -114,8 +116,45 @@ struct HomeView: View {
                 group.leave()
             }
         }
+        
         group.notify(queue: .main) {
             isFetching = false
+        }
+    }
+    
+    private func refreshData() async {
+        guard !isFetching else { return }
+        isFetching = true
+        
+        viewModel.productViewModel.resetData()
+        await loadInitialProducts()
+        
+        isFetching = false
+    }
+}
+
+struct RefreshableScrollView<Content: View>: View {
+    let refreshAction: () async -> Void
+    let content: Content
+
+    init(refreshAction: @escaping () async -> Void, @ViewBuilder content: () -> Content) {
+        self.refreshAction = refreshAction
+        self.content = content()
+    }
+
+    var body: some View {
+        ScrollView(showsIndicators: false) {
+            VStack {
+                Spacer()
+                    .frame(height: 0)
+                    .onAppear {
+                        UIRefreshControl.appearance().tintColor = .gray
+                    }
+                content
+            }
+        }
+        .refreshable {
+            await refreshAction()
         }
     }
 }
