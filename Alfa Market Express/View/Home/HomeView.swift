@@ -133,28 +133,3 @@ struct HomeView: View {
     }
 }
 
-struct RefreshableScrollView<Content: View>: View {
-    let refreshAction: () async -> Void
-    let content: Content
-
-    init(refreshAction: @escaping () async -> Void, @ViewBuilder content: () -> Content) {
-        self.refreshAction = refreshAction
-        self.content = content()
-    }
-
-    var body: some View {
-        ScrollView(showsIndicators: false) {
-            VStack {
-                Spacer()
-                    .frame(height: 0)
-                    .onAppear {
-                        UIRefreshControl.appearance().tintColor = .gray
-                    }
-                content
-            }
-        }
-        .refreshable {
-            await refreshAction()
-        }
-    }
-}

@@ -38,7 +38,6 @@ struct SlidesCardView: View {
                                 .scaledToFill()
                                 .frame(width: 300, height: 150)
                                 .cornerRadius(10)
-                                .overlay(Text("Invalid URL").foregroundColor(.white))
                         }
                     }
                 }

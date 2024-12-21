@@ -14,6 +14,7 @@ struct CategoryProductsView: View {
     @State private var hasMoreData: Bool = true
     @State private var currentPage: Int = 1
     @Environment(\.presentationMode) var presentationMode
+    @State private var scrollPosition: Int = 0
 
     var body: some View {
         VStack {
@@ -27,7 +28,14 @@ struct CategoryProductsView: View {
             }
             
             if let selectedCategory = selectedCategory {
-                productList(for: selectedCategory)
+                ScrollViewReader { proxy in
+                    productList(for: selectedCategory)
+                        .onAppear {
+                            DispatchQueue.main.asyncAfter(deadline: .now()) {
+                                proxy.scrollTo(0, anchor: .top)
+                            }
+                        }
+                }
             }
         }
     }
@@ -39,12 +47,14 @@ struct CategoryProductsView: View {
             if filteredProducts.isEmpty && !isFetching {
                 Text("Нет доступных продуктов для категории: \(category.name)")
                     .padding()
+                    .id(0)
             } else {
                 ProductGridView(
                     viewModel: viewModel,
                     products: filteredProducts,
                     onFavoriteToggle: { _ in }
                 )
+                .id(0)
             }
             
             if isFetching {

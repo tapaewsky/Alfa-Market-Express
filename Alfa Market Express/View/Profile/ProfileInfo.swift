@@ -41,14 +41,16 @@ struct ProfileInfo: View {
             if let storeImageUrl = viewModel.profileViewModel.userProfile.storeImageUrl,
                let url = URL(string: storeImageUrl) {
                 KFImage(url)
-                    .placeholder { ProgressView() }
                     .resizable()
-                    .aspectRatio(contentMode: .fill)
-                    .frame(height: 200)
-                    .cornerRadius(20)
-                    .frame(maxWidth: .infinity)
+                    .scaledToFill()
+                    .frame(width: 350, height: 200)
+                    .cornerRadius(10)
             } else {
-                EmptyView()
+                Image("placeholderStoreImage")
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: 350, height: 200)
+                    .cornerRadius(10)
             }
         }
     }

@@ -65,6 +65,7 @@
 		8FC4764F2C8C8EA200A9560C /* CatalogCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FC4764E2C8C8EA200A9560C /* CatalogCardView.swift */; };
 		8FC476512C8CA4F000A9560C /* CatalogGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FC476502C8CA4F000A9560C /* CatalogGridView.swift */; };
 		8FCF2F462C95AB74000B5EE1 /* CartProduct.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FCF2F452C95AB74000B5EE1 /* CartProduct.swift */; };
+		8FE28DC72D14850900F73896 /* RefreshableScrollView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FE28DC62D14850900F73896 /* RefreshableScrollView.swift */; };
 		8FED08B32C930EFD00094A3C /* CartItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FED08B22C930EFD00094A3C /* CartItemView.swift */; };
 		8FFA9D7B2C78B07E00115DFE /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FFA9D792C78B07E00115DFE /* LoginView.swift */; };
 		8FFA9D7D2C78B0AD00115DFE /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8FFA9D7C2C78B0AD00115DFE /* AuthManager.swift */; };
@@ -137,6 +138,7 @@
 		8FC4764E2C8C8EA200A9560C /* CatalogCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogCardView.swift; sourceTree = "<group>"; };
 		8FC476502C8CA4F000A9560C /* CatalogGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CatalogGridView.swift; sourceTree = "<group>"; };
 		8FCF2F452C95AB74000B5EE1 /* CartProduct.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartProduct.swift; sourceTree = "<group>"; };
+		8FE28DC62D14850900F73896 /* RefreshableScrollView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshableScrollView.swift; sourceTree = "<group>"; };
 		8FED08B22C930EFD00094A3C /* CartItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CartItemView.swift; sourceTree = "<group>"; };
 		8FFA9D792C78B07E00115DFE /* LoginView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		8FFA9D7C2C78B0AD00115DFE /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
@@ -350,6 +352,7 @@
 				8F4366892CC316FB0074A475 /* ImagePicker.swift */,
 				8FBC06962D060D4000EB45DE /* NoItnernetView.swift */,
 				8F76A4DE2D11B00A006FF1B5 /* NavigationController.swift */,
+				8FE28DC62D14850900F73896 /* RefreshableScrollView.swift */,
 			);
 			path = Another;
 			sourceTree = "<group>";
@@ -511,6 +514,7 @@
 				8F68E2CA2C9E29DD00EA86E9 /* FavoritesCardView.swift in Sources */,
 				8FCF2F462C95AB74000B5EE1 /* CartProduct.swift in Sources */,
 				8FC476512C8CA4F000A9560C /* CatalogGridView.swift in Sources */,
+				8FE28DC72D14850900F73896 /* RefreshableScrollView.swift in Sources */,
 				8F16D5A72C4876B900C3F429 /* FavoritesView.swift in Sources */,
 				8F6A23A12C396A5C005A3320 /* AlfaMarketExpressApp.swift in Sources */,
 				8F4D1EFF2CB8930300DF89B8 /* SuccessfullOrderView.swift in Sources */,
