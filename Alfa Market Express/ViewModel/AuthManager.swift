@@ -15,7 +15,7 @@ class AuthManager: ObservableObject {
 
     private let accessTokenKey = "accessToken"
     private let refreshTokenKey = "refreshToken"
-    private let baseUrl = "http://95.174.90.162:60/api"
+    private let baseUrl = "https://alfamarketexpress.ru/api"
 
     var accessToken: String? {
         UserDefaults.standard.string(forKey: accessTokenKey)

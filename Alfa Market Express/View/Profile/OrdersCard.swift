@@ -67,16 +67,16 @@ struct OrdersCard: View {
         print("\(order.status)")
         switch order.status
         {
-        case "Получен":
-            return "Получен"
-        case "Отказано":
-            return "Отказано"
-        case "Обработка":
-            return "Обработка"
-        case "Доставка":
-            return "Доставка"
-        case "Сборка":
-             return "Сборка"
+        case "получен":
+            return "получен"
+        case "отказано":
+            return "отказано"
+        case "обработка":
+            return "обработка"
+        case "доставка":
+            return "доставка"
+        case "сборка":
+             return "сборка"
         default:
             return "Неизвестно"
         }
@@ -84,15 +84,15 @@ struct OrdersCard: View {
 
     private var statusBackgroundColor: Color {
         switch order.status {
-        case "Получен":
+        case "получен":
             return Color.green
-        case "Отказано":
+        case "отказано":
             return Color.red
-        case "Обработка":
+        case "обработка":
             return Color.orange
-        case "Доставка":
+        case "доставка":
             return Color.blue
-        case "Сборка":
+        case "сборка":
             return Color.yellow
         default:
             return Color.gray

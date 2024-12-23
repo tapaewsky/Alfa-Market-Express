@@ -12,7 +12,7 @@ class SlideViewModel: ObservableObject {
     @Published var slides: [Slide] = []
     @Published var isLoading = false
     @Published var isError = false
-    private let baseURL = "http://95.174.90.162:60/api/sliders/"
+    private let baseURL = "https://alfamarketexpress.ru/api/sliders/"
     
     private let slidesCacheKey = "cachedSlides"
     private let lastUpdatedKey = "lastUpdatedSlides"

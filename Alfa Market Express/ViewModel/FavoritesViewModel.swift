@@ -13,7 +13,7 @@ class FavoritesViewModel: ObservableObject {
     @Published var errorMessage: String?
 
     private let authManager = AuthManager.shared
-    private let baseUrl = "http://95.174.90.162:60/api"
+    private let baseUrl = "https://alfamarketexpress.ru/api"
     
 
     func fetchFavorites(completion: @escaping (Bool) -> Void) {

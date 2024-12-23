@@ -10,7 +10,7 @@ import Combine
 
 class SearchViewModel: ObservableObject {
     @Published var searchText: String = ""
-    private let baseURL: String = "http://95.174.90.162:60/api/products/"
+    private let baseURL: String = "https://alfamarketexpress.ru/api/products/"
     private var cancellables = Set<AnyCancellable>()
     @Published var products: [Product] = []
     
