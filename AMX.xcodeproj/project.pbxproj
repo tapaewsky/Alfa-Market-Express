@@ -19,6 +19,7 @@
 		8F41E16D2D1B0C7C00A3C133 /* Product.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F41E1582D1B0C7C00A3C133 /* Product.swift */; };
 		8F41E16E2D1B0C7C00A3C133 /* UserProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F41E15B2D1B0C7C00A3C133 /* UserProfile.swift */; };
 		8F41E1D12D1B129600A3C133 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 8F41E1D02D1B129600A3C133 /* Kingfisher */; };
+		8F4A844E2D4FB4600024325E /* Registration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8F4A844D2D4FB4600024325E /* Registration.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +37,7 @@
 		8F41E1602D1B0C7C00A3C133 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		8F41E1D42D1B14A600A3C133 /* AMX.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = AMX.entitlements; sourceTree = "<group>"; };
 		8F41E1D52D1B19B900A3C133 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+		8F4A844D2D4FB4600024325E /* Registration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Registration.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -90,6 +92,7 @@
 				8F41E1592D1B0C7C00A3C133 /* ProductResponse.swift */,
 				8F41E15A2D1B0C7C00A3C133 /* Slide.swift */,
 				8F41E15B2D1B0C7C00A3C133 /* UserProfile.swift */,
+				8F4A844D2D4FB4600024325E /* Registration.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -205,6 +208,7 @@
 				8F41E1692D1B0C7C00A3C133 /* Category.swift in Sources */,
 				8F41E16A2D1B0C7C00A3C133 /* AMX.swift in Sources */,
 				8F41E16C2D1B0C7C00A3C133 /* Order.swift in Sources */,
+				8F4A844E2D4FB4600024325E /* Registration.swift in Sources */,
 				8F41E16D2D1B0C7C00A3C133 /* Product.swift in Sources */,
 				8F41E16E2D1B0C7C00A3C133 /* UserProfile.swift in Sources */,
 			);

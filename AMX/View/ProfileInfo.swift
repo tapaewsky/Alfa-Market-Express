@@ -80,9 +80,6 @@ struct ProfileInfo: View {
             .foregroundColor(.gray)
             .bold()
 
-            Text(viewModel.profileViewModel.userProfile.storeName)
-                .foregroundColor(.black)
-                .bold()
 
             Text("Адрес: ")
                 .foregroundColor(.gray)
@@ -105,15 +102,6 @@ struct ProfileInfo: View {
             Divider()
                 .background(.gray)
 
-            Text("Ваш менеджер \(viewModel.profileViewModel.userProfile.managerName)")
-                .foregroundColor(.black)
-                .bold()
-
-            Text(viewModel.profileViewModel.userProfile.managerPhoneNumber)
-                .foregroundColor(Color("colorGreen"))
-                .bold()
-
-            Spacer()
 
             VStack(spacing: 10) {
                 ordersButton

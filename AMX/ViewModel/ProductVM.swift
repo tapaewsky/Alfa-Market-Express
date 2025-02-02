@@ -14,12 +14,12 @@ class ProductViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var isError = false
     private let authManager = AuthManager.shared
-    var baseURL: String? = "https://alfamarketexpress.ru/api/products/"
+    var baseURL: String? = "https://77d4-194-164-235-45.ngrok-free.app/api/products/"
     
    
     func resetData() {
         products.removeAll()
-        baseURL = "https://alfamarketexpress.ru/api/products/"
+        baseURL = "https://77d4-194-164-235-45.ngrok-free.app/api/products/"
     }
 
     func fetchProducts(completion: @escaping (Bool) -> Void) {

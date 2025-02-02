@@ -14,7 +14,7 @@ class ProfileViewModel: ObservableObject {
     @Published var isError = false
     @Published var selectedImage: UIImage? = nil
     
-    private let baseURL = "https://alfamarketexpress.ru/api"
+    private let baseURL = "https://77d4-194-164-235-45.ngrok-free.app/api"
     private let authManager = AuthManager.shared
     
     init() {
@@ -23,13 +23,10 @@ class ProfileViewModel: ObservableObject {
             username: "",
             firstName: "",
             lastName: "",
-            storeName: "",
             storeImageUrl: "https://via.placeholder.com/150",
             storeAddress: "",
             storePhoneNumber: "",
             storeCode: "",
-            managerName: "",
-            managerPhoneNumber: "",
             remainingDebt: "",
             favoriteProducts: []
         )
@@ -39,7 +36,6 @@ class ProfileViewModel: ObservableObject {
         isLoading = true
         isError = false
         
-        
         guard let url = URL(string: "\(baseURL)/me/") else {
             isLoading = false
             isError = true
@@ -47,9 +43,18 @@ class ProfileViewModel: ObservableObject {
             return
         }
         
+        guard let accessToken = authManager.accessToken else {
+            // Проверка на nil для accessToken
+            isLoading = false
+            isError = true
+            print("Ошибка: отсутствует токен доступа.")
+            completion(false)
+            return
+        }
+        
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
-        request.setValue("Bearer \(authManager.accessToken!)", forHTTPHeaderField: "Authorization")
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
         
         print("Запрос на сервер: \(url.absoluteString)")
         
@@ -74,7 +79,6 @@ class ProfileViewModel: ObservableObject {
                 }
                 return
             }
-            
             
             guard let data = data else {
                 DispatchQueue.main.async {
@@ -136,7 +140,6 @@ class ProfileViewModel: ObservableObject {
         let textFields: [String: String] = [
             "first_name": userProfile.firstName,
             "last_name": userProfile.lastName,
-            "store_name": userProfile.storeName,
             "store_address": userProfile.storeAddress,
             "store_phone": userProfile.storePhoneNumber
         ]

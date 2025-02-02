@@ -12,20 +12,8 @@ struct LoginAndRegistration: View {
         NavigationView {
             VStack {
                 HStack {
-                    // Кнопка "Войти"
-                    NavigationLink(destination: LoginView()) {
-                        Text("Войти")
-                            .font(.title)
-                            .padding()
-                            .background(Color.blue)
-                            .foregroundColor(.white)
-                            .cornerRadius(10)
-                    }
-                    .padding()
-
-                    // Кнопка "Зарегистрироваться"
                     NavigationLink(destination: RegistrationView()) {
-                        Text("Зарегистрироваться")
+                        Text("Войти/Зарегистрироваться")
                             .font(.title)
                             .padding()
                             .background(Color.green)

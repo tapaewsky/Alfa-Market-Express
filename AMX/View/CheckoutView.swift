@@ -83,10 +83,6 @@ struct CheckoutView: View {
                     ProgressView()
                         .frame(maxWidth: .infinity, minHeight: 145)
                 } else {
-                    Text(viewModel.profileViewModel.userProfile.storeName)
-                        .foregroundColor(.black)
-                        .font(.system(size: 15, weight: .light))
-                        .lineLimit(1)
                     
                     Text("Код магазина: \(viewModel.profileViewModel.userProfile.storeCode)")
                         .foregroundColor(.black)
