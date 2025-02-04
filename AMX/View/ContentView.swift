@@ -56,6 +56,9 @@ struct ContentView: View {
                 .onReceive(NotificationCenter.default.publisher(for: Notification.Name("SwitchToHome"))) { _ in
                     selectedTab = 0
                 }
+                .onReceive(NotificationCenter.default.publisher(for: Notification.Name("SwitchToProfile"))) { _ in
+                    selectedTab = 4
+                }
         }
     }
 }

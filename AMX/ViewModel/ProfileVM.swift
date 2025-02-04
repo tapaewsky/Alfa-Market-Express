@@ -13,8 +13,10 @@ class ProfileViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var isError = false
     @Published var selectedImage: UIImage? = nil
+    @Published private var navigateToProfile = false
+    @Published private var navigateToRegistrationInfo = false
     
-    private let baseURL = "https://77d4-194-164-235-45.ngrok-free.app/api"
+    private let baseURL = "https://113b-194-164-235-45.ngrok-free.app/api"
     private let authManager = AuthManager.shared
     
     init() {
@@ -23,88 +25,112 @@ class ProfileViewModel: ObservableObject {
             username: "",
             firstName: "",
             lastName: "",
+            storeName: "",
             storeImageUrl: "https://via.placeholder.com/150",
             storeAddress: "",
             storePhoneNumber: "",
             storeCode: "",
+            managerName: "",
+            managerPhoneNumber: "",
             remainingDebt: "",
             favoriteProducts: []
         )
     }
     
     func fetchUserProfile(completion: @escaping (Bool) -> Void) {
-        isLoading = true
-        isError = false
-        
-        guard let url = URL(string: "\(baseURL)/me/") else {
-            isLoading = false
-            isError = true
-            completion(false)
-            return
+            print("Начинаем запрос для получения профиля...")
+            isLoading = true
+            isError = false
+            
+            guard let url = URL(string: "\(baseURL)/me/") else {
+                isLoading = false
+                isError = true
+                print("Ошибка: некорректный URL.")
+                completion(false)
+                return
+            }
+            
+            guard let accessToken = authManager.accessToken else {
+                isLoading = false
+                isError = true
+                print("Ошибка: отсутствует токен доступа.")
+                completion(false)
+                return
+            }
+            
+            var request = URLRequest(url: url)
+            request.httpMethod = "GET"
+            request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+            
+            print("Отправляем запрос на сервер: \(url.absoluteString)")
+            
+            URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
+                guard let self = self else { return }
+                
+                if let error = error {
+                    DispatchQueue.main.async {
+                        self.isLoading = false
+                        self.isError = true
+                        print("Ошибка сети: \(error.localizedDescription)")
+                        completion(false)
+                    }
+                    return
+                }
+                
+                guard let httpResponse = response as? HTTPURLResponse else {
+                    DispatchQueue.main.async {
+                        self.isLoading = false
+                        self.isError = true
+                        print("Ошибка: некорректный ответ от сервера.")
+                        completion(false)
+                    }
+                    return
+                }
+                
+                print("Код ответа от сервера: \(httpResponse.statusCode)")
+                
+                guard let data = data else {
+                    DispatchQueue.main.async {
+                        self.isLoading = false
+                        self.isError = true
+                        print("Ошибка: нет данных в ответе.")
+                        completion(false)
+                    }
+                    return
+                }
+                
+                do {
+                    print("Попытка декодировать данные в модель UserProfile.")
+                    let userProfile = try JSONDecoder().decode(UserProfile.self, from: data)
+                    DispatchQueue.main.async {
+                        print("Декодирование прошло успешно.")
+                        self.userProfile = userProfile
+                        self.isLoading = false
+                        
+                        // Проверяем, если данные профиля неполные
+                        if !self.userProfile.firstName.isEmpty ,
+                           !self.userProfile.lastName.isEmpty ,
+                           !self.userProfile.storeAddress.isEmpty {
+                            // Если данные полные, переходим к профилю
+                            self.navigateToProfile = true
+                        } else {
+                            // Если данные неполные, переходим к регистрации
+                            self.navigateToRegistrationInfo = true
+                        }
+                        completion(true)
+                    }
+                } catch {
+                    DispatchQueue.main.async {
+                        self.isLoading = false
+                        self.isError = true
+                        print("Ошибка при декодировании данных: \(error.localizedDescription)")
+                        completion(false)
+                    }
+                }
+            }.resume()
         }
-        
-        guard let accessToken = authManager.accessToken else {
-            // Проверка на nil для accessToken
-            isLoading = false
-            isError = true
-            print("Ошибка: отсутствует токен доступа.")
-            completion(false)
-            return
-        }
-        
-        var request = URLRequest(url: url)
-        request.httpMethod = "GET"
-        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
-        
-        print("Запрос на сервер: \(url.absoluteString)")
-        
-        URLSession.shared.dataTask(with: request) { [weak self] data, response, error in
-            guard let self = self else { return }
-            
-            if let error = error {
-                DispatchQueue.main.async {
-                    self.isLoading = false
-                    self.isError = true
-                    print("Ошибка сети: \(error.localizedDescription)")
-                    completion(false)
-                }
-                return
-            }
-            
-            guard let httpResponse = response as? HTTPURLResponse else {
-                DispatchQueue.main.async {
-                    self.isLoading = false
-                    self.isError = true
-                    completion(false)
-                }
-                return
-            }
-            
-            guard let data = data else {
-                DispatchQueue.main.async {
-                    self.isLoading = false
-                    self.isError = true
-                    completion(false)
-                }
-                return
-            }
-            
-            do {
-                let userProfile = try JSONDecoder().decode(UserProfile.self, from: data)
-                DispatchQueue.main.async {
-                    self.userProfile = userProfile
-                    self.isLoading = false
-                    completion(true)
-                }
-            } catch {
-                DispatchQueue.main.async {
-                    self.isLoading = false
-                    self.isError = true
-                    completion(false)
-                }
-            }
-        }.resume()
-    }
+    
+    
     
     func updateProfile(completion: @escaping (Bool) -> Void) {
         guard let url = URL(string: "\(baseURL)/me/update/"),
@@ -140,8 +166,9 @@ class ProfileViewModel: ObservableObject {
         let textFields: [String: String] = [
             "first_name": userProfile.firstName,
             "last_name": userProfile.lastName,
-            "store_address": userProfile.storeAddress,
-            "store_phone": userProfile.storePhoneNumber
+            "store_address": userProfile.storeAddress
+            
+//           , "store_phone": userProfile.storePhoneNumber
         ]
         
         for (key, value) in textFields {

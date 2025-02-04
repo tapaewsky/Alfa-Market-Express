@@ -159,11 +159,13 @@ struct CheckoutView: View {
     
     private func loadUserProfile() {
         isLoadingUserProfile = true
-        viewModel.profileViewModel.fetchUserProfile { success in
+        viewModel.profileViewModel.fetchUserProfile { success/*, userProfile*/ in
             DispatchQueue.main.async {
                 isLoadingUserProfile = false
                 if !success {
                     print("Ошибка загрузки профиля")
+                } else {
+                    // Здесь ты можешь работать с userProfile, если нужно
                 }
             }
         }

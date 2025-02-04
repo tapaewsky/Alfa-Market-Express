@@ -15,6 +15,7 @@ struct ProductCardView: View {
     @State private var quantity: Int = 1
     @State private var isFavorite: Bool = false
     @State private var isAddedToCart: Bool = false
+    @StateObject var authManager: AuthManager = .shared
 
     var body: some View {
         VStack(alignment: .leading) {
@@ -51,9 +52,13 @@ struct ProductCardView: View {
                         .scaledToFit()
                 }
             Button(action: {
-                Task {
-                    await someFunctionThatCallsToggleFavorite()
-                    isFavorite.toggle()
+                if authManager.isAuthenticated {
+                    Task {
+                        await someFunctionThatCallsToggleFavorite()
+                        isFavorite.toggle()
+                    }
+                } else {
+                    NotificationCenter.default.post(name: Notification.Name("SwitchToProfile"), object: nil)
                 }
             }) {
                 Image(isFavorite ? "favorites_green_heart" : "favorites_white_heart")
@@ -90,8 +95,14 @@ struct ProductCardView: View {
         VStack {
             HStack {
                 Button(action: {
-                    Task {
-                        await toggleCart()
+                    if authManager.isAuthenticated {
+                        // Добавить в корзину, если пользователь авторизован
+                        Task {
+                            await toggleCart()
+                        }
+                    } else {
+                        // Перенаправить на экран профиля, если пользователь не авторизован
+                        NotificationCenter.default.post(name: Notification.Name("SwitchToProfile"), object: nil)
                     }
                 }) {
                     Text(isAddedToCart ? "В корзине" : "В корзину")

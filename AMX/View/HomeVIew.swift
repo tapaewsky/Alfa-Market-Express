@@ -14,6 +14,7 @@ struct HomeView: View {
     @State private var isFetching: Bool = false
     @State private var hasMoreData: Bool = true
     @State private var currentPage: Int = 1
+
     
     var body: some View {
         NavigationView {

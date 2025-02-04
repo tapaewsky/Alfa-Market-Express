@@ -26,7 +26,7 @@ struct CustomButtonRegistration: View {
             Text(title)
                 .frame(maxWidth: .infinity)
                 .padding()
-                .background(Color.blue)
+                .background(Color("colorGreen"))
                 .foregroundColor(.white)
                 .cornerRadius(10)
         }
@@ -41,7 +41,8 @@ struct CustomTextFieldModifierRegistration: ViewModifier {
             .cornerRadius(8)
             .overlay(
                 RoundedRectangle(cornerRadius: 8)
-                    .stroke(Color.gray.opacity(0.5), lineWidth: 1)
-            )
+                    .stroke(Color("colorGreen")))
     }
 }
+
+

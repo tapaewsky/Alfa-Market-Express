@@ -14,6 +14,7 @@ struct CategoryProductsView: View {
     @State private var currentPage: Int = 1
     @Environment(\.presentationMode) var presentationMode
     @State private var scrollPosition: Int = 0
+   
 
     var body: some View {
         VStack {

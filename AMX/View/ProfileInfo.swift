@@ -9,7 +9,7 @@ import SwiftUI
 import Kingfisher
 
 struct ProfileInfo: View {
-    @ObservedObject var viewModel: MainViewModel
+    @StateObject var viewModel: MainViewModel
     @State private var isFetching: Bool = false
     @State private var showOrders = false
     @State private var showLogin = false
@@ -24,10 +24,9 @@ struct ProfileInfo: View {
                         .padding()
                 } else {
                     profileImage
-                    shopOwner
                     displayStoreInfo
                 }
-
+                
                 Spacer()
             }
         }
@@ -57,18 +56,7 @@ struct ProfileInfo: View {
     }
     
     
-    private var shopOwner: some View {
-        VStack {
-            Text("Владелец магазина")
-                .font(.title2)
-                .foregroundColor(.black)
-                .bold()
-            
-            Divider()
-                .background(.gray)
-        }
-        .padding()
-    }
+    
     
     
     private var displayStoreInfo: some View {
@@ -79,35 +67,35 @@ struct ProfileInfo: View {
             }
             .foregroundColor(.gray)
             .bold()
-
-
+            
+            
             Text("Адрес: ")
                 .foregroundColor(.gray)
                 .bold() +
             Text(viewModel.profileViewModel.userProfile.storeAddress)
                 .foregroundColor(Color("colorGreen"))
                 .bold()
-
+            
             Text("Телефон: ")
                 .foregroundColor(.gray)
                 .bold() +
             Text(viewModel.profileViewModel.userProfile.storePhoneNumber)
                 .foregroundColor(Color("colorGreen"))
                 .bold()
-
-            Text("Код магазина: \(viewModel.profileViewModel.userProfile.storeCode)")
+            
+            Text("ID: \(viewModel.profileViewModel.userProfile.storeCode)")
                 .foregroundColor(.gray)
                 .bold()
-
+            
             Divider()
                 .background(.gray)
-
-
+            
+            
             VStack(spacing: 10) {
                 ordersButton
                 exitButton
             }
-
+            
             NavigationLink(destination: OrdersView(viewModel: viewModel), isActive: $showOrders) {
                 EmptyView()
             }
@@ -131,7 +119,7 @@ struct ProfileInfo: View {
         }
         .shadow(radius: 1)
     }
-
+    
     private var exitButton: some View {
         Button(action: {
             showAlert = true
@@ -157,7 +145,7 @@ struct ProfileInfo: View {
             )
         }
     }
-
+    
     
     private func loadProfile() {
         isFetching = true
@@ -165,10 +153,17 @@ struct ProfileInfo: View {
             DispatchQueue.main.async {
                 isFetching = false
                 if success {
+                    // Логика при успешной загрузке профиля
                 } else {
-                    print("Не удалось загрузить профиль")
+//                    print("Не удалось загрузить профиль: \(String(describing: error))")
                 }
             }
         }
+    }
+}
+
+struct ProfileInfo_Preview: PreviewProvider {
+    static var previews: some View {
+        ProfileInfo(viewModel: MainViewModel())
     }
 }

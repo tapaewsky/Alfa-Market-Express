@@ -8,30 +8,65 @@
 import SwiftUI
 
 struct RegistrationInfo: View {
-    @ObservedObject var viewModel: ProfileViewModel
-    var onNext: () -> Void
-    
+    @StateObject var viewModel: ProfileViewModel
+    @State private var showError = false
+    @State private var isActive = false
+    @State private var isLoading = false // Показываем загрузку
+
     var body: some View {
         VStack(spacing: 20) {
-            Text("Шаг 3: Дополнительные данные")
+            Text("Информация о регистрации")
                 .font(.title2)
                 .bold()
-            
+
             CustomTextFieldRegistration(placeholder: "Имя", text: $viewModel.userProfile.firstName)
             CustomTextFieldRegistration(placeholder: "Фамилия", text: $viewModel.userProfile.lastName)
             CustomTextFieldRegistration(placeholder: "Адрес", text: $viewModel.userProfile.storeAddress)
-            
+
+            if showError {
+                Text("Пожалуйста, заполните все поля.")
+                    .font(.subheadline)
+                    .foregroundColor(.red)
+            }
+
+            if isLoading {
+                ProgressView()
+            }
+
             Spacer()
-            
-            CustomButtonRegistration(title: "Продолжить", action: {
-                // Убедитесь, что все обязательные данные заполнены, прежде чем продолжить
-                if !viewModel.userProfile.firstName.isEmpty && !viewModel.userProfile.lastName.isEmpty && !viewModel.userProfile.storeAddress.isEmpty {
-                    onNext() // Переход на профиль
-                } else {
-                    print("Пожалуйста, заполните все поля.")
-                }
-            })
+
+            NavigationLink(
+                destination: ProfileView(viewModel: MainViewModel())
+                    .navigationBarBackButtonHidden(true),
+                isActive: $isActive
+            ) {
+                CustomButtonRegistration(title: "Продолжить", action: {
+                    if isAllFieldsFilled() {
+                        showError = false
+                        isLoading = true
+
+                        viewModel.updateProfile { success in
+                            DispatchQueue.main.async {
+                                isLoading = false
+                                if success {
+                                    isActive = true
+                                } else {
+                                    showError = true
+                                }
+                            }
+                        }
+                    } else {
+                        showError = true
+                    }
+                })
+            }
         }
         .padding()
+    }
+
+    private func isAllFieldsFilled() -> Bool {
+        return !viewModel.userProfile.firstName.isEmpty &&
+               !viewModel.userProfile.lastName.isEmpty &&
+               !viewModel.userProfile.storeAddress.isEmpty
     }
 }

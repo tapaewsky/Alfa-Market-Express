@@ -13,7 +13,6 @@ struct ProductGridView: View {
     var onFavoriteToggle: (Product) -> Void
     
     var body: some View {
-        
         LazyVGrid(columns: [GridItem(.flexible(), spacing: 1), GridItem(.flexible(), spacing: 1)], spacing: 1) {
             ForEach(products) { product in
                 NavigationLink(destination: ProductDetailView(

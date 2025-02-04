@@ -86,11 +86,13 @@ struct SearchBar: View {
         viewModel.searchViewModel.products = []
     }
 }
+
 struct SearchResultsView: View {
     @Environment(\.presentationMode) var presentationMode
     @StateObject var viewModel: MainViewModel
     var products: [Product]
     var onFavoriteToggle: (Product) -> Void
+  
     
     var body: some View {
         ScrollView {
@@ -99,7 +101,11 @@ struct SearchResultsView: View {
                     .padding()
                     .foregroundColor(.gray)
             } else {
-                ProductGridView(viewModel: viewModel, products: products, onFavoriteToggle: onFavoriteToggle)
+                ProductGridView(
+                    viewModel: viewModel,
+                    products: products,
+                    onFavoriteToggle: onFavoriteToggle
+                )
             }
         }
         .navigationTitle("Результаты поиска")

@@ -15,6 +15,7 @@ struct ProductDetailView: View {
     @State private var isFavorite: Bool = false
     @State private var isAddedToCart: Bool = false
     @Environment(\.presentationMode) var presentationMode
+    @State var authManager: AuthManager = .shared
     
     var body: some View {
         ScrollView {
@@ -57,9 +58,13 @@ struct ProductDetailView: View {
                     .scaledToFit()
             }
             Button(action: {
-                Task {
-                    await someFunctionThatCallsToggleFavorite()
-                    isFavorite.toggle()
+                if authManager.isAuthenticated {
+                    Task {
+                        await someFunctionThatCallsToggleFavorite()
+                        isFavorite.toggle()
+                    }
+                } else {
+                    NotificationCenter.default.post(name: Notification.Name("SwitchToProfile"), object: nil)
                 }
             }) {
                 Image(isFavorite ? "favorites_green_heart" : "favorites_white_heart")
@@ -97,8 +102,12 @@ struct ProductDetailView: View {
     
     private var addToCartButton: some View {
         Button(action: {
-            Task {
-                await toggleCart()
+            if authManager.isAuthenticated {
+                Task {
+                    await toggleCart()
+                }
+            } else {
+                NotificationCenter.default.post(name: Notification.Name("SwitchToProfile"), object: nil)
             }
         }) {
             Text(isAddedToCart ? "Удалить из корзины" : "Добавить в корзину")
@@ -112,28 +121,29 @@ struct ProductDetailView: View {
         .padding(.horizontal)
     }
     
-    private var similarProductsSection: some View {
-        VStack(alignment: .leading) {
-            Text("Похожие товары")
-                .padding(.horizontal)
-                .bold()
-            
-            LazyVGrid(columns: [GridItem(.flexible(), spacing: 1), GridItem(.flexible(), spacing: 10)], spacing: 5) {
-                ForEach(viewModel.searchViewModel.filteredProducts) { product in
-                    NavigationLink(destination: ProductDetailView(viewModel: viewModel, product: product)) {
-                        ProductCardView(product: product, viewModel: viewModel, onFavoriteToggle: {
-                            Task {
-                                await viewModel.favoritesViewModel.toggleFavorite(for: product)
-                            }
-                        })
-                        .padding(5)
-                    }
-                    .buttonStyle(PlainButtonStyle())
-                }
-            }
-            .padding(.horizontal, 10)
-        }
-    }
+//    private var similarProductsSection: some View {
+//        VStack(alignment: .leading) {
+//            Text("Похожие товары")
+//                .padding(.horizontal)
+//                .bold()
+//            
+//            LazyVGrid(columns: [GridItem(.flexible(), spacing: 1), GridItem(.flexible(), spacing: 10)], spacing: 5) {
+//                ForEach(viewModel.searchViewModel.filteredProducts) { product in
+//                    NavigationLink(destination: ProductDetailView(viewModel: viewModel, product: product)) {
+//                        ProductCardView(product: product, viewModel: viewModel, onFavoriteToggle: {
+//                            Task {
+//                                await viewModel.favoritesViewModel.toggleFavorite(for: product)
+//                            }
+//                        }, showLoginView: <#Binding<Bool>#>)
+//                        .padding(5)
+//                    }
+//                    .buttonStyle(PlainButtonStyle())
+//                }
+//            }
+//            .padding(.horizontal, 10)
+//        }
+//    }
+    
     private func toggleCart() async {
         if isAddedToCart {
             await viewModel.cartViewModel.removeFromCard(product)

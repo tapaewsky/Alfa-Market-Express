@@ -11,7 +11,7 @@ class RegistrationVM: ObservableObject {
     @Published var registration: Registration
     @Published var isCodeSent: Bool = false
     @Published var isVerified: Bool = false
-    @Published var accessToken: String? // Свойство для хранения access token
+     var authManager: AuthManager = .shared
     
     init() {
         self.registration = Registration()
@@ -19,7 +19,7 @@ class RegistrationVM: ObservableObject {
 
     // Функция для отправки кода на сервер
     func sendCode(phoneNumber: String, completion: @escaping (Bool, String?) -> Void) {
-        guard let url = URL(string: "https://77d4-194-164-235-45.ngrok-free.app/api/send_code/") else {
+        guard let url = URL(string: "https://113b-194-164-235-45.ngrok-free.app/api/send_code/") else {
             completion(false, "Неверный URL")
             return
         }
@@ -58,7 +58,7 @@ class RegistrationVM: ObservableObject {
     }
 
     func verifyCode(phoneNumber: String, code: String, completion: @escaping (Bool, String?) -> Void) {
-        guard let url = URL(string: "https://77d4-194-164-235-45.ngrok-free.app/api/verify_code/") else {
+        guard let url = URL(string: "https://113b-194-164-235-45.ngrok-free.app/api/verify_code/") else {
             completion(false, "Неверный URL")
             return
         }
@@ -68,7 +68,7 @@ class RegistrationVM: ObservableObject {
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")
         
         // Логируем токен перед отправкой запроса
-        if let token = accessToken {
+        if let token = authManager.accessToken {
             print("Токен передан в заголовке: \(token)")  // Логирование токена
             request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization") // Добавляем токен в заголовок
         } else {
@@ -95,7 +95,6 @@ class RegistrationVM: ObservableObject {
                 return
             }
             
-            
             // Обработка ответа от сервера
             if let httpResponse = response as? HTTPURLResponse {
                 switch httpResponse.statusCode {
@@ -104,11 +103,21 @@ class RegistrationVM: ObservableObject {
                     if let data = data {
                         let responseXml = self.convertDataToXML(data) // Явное использование self
                         self.logResponseBody(responseXml)
+                        
+                        // Обрабатываем ответ, если получены новые токены
+                        if let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+                           let accessToken = json["access"] as? String,
+                           let refreshToken = json["refresh"] as? String {
+                            // Сохраняем токены в AuthManager
+                            AuthManager.shared.setTokens(accessToken: accessToken, refreshToken: refreshToken)
+                            DispatchQueue.main.async {
+                                self.isVerified = true
+                            }
+                            completion(true, "Код успешно подтвержден!")
+                        } else {
+                            completion(false, "Не удалось получить токены")
+                        }
                     }
-                    DispatchQueue.main.async {
-                        self.isVerified = true
-                    }
-                    completion(true, "Код успешно подтвержден!")
                 case 400...499:
                     completion(false, "Ошибка клиента. Код ошибки: \(httpResponse.statusCode)")
                 case 500...599:
@@ -122,41 +131,124 @@ class RegistrationVM: ObservableObject {
         }.resume()
     }
     
-    func checkUserExistence(phoneNumber: String, completion: @escaping (Bool, String?) -> Void) {
-        guard let url = URL(string: "https://77d4-194-164-235-45.ngrok-free.app/api/me") else {
-            completion(false, "Неверный URL")
+    func checkUserExistence(firstName: String, lastName: String, storeAddress: String, completion: @escaping (Bool, String?) -> Void) {
+        guard let url = URL(string: "https://113b-194-164-235-45.ngrok-free.app/api/me/"),
+              let accessToken = authManager.accessToken else {
+            print("Ошибка: некорректный URL или отсутствует токен доступа.")
+            completion(false, "Ошибка: нет токена")
             return
         }
         
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
         
-        // Добавляем токен в заголовок запроса
-        if let token = accessToken {
-            print("Токен передан в заголовке: \(token)")  // Логирование токена
-            request.addValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
-        } else {
-            print("Токен не найден в момент отправки запроса.")  // Логируем отсутствие токена
-            completion(false, "Токен не найден")
+        print("Отправляем запрос на проверку пользователя: \(url.absoluteString)")
+        
+        let boundary = UUID().uuidString
+        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+
+        var body = Data()
+        
+        let params: [String: String] = [
+            "first_name": firstName,
+            "last_name": lastName,
+            "store_address": storeAddress
+        ]
+        
+        for (key, value) in params {
+            print("Добавляем поле: \(key) = \(value)")
+            body.append("--\(boundary)\r\n".data(using: .utf8)!)
+            body.append("Content-Disposition: form-data; name=\"\(key)\"\r\n\r\n".data(using: .utf8)!)
+            body.append("\(value)\r\n".data(using: .utf8)!)
+        }
+        
+        body.append("--\(boundary)--\r\n".data(using: .utf8)!)
+        request.httpBody = body
+        
+        print("Тело запроса сформировано. Отправка данных.")
+        
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            DispatchQueue.main.async {
+                if let error = error {
+                    print("Ошибка сети при проверке пользователя: \(error.localizedDescription)")
+                    completion(false, error.localizedDescription)
+                    return
+                }
+                
+                if let httpResponse = response as? HTTPURLResponse {
+                    print("Код ответа сервера: \(httpResponse.statusCode)")
+                    
+                    if (200...299).contains(httpResponse.statusCode) {
+                        print("Пользователь найден.")
+                        completion(true, nil)
+                    } else {
+                        let responseString = String(data: data ?? Data(), encoding: .utf8) ?? "Нет данных"
+                        print("Пользователь не найден. Код ответа: \(httpResponse.statusCode), Ответ: \(responseString)")
+                        completion(false, responseString)
+                    }
+                } else {
+                    print("Ошибка: некорректный ответ от сервера.")
+                    completion(false, "Некорректный ответ от сервера")
+                }
+            }
+        }.resume()
+    }
+    
+    func updateProfile(storePhone: String, completion: @escaping (Bool, String?) -> Void) {
+        guard let url = URL(string: "https://113b-194-164-235-45.ngrok-free.app/api/me/update/"),
+              let accessToken = authManager.accessToken else {
+            print("Ошибка: некорректный URL или отсутствует токен доступа.")
+            completion(false, "Ошибка: нет токена")
             return
         }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "PATCH"
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        
+        print("Запрос на обновление профиля отправляется на сервер: \(url.absoluteString)")
+
+        let boundary = UUID().uuidString
+        request.setValue("multipart/form-data; boundary=\(boundary)", forHTTPHeaderField: "Content-Type")
+
+        var body = Data()
+        let fieldName = "store_phone"
+        
+        print("Добавляем поле: \(fieldName) = \(storePhone)")
+        
+        body.append("--\(boundary)\r\n".data(using: .utf8)!)
+        body.append("Content-Disposition: form-data; name=\"\(fieldName)\"\r\n\r\n".data(using: .utf8)!)
+        body.append("\(storePhone)\r\n".data(using: .utf8)!)
+        
+        body.append("--\(boundary)--\r\n".data(using: .utf8)!)
+        request.httpBody = body
+
+        print("Тело запроса сформировано. Отправка данных.")
 
         URLSession.shared.dataTask(with: request) { data, response, error in
-            if let error = error {
-                completion(false, error.localizedDescription)
-                return
-            }
-            
-            if let data = data {
-                // Обработка ответа от сервера
-                let userExists = self.parseUserExistence(data)
-                if userExists {
-                    completion(true, nil) // Пользователь существует
-                } else {
-                    completion(false, "Пользователь не найден") // Пользователь не найден
+            DispatchQueue.main.async {
+                if let error = error {
+                    print("Ошибка сети при обновлении профиля: \(error.localizedDescription)")
+                    completion(false, error.localizedDescription)
+                    return
                 }
-            } else {
-                completion(false, "Ошибка получения данных")
+
+                if let httpResponse = response as? HTTPURLResponse {
+                    print("Код ответа сервера: \(httpResponse.statusCode)")
+
+                    if (200...299).contains(httpResponse.statusCode) {
+                        print("Обновление профиля прошло успешно.")
+                        completion(true, nil)
+                    } else {
+                        let responseString = String(data: data ?? Data(), encoding: .utf8) ?? "Нет данных"
+                        print("Ошибка обновления профиля. Код ответа: \(httpResponse.statusCode), Ответ: \(responseString)")
+                        completion(false, responseString)
+                    }
+                } else {
+                    print("Ошибка: некорректный ответ от сервера.")
+                    completion(false, "Некорректный ответ от сервера")
+                }
             }
         }.resume()
     }
