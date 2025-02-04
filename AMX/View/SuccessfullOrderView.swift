@@ -25,6 +25,8 @@ struct SuccessfullOrderView: View {
                         NavigationLink(destination: CartView(viewModel: viewModel), isActive: $showCart) {
                             EmptyView()
                         }
+                            .navigationBarHidden(true)
+
                     )
                     .padding()
                     

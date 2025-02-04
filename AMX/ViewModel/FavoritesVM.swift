@@ -14,7 +14,8 @@ class FavoritesViewModel: ObservableObject {
     @Published var errorMessage: String?
 
     private let authManager = AuthManager.shared
-    private let baseUrl = "https://alfamarketexpress.ru/api"
+//    private let baseUrl = "https://alfamarketexpress.ru/api"
+    var baseURL: String = BaseURL.alfa
     
 
     func fetchFavorites(completion: @escaping (Bool) -> Void) {
@@ -25,7 +26,7 @@ class FavoritesViewModel: ObservableObject {
             return
         }
 
-        guard let url = URL(string: "\(baseUrl)/favorites/") else {
+        guard let url = URL(string: "\(baseURL)favorites/") else {
             print("Неверный URL")
             completion(false)
             return
@@ -80,7 +81,7 @@ class FavoritesViewModel: ObservableObject {
         isLoading = true
         defer { isLoading = false }
 
-        guard let url = URL(string: "\(baseUrl)/favorites/add_remove/") else {
+        guard let url = URL(string: "\(baseURL)favorites/add_remove/") else {
             errorMessage = "Неверный URL"
             return
         }

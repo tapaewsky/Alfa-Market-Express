@@ -12,6 +12,7 @@ class RegistrationVM: ObservableObject {
     @Published var isCodeSent: Bool = false
     @Published var isVerified: Bool = false
      var authManager: AuthManager = .shared
+    var baseURL: String = BaseURL.alfa
     
     init() {
         self.registration = Registration()
@@ -19,7 +20,7 @@ class RegistrationVM: ObservableObject {
 
     // Функция для отправки кода на сервер
     func sendCode(phoneNumber: String, completion: @escaping (Bool, String?) -> Void) {
-        guard let url = URL(string: "https://113b-194-164-235-45.ngrok-free.app/api/send_code/") else {
+        guard let url = URL(string: "\(baseURL)send_code/") else {
             completion(false, "Неверный URL")
             return
         }
@@ -58,7 +59,7 @@ class RegistrationVM: ObservableObject {
     }
 
     func verifyCode(phoneNumber: String, code: String, completion: @escaping (Bool, String?) -> Void) {
-        guard let url = URL(string: "https://113b-194-164-235-45.ngrok-free.app/api/verify_code/") else {
+        guard let url = URL(string: "\(baseURL)verify_code/") else {
             completion(false, "Неверный URL")
             return
         }
@@ -132,7 +133,7 @@ class RegistrationVM: ObservableObject {
     }
     
     func checkUserExistence(firstName: String, lastName: String, storeAddress: String, completion: @escaping (Bool, String?) -> Void) {
-        guard let url = URL(string: "https://113b-194-164-235-45.ngrok-free.app/api/me/"),
+        guard let url = URL(string: "\(baseURL)me/"),
               let accessToken = authManager.accessToken else {
             print("Ошибка: некорректный URL или отсутствует токен доступа.")
             completion(false, "Ошибка: нет токена")
@@ -196,7 +197,7 @@ class RegistrationVM: ObservableObject {
     }
     
     func updateProfile(storePhone: String, completion: @escaping (Bool, String?) -> Void) {
-        guard let url = URL(string: "https://113b-194-164-235-45.ngrok-free.app/api/me/update/"),
+        guard let url = URL(string: "\(baseURL)me/update/"),
               let accessToken = authManager.accessToken else {
             print("Ошибка: некорректный URL или отсутствует токен доступа.")
             completion(false, "Ошибка: нет токена")

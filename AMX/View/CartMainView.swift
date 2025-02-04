@@ -17,6 +17,8 @@ struct CartMainView: View {
     @State private var totalPrice: Double = 0
     @State private var productCount: Int = 0
     @State private var cardOffset: CGFloat = 0
+    @State var authManager: AuthManager = .shared
+    @State var showCheckoutView = false
 
     var body: some View {
         VStack(spacing: 0) {
@@ -150,15 +152,15 @@ struct CartMainView: View {
             
             Spacer()
 
-            NavigationLink(
-                destination: CheckoutView(
-                    viewModel: viewModel,
-                    selectedTab: $selectedTab,
-                    totalPrice: $totalPrice,
-                    productCount: $productCount,
-                    products: selectedOrAllProducts()
-                )
-            ) {
+            Button(action: {
+                if authManager.accessToken != nil {
+                    // Если токен существует, переходим в CheckoutView
+                    showCheckoutView = true
+                } else {
+                    // Если токен отсутствует, отправляем уведомление
+                    NotificationCenter.default.post(name: Notification.Name("SwitchToProfile"), object: nil)
+                }
+            }) {
                 Text("Оформить заказ")
                     .font(.callout)
                     .padding(10)
@@ -166,6 +168,20 @@ struct CartMainView: View {
                     .foregroundColor(.white)
                     .cornerRadius(15)
             }
+            .background(
+                NavigationLink(
+                    destination: CheckoutView(
+                        viewModel: viewModel,
+                        selectedTab: $selectedTab,
+                        totalPrice: $totalPrice,
+                        productCount: $productCount,
+                        products: selectedOrAllProducts()
+                    ),
+                    isActive: $showCheckoutView
+                ) {
+                    EmptyView()
+                }
+            )
             .disabled(viewModel.cartViewModel.cartProduct.isEmpty)
             .opacity(viewModel.cartViewModel.cartProduct.isEmpty ? 0.8 : 1)
         }
@@ -177,7 +193,7 @@ struct CartMainView: View {
             productCount = selectedOrAllProducts().count
         }
     }
-
+            
     private func selectedOrAllProducts() -> [Product] {
         let selectedProducts = viewModel.cartViewModel.cartProduct.filter {
             viewModel.cartViewModel.selectedProducts[$0.id] == true

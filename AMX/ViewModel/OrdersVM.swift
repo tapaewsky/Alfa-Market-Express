@@ -16,7 +16,9 @@ class OrdersViewModel: ObservableObject {
     @Published var isError = false
     private var cancellables = Set<AnyCancellable>()
     var authManager = AuthManager.shared
-    private let baseURL = "https://alfamarketexpress.ru/api/orders/"
+//    private let baseURL = "https://alfamarketexpress.ru/api/orders/"
+    
+    var baseURL: String = BaseURL.alfa + "orders/"
     
   
     init(cartViewModel: CartViewModel) {

@@ -109,11 +109,13 @@ struct PhoneNumberView: View {
     
     private var navigationLink: some View {
         NavigationLink(
-            destination: VerificationCodeView(viewModel: viewModel, phoneNumber: phoneNumberForServer, profileViewModel: ProfileViewModel()),
+            destination: VerificationCodeView(viewModel: MainViewModel(), phoneNumber: phoneNumberForServer),
             isActive: $isCodeSent
         ) {
             EmptyView()
         }
+        .navigationBarHidden(true)
+
     }
     
     var body: some View {

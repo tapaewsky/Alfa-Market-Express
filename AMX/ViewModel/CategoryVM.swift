@@ -12,8 +12,10 @@ class CategoryViewModel: ObservableObject {
     @Published var categories: [Category] = []
     @Published var isLoading = false
     @Published var isError = false
-    private let baseURL = "https://alfamarketexpress.ru/api/categories/"
-
+//    private let baseURL = "https://alfamarketexpress.ru/api/categories/"
+    
+    
+    var baseURL: String = BaseURL.alfa + "categories/"
     func fetchCategory(completion: @escaping (Bool) -> Void) {
         guard let url = URL(string: baseURL) else {
             print("Некорректный URL")

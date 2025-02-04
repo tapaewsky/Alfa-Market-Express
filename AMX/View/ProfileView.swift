@@ -13,11 +13,30 @@ struct ProfileView: View {
     @StateObject var networkMonitor: NetworkMonitor = NetworkMonitor()
     @StateObject var authManager: AuthManager = .shared
     
-    
     var body: some View {
         VStack(alignment: .leading) {
             if networkMonitor.isConnected {
-                if (authManager.accessToken != nil) {
+                if let _ = authManager.accessToken {
+                    HStack {
+                        Spacer()
+                        NavigationLink(destination: EditProfile(viewModel: viewModel)) {
+                            ZStack {
+                                Image(systemName: "person")
+                                    .resizable()
+                                    .frame(width: 30, height: 30)
+                                    .foregroundColor(.colorGreen)
+                                
+                                Image(systemName: "gearshape")
+                                    .resizable()
+                                    .frame(width: 10, height: 10)
+                                    .foregroundColor(.colorGreen)
+                                    .offset(x: 15, y: -5)
+                            }
+                        }
+                        .navigationBarHidden(true)
+                        .padding(.horizontal)
+                    }
+                    
                     ProfileInfo(viewModel: viewModel)
                 } else {
                     LoginAndRegistration()
@@ -26,10 +45,11 @@ struct ProfileView: View {
                 NoInternetView(viewModel: viewModel)
             }
         }
+        .navigationBarBackButtonHidden(true)
+        .navigationBarHidden(true)
         .padding()
     }
 }
-
 
 struct ProfileView_Previews: PreviewProvider {
     static var previews: some View {

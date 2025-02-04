@@ -12,7 +12,7 @@ struct ProfileInfo: View {
     @StateObject var viewModel: MainViewModel
     @State private var isFetching: Bool = false
     @State private var showOrders = false
-    @State private var showLogin = false
+    @State private var showProfile = false
     @State private var showAlert = false
     
     var body: some View {
@@ -87,6 +87,10 @@ struct ProfileInfo: View {
                 .foregroundColor(.gray)
                 .bold()
             
+            Text("Долг: \(viewModel.profileViewModel.userProfile.remainingDebt)")
+                .foregroundColor(.gray)
+                .bold()
+            
             Divider()
                 .background(.gray)
             
@@ -99,9 +103,13 @@ struct ProfileInfo: View {
             NavigationLink(destination: OrdersView(viewModel: viewModel), isActive: $showOrders) {
                 EmptyView()
             }
-            NavigationLink(destination: LoginView(viewModel: viewModel), isActive: $showLogin){
+            .navigationBarHidden(true)
+            
+            NavigationLink(destination: ProfileView(viewModel: viewModel), isActive: $showProfile){
                 EmptyView()
-            }}
+            }
+            .navigationBarHidden(true)
+            }
         .padding()
     }
     
@@ -137,7 +145,7 @@ struct ProfileInfo: View {
                 title: Text("Выход из аккаунта"),
                 message: Text("Вы уверены, что хотите выйти из аккаунта?"),
                 primaryButton: .destructive(Text("Выйти")) {
-                    showLogin = true
+                    showProfile = true
                     viewModel.authManager.logOut()
                     print("Кнопка нажата")
                 },
@@ -155,13 +163,13 @@ struct ProfileInfo: View {
                 if success {
                     // Логика при успешной загрузке профиля
                 } else {
-//                    print("Не удалось загрузить профиль: \(String(describing: error))")
+                    //                    print("Не удалось загрузить профиль: \(String(describing: error))")
                 }
             }
         }
     }
+    
 }
-
 struct ProfileInfo_Preview: PreviewProvider {
     static var previews: some View {
         ProfileInfo(viewModel: MainViewModel())

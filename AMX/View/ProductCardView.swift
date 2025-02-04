@@ -52,7 +52,7 @@ struct ProductCardView: View {
                         .scaledToFit()
                 }
             Button(action: {
-                if authManager.isAuthenticated {
+                if (authManager.accessToken != nil) {
                     Task {
                         await someFunctionThatCallsToggleFavorite()
                         isFavorite.toggle()
@@ -95,7 +95,7 @@ struct ProductCardView: View {
         VStack {
             HStack {
                 Button(action: {
-                    if authManager.isAuthenticated {
+                    if (authManager.accessToken != nil) {
                         // Добавить в корзину, если пользователь авторизован
                         Task {
                             await toggleCart()

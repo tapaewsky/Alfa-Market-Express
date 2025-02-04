@@ -32,6 +32,8 @@ struct OrdersView: View {
                                 .padding(.vertical, 2)
                                 .padding(.horizontal, 15)
                         }
+                        .navigationBarHidden(true)
+
                         .buttonStyle(PlainButtonStyle())
                     }
                 }

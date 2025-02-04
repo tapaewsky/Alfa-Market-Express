@@ -12,7 +12,8 @@ class SlideViewModel: ObservableObject {
     @Published var slides: [Slide] = []
     @Published var isLoading = false
     @Published var isError = false
-    private let baseURL = "https://alfamarketexpress.ru/api/sliders/"
+//    private let baseURL = "https://alfamarketexpress.ru/api/sliders/"
+    var baseURL: String = BaseURL.alfa + "sliders/"
     
     func fetchSlides(completion: @escaping (Bool) -> Void) {
         loadSlidesFromServer(completion: completion)

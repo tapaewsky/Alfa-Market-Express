@@ -8,33 +8,42 @@
 import SwiftUI
 
 struct RegistrationInfo: View {
-    @StateObject var viewModel: ProfileViewModel
+    @StateObject var viewModel = MainViewModel()
     @State private var showError = false
     @State private var isActive = false
-    @State private var isLoading = false // Показываем загрузку
+    @State private var isLoading = false
 
     var body: some View {
         VStack(spacing: 20) {
+            Text("Вход")
+                .font(.title2)
+                .bold()
+                .frame(maxWidth: .infinity, alignment: .center)
+            
+            Divider()
+                .frame(maxWidth: .infinity)
+                .background(Color.gray)
+            
             Text("Информация о регистрации")
                 .font(.title2)
                 .bold()
-
-            CustomTextFieldRegistration(placeholder: "Имя", text: $viewModel.userProfile.firstName)
-            CustomTextFieldRegistration(placeholder: "Фамилия", text: $viewModel.userProfile.lastName)
-            CustomTextFieldRegistration(placeholder: "Адрес", text: $viewModel.userProfile.storeAddress)
-
+            
+            CustomTextFieldRegistration(placeholder: "Имя", text: $viewModel.profileViewModel.userProfile.firstName)
+            CustomTextFieldRegistration(placeholder: "Фамилия", text: $viewModel.profileViewModel.userProfile.lastName)
+            CustomTextFieldRegistration(placeholder: "Адрес", text: $viewModel.profileViewModel.userProfile.storeAddress)
+            
             if showError {
                 Text("Пожалуйста, заполните все поля.")
                     .font(.subheadline)
                     .foregroundColor(.red)
             }
-
+            
             if isLoading {
                 ProgressView()
             }
-
+            
             Spacer()
-
+            
             NavigationLink(
                 destination: ProfileView(viewModel: MainViewModel())
                     .navigationBarBackButtonHidden(true),
@@ -44,8 +53,8 @@ struct RegistrationInfo: View {
                     if isAllFieldsFilled() {
                         showError = false
                         isLoading = true
-
-                        viewModel.updateProfile { success in
+                        
+                        viewModel.profileViewModel.updateProfile { success in
                             DispatchQueue.main.async {
                                 isLoading = false
                                 if success {
@@ -61,12 +70,19 @@ struct RegistrationInfo: View {
                 })
             }
         }
+        .navigationBarBackButtonHidden(true)
         .padding()
     }
-
+    
     private func isAllFieldsFilled() -> Bool {
-        return !viewModel.userProfile.firstName.isEmpty &&
-               !viewModel.userProfile.lastName.isEmpty &&
-               !viewModel.userProfile.storeAddress.isEmpty
+        !viewModel.profileViewModel.userProfile.firstName.isEmpty &&
+        !viewModel.profileViewModel.userProfile.lastName.isEmpty &&
+        !viewModel.profileViewModel.userProfile.storeAddress.isEmpty
+    }
+}
+
+struct RegistrationInfo_Preview: PreviewProvider {
+    static var previews: some View {
+        RegistrationInfo()
     }
 }

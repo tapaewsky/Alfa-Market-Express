@@ -18,8 +18,9 @@ class CartViewModel: ObservableObject {
     @Published var selectedProduct: Product?
     @Published var dataId: Int = 0
     
-    private let baseURL = "https://alfamarketexpress.ru/api/cart/"
+//    private let baseURL = "https://alfamarketexpress.ru/api/cart/"
     private var authManager = AuthManager.shared
+    var baseURL: String = BaseURL.alfa + "cart/"
     
     func fetchCart(completion: @escaping (Bool) -> Void) {
         guard let accessToken = authManager.accessToken else {

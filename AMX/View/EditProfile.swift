@@ -81,7 +81,6 @@ struct EditProfile: View {
             editTextField(placeholder: viewModel.profileViewModel.userProfile.firstName, text: $viewModel.profileViewModel.userProfile.firstName)
             editTextField(placeholder: viewModel.profileViewModel.userProfile.lastName, text: $viewModel.profileViewModel.userProfile.lastName)
             editTextField(placeholder: viewModel.profileViewModel.userProfile.storeAddress, text: $viewModel.profileViewModel.userProfile.storeAddress)
-            editTextField(placeholder: viewModel.profileViewModel.userProfile.storePhoneNumber, text: $viewModel.profileViewModel.userProfile.storePhoneNumber)
         }
     }
     
@@ -98,7 +97,6 @@ struct EditProfile: View {
                 await viewModel.profileViewModel.updateProfile { success in
                     DispatchQueue.main.async {
                         if success {
-                            // Проверяем, не было ли уже закрыто представление
                             if self.presentationMode.wrappedValue.isPresented {
                                 self.presentationMode.wrappedValue.dismiss()
                             }

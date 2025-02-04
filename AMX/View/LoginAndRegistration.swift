@@ -44,6 +44,7 @@ struct LoginAndRegistration: View {
                         .cornerRadius(12)
                         .padding(.horizontal)
                 }
+                .navigationBarHidden(true)
 
                 Spacer()
             }

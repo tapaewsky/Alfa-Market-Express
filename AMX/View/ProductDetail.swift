@@ -58,7 +58,7 @@ struct ProductDetailView: View {
                     .scaledToFit()
             }
             Button(action: {
-                if authManager.isAuthenticated {
+                if (authManager.accessToken != nil) {
                     Task {
                         await someFunctionThatCallsToggleFavorite()
                         isFavorite.toggle()
@@ -102,7 +102,7 @@ struct ProductDetailView: View {
     
     private var addToCartButton: some View {
         Button(action: {
-            if authManager.isAuthenticated {
+            if (authManager.accessToken != nil) {
                 Task {
                     await toggleCart()
                 }

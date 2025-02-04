@@ -16,8 +16,9 @@ class AuthManager: ObservableObject {
 
     private let accessTokenKey = "accessToken"
     private let refreshTokenKey = "refreshToken"
-    private let baseUrl = "https://113b-194-164-235-45.ngrok-free.app/api"
-
+//    private let baseUrl = "https://113b-194-164-235-45.ngrok-free.app/api"
+    
+    var baseURL: String = BaseURL.alfa
     var accessToken: String? {
         UserDefaults.standard.string(forKey: accessTokenKey)
     }
@@ -72,7 +73,7 @@ class AuthManager: ObservableObject {
             return
         }
 
-        let url = URL(string: "\(baseUrl)/token/refresh/")!
+        let url = URL(string: "\(baseURL)token/refresh/")!
         var request = URLRequest(url: url)
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
@@ -109,7 +110,7 @@ class AuthManager: ObservableObject {
     func authenticateUser(username: String, password: String, completion: @escaping (Bool) -> Void) {
         print("Authenticating user...")
 
-        guard let url = URL(string: "\(baseUrl)/token/") else {
+        guard let url = URL(string: "\(baseURL)token/") else {
             print("Invalid URL")
             completion(false)
             return
@@ -184,10 +185,40 @@ class AuthManager: ObservableObject {
     func logOut() {
         print("Logging out...")
         clearTokens()
+        clearAppCache()
         
         DispatchQueue.main.async {
             self.isAuthenticated = false
             self.isCheckingAuth = false
         }
     }
+    
+    func clearAppCache() {
+        // Очистка данных в UserDefaults
+        let userDefaults = UserDefaults.standard
+        let dictionary = userDefaults.dictionaryRepresentation()
+        for key in dictionary.keys {
+            userDefaults.removeObject(forKey: key)
+        }
+
+        // Очистка кэшированных файлов (например, изображения)
+        clearCachedFiles()
+
+    }
+
+    func clearCachedFiles() {
+        // Путь к кэшированным файлам (например, для изображений)
+        let fileManager = FileManager.default
+        if let cachesDirectory = fileManager.urls(for: .cachesDirectory, in: .userDomainMask).first {
+            do {
+                let files = try fileManager.contentsOfDirectory(at: cachesDirectory, includingPropertiesForKeys: nil)
+                for file in files {
+                    try fileManager.removeItem(at: file)
+                }
+            } catch {
+                print("Error clearing cached files: \(error)")
+            }
+        }
+    }
+
 }

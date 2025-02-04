@@ -18,7 +18,8 @@ class MainViewModel: ObservableObject {
     @Published var authManager = AuthManager.shared
     @Published var slideViewModel: SlideViewModel
     @Published var searchViewModel: SearchViewModel
-    
+    @Published var registrationViewModel: RegistrationVM
+
     init() {
         self.categoryViewModel = CategoryViewModel()
         self.productViewModel = ProductViewModel()
@@ -27,6 +28,8 @@ class MainViewModel: ObservableObject {
         self.profileViewModel = ProfileViewModel()
         self.slideViewModel = SlideViewModel()
         self.searchViewModel = SearchViewModel()
+        self.registrationViewModel = RegistrationVM()
+        
         self.ordersViewModel = OrdersViewModel(cartViewModel: self.cartViewModel)
     }
 }

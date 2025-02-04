@@ -10,9 +10,10 @@ import Combine
 
 class SearchViewModel: ObservableObject {
     @Published var searchText: String = ""
-    private let baseURL: String = "https://alfamarketexpress.ru/api/products/"
+//    private let baseURL: String = "https://alfamarketexpress.ru/api/products/"
     private var cancellables = Set<AnyCancellable>()
     @Published var products: [Product] = []
+    var baseURL: String = BaseURL.alfa + "products/"
     
     // Основная функция поиска продуктов
     func searchProducts(query: String, completion: @escaping () -> Void) {

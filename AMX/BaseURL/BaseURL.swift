@@ -9,5 +9,5 @@ import Foundation
 
 
 struct BaseURL {
-    static let alfa: URL = URL(string: "https://alfamarketexpress.ru/api")!
+    static let alfa = "https://cc65-194-164-235-45.ngrok-free.app/api/"
 }
