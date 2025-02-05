@@ -9,5 +9,5 @@ import Foundation
 
 
 struct BaseURL {
-    static let alfa = "https://cc65-194-164-235-45.ngrok-free.app/api/"
+    static let alfa = "https://4224-194-164-235-45.ngrok-free.app/api/"
 }

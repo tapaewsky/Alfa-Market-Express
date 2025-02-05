@@ -36,7 +36,6 @@ struct ProfileView: View {
                         .navigationBarHidden(true)
                         .padding(.horizontal)
                     }
-                    
                     ProfileInfo(viewModel: viewModel)
                 } else {
                     LoginAndRegistration()

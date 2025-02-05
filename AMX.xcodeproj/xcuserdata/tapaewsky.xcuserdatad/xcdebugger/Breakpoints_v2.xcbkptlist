@@ -56,7 +56,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "2C5F6721-2C47-4D7B-A917-CA9E5557E43A"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "AMX/ViewModel/Network.swift"
@@ -66,141 +66,13 @@
             endingLineNumber = "16"
             landmarkName = "NetworkMonitor"
             landmarkType = "3">
-            <Locations>
-               <Location
-                  uuid = "2C5F6721-2C47-4D7B-A917-CA9E5557E43A - a23c47552fddd36c"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "property wrapper backing initializer of AMX.NetworkMonitor.isConnected : Swift.Bool"
-                  moduleName = "AMX.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/tapaewsky/Library/Mobile%20Documents/com~apple~CloudDocs/Xcode/Projects/AMX/AMX/ViewModel/Network.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "0"
-                  endingLineNumber = "0">
-               </Location>
-               <Location
-                  uuid = "2C5F6721-2C47-4D7B-A917-CA9E5557E43A - 9eb67a48e94146"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "AMX.NetworkMonitor.isConnected.getter : Swift.Bool"
-                  moduleName = "AMX.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/tapaewsky/Library/Mobile%20Documents/com~apple~CloudDocs/Xcode/Projects/AMX/AMX/ViewModel/Network.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "0"
-                  endingLineNumber = "0">
-               </Location>
-               <Location
-                  uuid = "2C5F6721-2C47-4D7B-A917-CA9E5557E43A - 1c67ca51e18cbb42"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "AMX.NetworkMonitor.isConnected.setter : Swift.Bool"
-                  moduleName = "AMX.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/tapaewsky/Library/Mobile%20Documents/com~apple~CloudDocs/Xcode/Projects/AMX/AMX/ViewModel/Network.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "16"
-                  endingLineNumber = "16">
-               </Location>
-               <Location
-                  uuid = "2C5F6721-2C47-4D7B-A917-CA9E5557E43A - bc7b6a210095bd55"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "AMX.NetworkMonitor.isConnected.modify : Swift.Bool"
-                  moduleName = "AMX.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/tapaewsky/Library/Mobile%20Documents/com~apple~CloudDocs/Xcode/Projects/AMX/AMX/ViewModel/Network.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "16"
-                  endingLineNumber = "16">
-               </Location>
-               <Location
-                  uuid = "2C5F6721-2C47-4D7B-A917-CA9E5557E43A - df75c19da59fef3b"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "AMX.NetworkMonitor.isConnected.modify : Swift.Bool with unmangled suffix &quot;.resume.0&quot;"
-                  moduleName = "AMX.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///%3Ccompiler-generated%3E"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "0"
-                  endingLineNumber = "0">
-               </Location>
-               <Location
-                  uuid = "2C5F6721-2C47-4D7B-A917-CA9E5557E43A - e1a23ed89f6d323b"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "AMX.NetworkMonitor.$isConnected.getter : Combine.Published&lt;Swift.Bool&gt;.Publisher"
-                  moduleName = "AMX.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/tapaewsky/Library/Mobile%20Documents/com~apple~CloudDocs/Xcode/Projects/AMX/AMX/ViewModel/Network.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "0"
-                  endingLineNumber = "0">
-               </Location>
-               <Location
-                  uuid = "2C5F6721-2C47-4D7B-A917-CA9E5557E43A - 1b05d4d919b6c427"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "AMX.NetworkMonitor.$isConnected.setter : Combine.Published&lt;Swift.Bool&gt;.Publisher"
-                  moduleName = "AMX.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/tapaewsky/Library/Mobile%20Documents/com~apple~CloudDocs/Xcode/Projects/AMX/AMX/ViewModel/Network.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "16"
-                  endingLineNumber = "16">
-               </Location>
-               <Location
-                  uuid = "2C5F6721-2C47-4D7B-A917-CA9E5557E43A - a04421853320b536"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "AMX.NetworkMonitor.$isConnected.modify : Combine.Published&lt;Swift.Bool&gt;.Publisher"
-                  moduleName = "AMX.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/tapaewsky/Library/Mobile%20Documents/com~apple~CloudDocs/Xcode/Projects/AMX/AMX/ViewModel/Network.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "16"
-                  endingLineNumber = "16">
-               </Location>
-               <Location
-                  uuid = "2C5F6721-2C47-4D7B-A917-CA9E5557E43A - 24d2c5f6dcd679dc"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "AMX.NetworkMonitor.$isConnected.modify : Combine.Published&lt;Swift.Bool&gt;.Publisher with unmangled suffix &quot;.resume.0&quot;"
-                  moduleName = "AMX.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///%3Ccompiler-generated%3E"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "0"
-                  endingLineNumber = "0">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "8711C6B7-9CA4-4414-811B-0A5326F9A50B"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "AMX/ViewModel/Network.swift"
@@ -210,57 +82,13 @@
             endingLineNumber = "19"
             landmarkName = "init()"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "8711C6B7-9CA4-4414-811B-0A5326F9A50B - 7e13b1bf3b75824d"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "AMX.NetworkMonitor.init() -&gt; AMX.NetworkMonitor"
-                  moduleName = "AMX.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/tapaewsky/Library/Mobile%20Documents/com~apple~CloudDocs/Xcode/Projects/AMX/AMX/ViewModel/Network.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "19"
-                  endingLineNumber = "19">
-               </Location>
-               <Location
-                  uuid = "8711C6B7-9CA4-4414-811B-0A5326F9A50B - 2220c73d13679ca9"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Network.NWPath) -&gt; () in AMX.NetworkMonitor.init() -&gt; AMX.NetworkMonitor"
-                  moduleName = "AMX.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/tapaewsky/Library/Mobile%20Documents/com~apple~CloudDocs/Xcode/Projects/AMX/AMX/ViewModel/Network.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "19"
-                  endingLineNumber = "19">
-               </Location>
-               <Location
-                  uuid = "8711C6B7-9CA4-4414-811B-0A5326F9A50B - e7f9fed516a24751"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 @Swift.MainActor () -&gt; () in closure #1 (Network.NWPath) -&gt; () in AMX.NetworkMonitor.init() -&gt; AMX.NetworkMonitor"
-                  moduleName = "AMX.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/tapaewsky/Library/Mobile%20Documents/com~apple~CloudDocs/Xcode/Projects/AMX/AMX/ViewModel/Network.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "19"
-                  endingLineNumber = "19">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "A912E699-5294-4C7C-8E23-471CBCD47384"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "AMX/ViewModel/Network.swift"
@@ -270,43 +98,13 @@
             endingLineNumber = "20"
             landmarkName = "init()"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "A912E699-5294-4C7C-8E23-471CBCD47384 - 2220c73d13679d48"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Network.NWPath) -&gt; () in AMX.NetworkMonitor.init() -&gt; AMX.NetworkMonitor"
-                  moduleName = "AMX.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/tapaewsky/Library/Mobile%20Documents/com~apple~CloudDocs/Xcode/Projects/AMX/AMX/ViewModel/Network.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "20"
-                  endingLineNumber = "20">
-               </Location>
-               <Location
-                  uuid = "A912E699-5294-4C7C-8E23-471CBCD47384 - e7f9fed516a24751"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 @Swift.MainActor () -&gt; () in closure #1 (Network.NWPath) -&gt; () in AMX.NetworkMonitor.init() -&gt; AMX.NetworkMonitor"
-                  moduleName = "AMX.debug.dylib"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/tapaewsky/Library/Mobile%20Documents/com~apple~CloudDocs/Xcode/Projects/AMX/AMX/ViewModel/Network.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "19"
-                  endingLineNumber = "19">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "0C7DB461-89B6-43E7-AFC7-8EA64A8DA1C5"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "AMX/ViewModel/Network.swift"
@@ -322,7 +120,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "EC6EE409-F796-41D1-BA2E-9B81E1E75F32"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "AMX/ViewModel/Network.swift"
@@ -338,7 +136,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "0141FD99-CB62-4DBC-8B8E-8BF325902925"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "AMX/View/HomeVIew.swift"
@@ -354,7 +152,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "070E9857-349C-4623-B2B2-6A1F39F4A2CE"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "AMX/View/HomeVIew.swift"
@@ -370,7 +168,7 @@
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
             uuid = "0E38077E-5E5E-4A37-9A3B-8FBE490C876B"
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "AMX/View/HomeVIew.swift"

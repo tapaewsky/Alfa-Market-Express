@@ -12,7 +12,6 @@ class AuthManager: ObservableObject {
     static let shared = AuthManager()
 
     @Published var isAuthenticated: Bool = false
-    @Published var isCheckingAuth: Bool = true
 
     private let accessTokenKey = "accessToken"
     private let refreshTokenKey = "refreshToken"
@@ -35,36 +34,84 @@ class AuthManager: ObservableObject {
         DispatchQueue.global().async { [weak self] in
             guard let self = self else { return }
             
-            if let token = self.accessToken {
-                print("Access token exists: \(token)")
-                DispatchQueue.main.async {
-                    self.isAuthenticated = true
-                    self.isCheckingAuth = false
-                }
-            } else if let refreshToken = self.refreshToken {
-                print("Access token not found, trying to refresh...")
-                self.refreshAccessToken { success in
+            if let accessToken = self.accessToken {
+                // Проверяем валидность токена, делая запрос на сервер
+                self.verifyToken() { isValid in
                     DispatchQueue.main.async {
-                        self.isAuthenticated = success
-                        self.isCheckingAuth = false
-                        if success {
-                            print("Token successfully refreshed")
+                        if isValid {
+                            print("Access token is valid: \(accessToken)")
+                            self.isAuthenticated = true
                         } else {
-                            print("Failed to refresh token")
-                            self.clearTokens()
+                            print("Access token is invalid")
+                            self.isAuthenticated = false
+                            self.refreshAccessToken { success in
+                                DispatchQueue.main.async {
+                                    self.isAuthenticated = true
+                                    if success {
+                                        print("Token successfully refreshed")
+                                    } else {
+                                        print("Failed to refresh token")
+                                        self.clearTokens()
+                                    }
+                                }
+                            }
                         }
                     }
-                }
-            } else {
-                print("No access or refresh token found, showing LoginView")
-                DispatchQueue.main.async {
-                    self.clearTokens()
-                    self.isAuthenticated = false
-                    self.isCheckingAuth = false
                 }
             }
         }
     }
+
+    private func verifyToken( completion: @escaping (Bool) -> Void) {
+        guard let url = URL(string: "\(baseURL)me") else {
+            completion(false)
+            return
+        }
+        guard let accessToken = accessToken else {
+           
+            print("Ошибка: отсутствует токен доступа.")
+            completion(false)
+            return
+        }
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "GET"
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        
+        URLSession.shared.dataTask(with: request) { data, response, error in
+            if let error = error {
+                print("Error verifying token: \(error.localizedDescription)")
+                DispatchQueue.main.async {
+                    completion(false)
+                }
+                return
+            }
+            
+            guard let httpResponse = response as? HTTPURLResponse else {
+                DispatchQueue.main.async {
+                    completion(false)
+                }
+                return
+            }
+            
+            switch httpResponse.statusCode {
+            case 200:
+                DispatchQueue.main.async {
+                    completion(true)
+                }
+            case 401:
+                DispatchQueue.main.async {
+//                    self.clearTokens()
+                    completion(false)
+                }
+            default:
+                DispatchQueue.main.async {
+                    completion(false)
+                }
+            }
+        }.resume()
+    }
+
 
     func refreshAccessToken(completion: @escaping (Bool) -> Void) {
         guard let refreshToken = self.refreshToken else {
@@ -189,7 +236,6 @@ class AuthManager: ObservableObject {
         
         DispatchQueue.main.async {
             self.isAuthenticated = false
-            self.isCheckingAuth = false
         }
     }
     
