@@ -83,7 +83,7 @@ struct ProfileInfo: View {
                 .foregroundColor(Color("colorGreen"))
                 .bold()
             
-            Text("ID: \(viewModel.profileViewModel.userProfile.storeCode)")
+            Text("ID: \(viewModel.profileViewModel.userProfile.storeCode ?? "Не определен")")
                 .foregroundColor(.gray)
                 .bold()
             
