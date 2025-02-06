@@ -8,10 +8,10 @@
 import Foundation
 
 struct Slide: Codable, Identifiable {
-    let id: Int
-    let title: String
-    let image: String
-    let link: String
+    var id: Int
+    var title: String
+    var image: String
+    var link: String?
     var description: String?
     
     enum CodingKeys: String, CodingKey {

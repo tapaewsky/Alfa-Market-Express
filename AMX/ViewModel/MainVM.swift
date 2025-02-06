@@ -26,7 +26,7 @@ class MainViewModel: ObservableObject {
         self.favoritesViewModel = FavoritesViewModel()
         self.cartViewModel = CartViewModel()
         self.profileViewModel = ProfileViewModel()
-        self.slideViewModel = SlideViewModel()
+        self.slideViewModel = SlideViewModel(slides: [Slide]())
         self.searchViewModel = SearchViewModel()
         self.registrationViewModel = RegistrationVM()
         

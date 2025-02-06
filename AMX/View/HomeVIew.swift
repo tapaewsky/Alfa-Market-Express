@@ -23,6 +23,7 @@ struct HomeView: View {
             }) {
                 VStack {
                     SlidesCardView(viewModel: viewModel)
+                    
                     SearchBar(viewModel: viewModel)
                     
                     if networkMonitor.isConnected {
@@ -31,10 +32,11 @@ struct HomeView: View {
                         NoInternetView(viewModel: viewModel)
                     }
                 }
-            }
-            .navigationBarBackButtonHidden(true)
-            .onAppear {
-                loadInitialProducts()
+                .navigationBarHidden(true)
+                .navigationBarBackButtonHidden(true)
+                .onAppear {
+                    loadInitialProducts()
+                }
             }
         }
     }
@@ -112,6 +114,8 @@ struct HomeView: View {
             DispatchQueue.main.async {
                 if !success {
                     print("Не удалось загрузить слайды")
+                } else {
+                    print("Слайды успешно загружены")
                 }
                 group.leave()
             }

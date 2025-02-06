@@ -46,7 +46,7 @@ struct ProductCardView: View {
                         .cornerRadius(20)
                         .scaledToFit()
                 } else {
-                    Image("plaseholderProduct")
+                    Image("placeholderProduct")
                         .resizable()
                         .cornerRadius(20)
                         .scaledToFit()

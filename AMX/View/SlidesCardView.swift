@@ -13,45 +13,35 @@ struct SlidesCardView: View {
     
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            LazyHStack {
-                ForEach(viewModel.slideViewModel.slides, id: \.id) { singleSlide in
+            LazyHStack(spacing: 1) {
+                ForEach(viewModel.slideViewModel.slides, id: \.id) { slide in
                     Button(action: {
-                        let slideDetailView = SlidesView(slide: singleSlide)
+                        let slideDetailView = SlidesView(slide: slide)
                         let hostingController = UIHostingController(rootView: slideDetailView)
                         if let topController = getTopMostViewController() {
                             topController.present(hostingController, animated: true)
                         }
                     }) {
-                        if let imageUrl = URL(string: singleSlide.image) {
-                            KFImage(imageUrl)
-                                .placeholder {
-                                    Image("placeholderSlide")
-                                        .resizable()
-                                        .scaledToFill()
-                                        .frame(width: 300, height: 150)
-                                        .cornerRadius(10)
-                                }
-                                .resizable()
-                                .scaledToFill()
-                                .frame(width: 300, height: 150)
-                                .cornerRadius(10)
-                        } else {
-                            Image("placeholderSlide")
-                                .resizable()
-                                .scaledToFill()
-                                .frame(width: 300, height: 150)
-                                .cornerRadius(10)
+                        if let imageUrl = URL(string: slide.image) {
+                            ZStack {
+                                KFImage(imageUrl)
+                                    .resizable()
+                                    .scaledToFill()
+                                    .frame(height: 170)
+                                    .clipShape(RoundedRectangle(cornerRadius: 20))
+                            }
+                            .containerRelativeFrame(.horizontal)
+                            .clipShape(RoundedRectangle(cornerRadius: 20))
                         }
                     }
                 }
             }
             .scrollTargetLayout()
         }
+        .contentMargins(10)
         .scrollTargetBehavior(.viewAligned)
-        .safeAreaPadding(.horizontal, 50)
     }
-    
- 
+
     private func getTopMostViewController() -> UIViewController? {
         guard let rootViewController = UIApplication.shared.connectedScenes
                 .compactMap({ ($0 as? UIWindowScene)?.keyWindow?.rootViewController })
