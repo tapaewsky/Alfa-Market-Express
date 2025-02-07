@@ -14,7 +14,7 @@ struct SlidesCardView: View {
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             LazyHStack(spacing: 1) {
-                ForEach(viewModel.slideViewModel.slides, id: \.id) { slide in
+                ForEach(Array(repeating: viewModel.slideViewModel.slides, count: 100).flatMap { $0 }, id: \.id) { slide in
                     Button(action: {
                         let slideDetailView = SlidesView(slide: slide)
                         let hostingController = UIHostingController(rootView: slideDetailView)
