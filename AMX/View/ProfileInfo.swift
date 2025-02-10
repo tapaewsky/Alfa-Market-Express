@@ -145,7 +145,9 @@ struct ProfileInfo: View {
                 title: Text("Выход из аккаунта"),
                 message: Text("Вы уверены, что хотите выйти из аккаунта?"),
                 primaryButton: .destructive(Text("Выйти")) {
-                    showProfile = true
+//                    showProfile = true
+//                    NotificationCenter.default.post(name: Notification.Name("SwitchToHome"), object: nil)
+
                     viewModel.authManager.logOut()
                     print("Кнопка нажата")
                 },
