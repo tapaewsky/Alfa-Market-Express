@@ -16,20 +16,24 @@ struct CategoryView: View {
 
     var body: some View {
         VStack {
-            HeaderView {
+            
                 SearchBar(viewModel: viewModel)
-            }
-
+            
             if networkMonitor.isConnected {
                 ScrollView {
                     if viewModel.categoryViewModel.categories.isEmpty && !isFetching {
-                        Text("Нет доступных категорий")
+                        Text("Технические неполадки с сервером. Попробуйте позже.")
                             .padding()
                     } else {
                         if let selectedCategory = selectedCategory {
                             CategoryProductsView(viewModel: viewModel, selectedCategory: $selectedCategory)
                         } else {
                             categoryGridView
+                        }
+                        if isFetching {
+                            ProgressView("Загрузка...")
+                                .padding()
+                                .frame(maxWidth: .infinity, alignment: .center)
                         }
                     }
                 }
@@ -50,7 +54,6 @@ struct CategoryView: View {
             DispatchQueue.main.async {
                 isFetching = false
                 if success {
-                    // Categories loaded successfully
                 } else {
                     print("Не удалось загрузить категории")
                 }

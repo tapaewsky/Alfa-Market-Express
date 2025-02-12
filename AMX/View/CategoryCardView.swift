@@ -41,7 +41,7 @@ struct CategoryCardView: View {
                
         }
         .padding(0)
-        .background(Color("colorGray"))
+
         .cornerRadius(15)
     }
 }

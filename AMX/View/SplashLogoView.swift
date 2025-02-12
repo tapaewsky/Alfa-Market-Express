@@ -10,8 +10,6 @@ import SwiftUI
 struct SplashLogoView: View {
     var body: some View {
         ZStack {
-            Color("colorGray")
-                .edgesIgnoringSafeArea(.all)
             GeometryReader { geometry in
                 let logoSize: CGFloat = 250
                 Image("splashLogo")

@@ -211,55 +211,37 @@ import Combine
 
 struct VerificationCodeView: View {
     @State private var verificationCode: String = ""
-    @StateObject var viewModel = MainViewModel()
-    var phoneNumber: String
     @State private var errorMessage: String?
-    @State private var navigateToProfile = false
-    @State private var navigateToRegistrationInfo = false
-    @State private var navigateToHome = false
-    @FocusState private var isTextFieldFocused: Bool
     @State private var keyboardHeight: CGFloat = 0
-    @State private var cancellables = Set<AnyCancellable>()
+    
+    @StateObject var viewModel = MainViewModel()
+    
+    var phoneNumber: String
+    
+    @FocusState private var isTextFieldFocused: Bool
     
     @Environment(\.dismiss) var dismiss
     
+    // Navigation state variables
+    @State private var navigateToProfile = false
+    @State private var navigateToRegistrationInfo = false
+    @State private var navigateToHome = false
+    
     var body: some View {
         VStack {
-            header
+            HEADER
             
-            Spacer()
+            CONTENT
             
-            textFieldsSection
-            
-            verificationCodeCircle
-            
-            TextField("", text: $verificationCode)
-                .keyboardType(.numberPad)
-                .opacity(0)
-                .frame(width: 1, height: 1)
-                .focused($isTextFieldFocused)
-                .onChange(of: verificationCode) { newValue in
-                    if newValue.count == 6 {
-                        verifyCode()
-                        hideKeyboard()
-                    }
-                }
+            hiddenTextField
             
             errorMessageView
+            
+            Spacer()
         }
-        NavigationLink(destination: ProfileView(viewModel: viewModel), isActive: $navigateToProfile) {
-            Text("")
-        }
-        .navigationBarHidden(true)
-
+        .padding()
+        .padding(.bottom, keyboardHeight)
         .navigationBarBackButtonHidden(true)
-        
-        NavigationLink(destination: RegistrationInfo(viewModel: viewModel), isActive: $navigateToRegistrationInfo) {
-            Text("")
-        }
-        .navigationBarHidden(true)
-
-        
         .onAppear {
             isTextFieldFocused = true
             setupKeyboardNotifications()
@@ -269,9 +251,147 @@ struct VerificationCodeView: View {
             removeKeyboardNotifications()
             viewModel.profileViewModel.onProfileFetched = nil
         }
-        .navigationBarBackButtonHidden(true)
-        .padding(.bottom, keyboardHeight)
     }
+    
+    // MARK: - HEADER VIEW
+    
+    private var HEADER: some View {
+        VStack {
+            ZStack {
+                HStack {
+                    Button(action: { dismiss() }) {
+                        Image(systemName: "chevron.left")
+                            .foregroundColor(.colorGreen)
+                            .font(.headline)
+                    }
+                    Spacer()
+                }
+                Text("Вход")
+                    .font(.title3)
+                    .bold()
+                    .frame(maxWidth: .infinity, alignment: .center)
+            }
+            Divider()
+                .background(Color.gray)
+                .frame(width: 500)
+                .opacity(0.4)
+        }
+        .padding(.bottom)
+        .background(Color.white)
+    }
+    
+    // MARK: - CONTENT
+    
+    private var CONTENT: some View {
+        VStack(spacing: 16) {
+            textFieldsSection
+            verificationCodeCircle
+        }
+        .padding(.horizontal)
+    }
+    
+    // MARK: - TEXT FIELDS SECTION
+    
+    private var textFieldsSection: some View {
+        VStack(spacing: 20) {
+
+            Text("Введите код из СМС")
+                .bold()
+                .font(.title3)
+                .frame(maxWidth: .infinity, alignment: .leading)
+            
+           
+            VStack {
+                HStack {
+                    Text(formattedPhoneNumber(phoneNumber))
+                        .fixedSize(horizontal: true, vertical: false)
+                        .font(.headline)
+                        .foregroundColor(.black)
+                        .bold()
+                        .frame(maxWidth: .infinity, alignment: .leading)
+                    
+                    Spacer()
+                    
+                    Button("Изменить") {
+                        dismiss()
+                    }
+                    .font(.footnote)
+                    .bold()
+                    .frame(alignment: .trailing)
+                    .foregroundColor(.colorGreen)
+                }
+                
+                Text("Мы отправили смс на этот номер")
+                    .foregroundColor(.gray)
+                    .font(.subheadline)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+            }
+        }
+    }
+    
+    // MARK: - VERIFICATION CODE CIRCLE
+    
+    private var verificationCodeCircle: some View {
+        HStack(spacing: 20) {
+            ForEach(0..<6, id: \.self) { index in
+                if index < verificationCode.count {
+                    Text(String(verificationCode[verificationCode.index(verificationCode.startIndex, offsetBy: index)]))
+                        .font(.title)
+                        .frame(width: 40, height: 40)
+                        .bold()
+                        .foregroundColor(.black)
+                } else {
+                    Circle()
+                        .fill(Color.colorGray)
+                        .frame(width: 20, height: 20)
+                }
+            }
+        }
+        .padding()
+    }
+    
+    // MARK: - HIDDEN TEXT FIELD
+    
+    private var hiddenTextField: some View {
+        TextField("", text: $verificationCode)
+            .keyboardType(.numberPad)
+            .opacity(0)
+            .frame(width: 1, height: 1)
+            .focused($isTextFieldFocused)
+            .onChange(of: verificationCode) { newValue in
+                if newValue.count == 6 {
+                    verifyCode()
+                    hideKeyboard()
+                }
+            }
+    }
+    
+    // MARK: - ERROR MESSAGE VIEW
+    
+    private var errorMessageView: some View {
+        Group {
+            if let errorMessage = errorMessage {
+                Text(errorMessage)
+                    .foregroundColor(.red)
+                    .font(.subheadline)
+            }
+        }
+    }
+    
+    // MARK: - VERIFY CODE
+    
+    private func verifyCode() {
+        viewModel.registrationViewModel.verifyCode(phoneNumber: phoneNumber, code: verificationCode) { success, message in
+            if success {
+                self.viewModel.profileViewModel.fetchUserProfile(completion: { _ in })
+            } else {
+                errorMessage = "Неверный код, повторите попытку."
+                isTextFieldFocused = true
+            }
+        }
+    }
+    
+    // MARK: - SETUP KEYBOARD NOTIFICATIONS
     
     private func setupKeyboardNotifications() {
         NotificationCenter.default.addObserver(
@@ -295,9 +415,11 @@ struct VerificationCodeView: View {
         NotificationCenter.default.removeObserver(self, name: UIResponder.keyboardWillHideNotification, object: nil)
     }
     
+    // MARK: - FORMATTED PHONE NUMBER
+    
     private func formattedPhoneNumber(_ number: String) -> String {
         let digits = number.filter { $0.isNumber }
-        var formatted = "+7 (9"
+        var formatted = "+ 7 (9"
         let numbersOnly = digits.dropFirst().dropFirst()
         
         for (index, char) in numbersOnly.enumerated() {
@@ -308,100 +430,7 @@ struct VerificationCodeView: View {
         return formatted
     }
     
-    private var header: some View {
-        VStack {
-            ZStack {
-                HStack {
-                    Button(action: { dismiss() }) {
-                        Image(systemName: "chevron.left")
-                            .foregroundColor(.colorGreen)
-                            .font(.title3)
-                    }
-                    Spacer()
-                }
-                Text("Вход")
-                    .font(.title2)
-                    .bold()
-                    .frame(maxWidth: .infinity, alignment: .center)
-            }
-            Divider()
-                .background(Color.gray)
-                .frame(maxWidth: .infinity)
-        }
-        .background(Color.white)
-    }
-    
-    private var verificationCodeCircle: some View {
-        HStack(spacing: 20) {
-            ForEach(0..<6, id: \.self) { index in
-                if index < verificationCode.count {
-                    Text(String(verificationCode[verificationCode.index(verificationCode.startIndex, offsetBy: index)]))
-                        .font(.title)
-                        .frame(width: 40, height: 40)
-                        .bold()
-                        .foregroundColor(.black)
-                } else {
-                    Circle()
-                        .fill(Color.gray)
-                        .frame(width: 20, height: 20)
-                }
-            }
-        }
-        .padding()
-    }
-    
-    private var textFieldsSection: some View {
-        VStack(spacing: 8) {
-            Text("Введите код из SMS")
-                .font(.title2)
-                .bold()
-                .frame(maxWidth: .infinity, alignment: .leading)
-            
-            Text("Код был отправлен на номер:")
-                .foregroundColor(.gray)
-                .bold()
-                .frame(maxWidth: .infinity, alignment: .leading)
-            
-            HStack {
-                Text(formattedPhoneNumber(phoneNumber))
-                    .fixedSize(horizontal: true, vertical: false)
-                    .font(.title3)
-                    .foregroundColor(.black)
-                    .bold()
-                    .frame(maxWidth: .infinity, alignment: .leading)
-                
-                Spacer()
-                
-                Button("Изменить") {
-                    dismiss()
-                }
-                .frame(maxWidth: .infinity, alignment: .trailing)
-                .bold()
-                .foregroundColor(.colorGreen)
-            }
-        }
-    }
-    
-    private var errorMessageView: some View {
-        Group {
-            if let errorMessage = errorMessage {
-                Text(errorMessage)
-                    .foregroundColor(.red)
-                    .font(.subheadline)
-            }
-        }
-    }
-    
-    private func verifyCode() {
-        viewModel.registrationViewModel.verifyCode(phoneNumber: phoneNumber, code: verificationCode) { success, message in
-            if success {
-                self.viewModel.profileViewModel.fetchUserProfile(completion: { _ in })
-            } else {
-                errorMessage = "Неверный код, повторите попытку."
-                isTextFieldFocused = true
-            }
-        }
-    }
+    // MARK: - PROFILE FETCH CALLBACK
     
     private func setupProfileFetchCallback() {
         viewModel.profileViewModel.onProfileFetched = { success in
@@ -416,27 +445,15 @@ struct VerificationCodeView: View {
             !viewModel.profileViewModel.userProfile.storeAddress.isEmpty
 
         if userHasRequiredData {
-            // Оповещаем через NotificationCenter для перехода на Home
             navigateToProfile = true
         } else {
-            // Прямо меняем флаг для навигации в RegistrationInfo
             navigateToRegistrationInfo = true
         }
     }
-    
 
+    // MARK: - HIDE KEYBOARD EXTENSION
     
-    private func handleNavigationNotification(_ notification: Notification) {
-        if notification.name == Notification.Name("SwitchToHome") {
-            self.navigateToHome = true
-        } else if notification.name == Notification.Name("SwitchToRegistrationInfo") {
-            self.navigateToRegistrationInfo = true
-        }
-    }
-}
-
-extension View {
-    func hideKeyboard() {
+    private func hideKeyboard() {
         UIApplication.shared.sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
     }
 }

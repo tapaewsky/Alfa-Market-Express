@@ -9,7 +9,7 @@ import SwiftUI
 
 struct LoginAndRegistration: View {
     var body: some View {
-        NavigationView {
+//        NavigationView {
             VStack(spacing: 16) {
                 Text("Профиль")
                     .font(.largeTitle)
@@ -44,12 +44,12 @@ struct LoginAndRegistration: View {
                         .cornerRadius(12)
                         .padding(.horizontal)
                 }
-                .navigationBarHidden(true)
 
                 Spacer()
             }
+    
             .navigationBarTitleDisplayMode(.inline)
-        }
+//        }
     }
 }
 

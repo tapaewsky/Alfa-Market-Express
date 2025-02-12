@@ -16,9 +16,9 @@ struct FavoritesView: View {
 
     var body: some View {
         VStack {
-            HeaderView {
+            
                 SearchBar(viewModel: viewModel)
-            }
+            
 
             ScrollView {
                 if networkMonitor.isConnected {

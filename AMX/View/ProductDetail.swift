@@ -26,7 +26,7 @@ struct ProductDetailView: View {
                 productPrice
                 addToCartButton
             }
-            .background(Color("colorGray"))
+
             .padding(.vertical)
         }
         .navigationBarBackButtonHidden(true)

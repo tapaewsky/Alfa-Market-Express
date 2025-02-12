@@ -48,18 +48,19 @@ struct PhoneNumberView: View {
                     Button(action: { dismiss() }) {
                         Image(systemName: "chevron.left")
                             .foregroundColor(.colorGreen)
-                            .font(.title3)
+                            .font(.headline)
                     }
                     Spacer()
                 }
                 Text("Вход")
-                    .font(.title2)
+                    .font(.title3)
                     .bold()
                     .frame(maxWidth: .infinity, alignment: .center)
             }
             Divider()
                 .background(Color.gray)
-                .frame(maxWidth: .infinity)
+                .frame(width: 500)
+                .opacity(0.4)
         }
         .background(Color.white)
     }
@@ -127,6 +128,8 @@ struct PhoneNumberView: View {
             getCodeButton
             navigationLink
         }
+        .navigationBarHidden(true)
+
         .padding()
         .navigationBarBackButtonHidden(true)
     }
