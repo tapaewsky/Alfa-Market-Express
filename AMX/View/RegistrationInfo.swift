@@ -14,19 +14,21 @@ struct RegistrationInfo: View {
     @State private var isLoading = false
 
     var body: some View {
-        VStack(spacing: 20) {
+        VStack/*(spacing: 20)*/ {
             Text("Вход")
-                .font(.title2)
+                .font(.title3)
                 .bold()
                 .frame(maxWidth: .infinity, alignment: .center)
             
             Divider()
-                .frame(maxWidth: .infinity)
+                .frame(width: 500)
                 .background(Color.gray)
+                .opacity(0.4)
             
-            Text("Информация о регистрации")
-                .font(.title2)
+            Text("Данные клиента")
+                .font(.title3)
                 .bold()
+            
             
             CustomTextFieldRegistration(placeholder: "Имя", text: $viewModel.profileViewModel.userProfile.firstName)
             CustomTextFieldRegistration(placeholder: "Фамилия", text: $viewModel.profileViewModel.userProfile.lastName)

@@ -251,7 +251,22 @@ struct VerificationCodeView: View {
             removeKeyboardNotifications()
             viewModel.profileViewModel.onProfileFetched = nil
         }
-    }
+        NavigationLink(
+                        destination: ProfileView(viewModel: viewModel),
+                        isActive: $navigateToProfile
+                    ) {
+                        EmptyView()
+                    }
+                    .navigationBarBackButtonHidden(true)
+        
+                    NavigationLink(
+                        destination: RegistrationInfo(viewModel: MainViewModel()),
+                        isActive: $navigateToRegistrationInfo
+                    ) {
+                        EmptyView()
+                    }
+                }
+    
     
     // MARK: - HEADER VIEW
     
