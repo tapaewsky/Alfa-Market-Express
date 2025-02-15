@@ -92,7 +92,7 @@ struct CartItemView: View {
             )
         } else {
             return AnyView(
-                Image("plaseholderProduct")
+                Image("placeholderProduct")
                     .resizable()
                     .scaledToFill()
                     .frame(maxWidth: 115, maxHeight: 150)

@@ -20,13 +20,16 @@ struct SlidesView: View {
             
             KFImage(URL(string: slide.image))
                 .placeholder {
-                    ProgressView()
+                    Image("placeholderSlide")
+                        .resizable()
+                        .scaledToFill()
+                        .frame(height: 170)
+                        .clipShape(RoundedRectangle(cornerRadius: 20))
                 }
                 .resizable()
-                .cornerRadius(10)
-                .scaledToFit()
-                .clipped()
-                .padding()
+                .scaledToFill()
+                .frame(height: 170)
+                .clipShape(RoundedRectangle(cornerRadius: 20))
                 
             
             ScrollView {

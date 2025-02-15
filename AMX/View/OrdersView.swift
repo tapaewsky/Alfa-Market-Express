@@ -28,12 +28,10 @@ struct OrdersView: View {
                     Spacer()
                     ForEach(orders, id: \.id) { order in
                         NavigationLink(destination: OrdersDetail(order: order, viewModel: viewModel)) {
-                            OrdersCard(order: order)
+                            OrdersCard(order: order, cancelOrderAction: cancelOrder)
                                 .padding(.vertical, 2)
                                 .padding(.horizontal, 15)
                         }
-                        .navigationBarHidden(true)
-
                         .buttonStyle(PlainButtonStyle())
                     }
                 }
@@ -44,14 +42,26 @@ struct OrdersView: View {
                     .padding()
             }
         }
-        .navigationBarItems(leading: CustomBackButton {
-            self.presentationMode.wrappedValue.dismiss()
-        })
         .navigationBarBackButtonHidden(true)
+        .toolbar {
+            ToolbarItem(placement: .navigationBarLeading) {
+                CustomBackButton {
+                    self.presentationMode.wrappedValue.dismiss()
+                }
+            }
+        }
         .onAppear {
             loadOrders()
         }
     }
+
+
+    private func cancelOrder(order: Order) {
+        Task {
+            await viewModel.ordersViewModel?.cancelOrder(orderId: order.id)
+        }
+    }
+
 
     private func loadOrders() {
         isFetching = true
@@ -63,5 +73,11 @@ struct OrdersView: View {
                 }
             }
         }
+    }
+}
+
+struct OrdersView_Preview: PreviewProvider {
+    static var previews: some View {
+        OrdersView(viewModel: MainViewModel())
     }
 }

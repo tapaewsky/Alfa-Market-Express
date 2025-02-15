@@ -174,11 +174,11 @@
 				};
 			};
 			buildConfigurationList = 8F41E10D2D1B099300A3C133 /* Build configuration list for PBXProject "AMX" */;
-			developmentRegion = en;
+			developmentRegion = ru;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
-				Base,
+				ru,
 			);
 			mainGroup = 8F41E1092D1B099300A3C133;
 			minimizedProjectReferenceProxies = 1;

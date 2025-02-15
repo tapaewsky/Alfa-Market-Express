@@ -60,7 +60,9 @@ struct EditProfile: View {
                         .cornerRadius(20)
                         .frame(maxWidth: .infinity)
                 } else {
-                    Color.gray
+                    Image("placeholderStoreImage")
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
                         .frame(height: 200)
                         .cornerRadius(20)
                         .frame(maxWidth: .infinity)

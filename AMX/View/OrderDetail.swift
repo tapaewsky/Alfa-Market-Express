@@ -55,7 +55,7 @@ struct OrdersDetail: View {
                     .scaledToFit()
                     .frame(width: 75, height: 100)
             } else {
-                Image("plaseholderProduct")
+                Image("placeholderProduct")
                     .resizable()
                     .scaledToFit()
                     .frame(width: 75, height: 100)

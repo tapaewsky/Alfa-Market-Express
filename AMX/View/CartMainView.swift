@@ -182,6 +182,7 @@ struct CartMainView: View {
                     EmptyView()
                 }
             )
+            
             .disabled(viewModel.cartViewModel.cartProduct.isEmpty)
             .opacity(viewModel.cartViewModel.cartProduct.isEmpty ? 0.8 : 1)
         }
@@ -192,6 +193,9 @@ struct CartMainView: View {
             totalPrice = newValue
             productCount = selectedOrAllProducts().count
         }
+        .onAppear {
+            viewModel.profileViewModel.fetchUserProfile(completion: {_ in })
+                                                        }
     }
             
     private func selectedOrAllProducts() -> [Product] {

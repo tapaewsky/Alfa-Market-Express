@@ -13,7 +13,7 @@ struct SlidesCardView: View {
     
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            LazyHStack(spacing: 1) {
+            LazyHStack(spacing: 3) {
                 ForEach(Array(repeating: viewModel.slideViewModel.slides, count: 100).flatMap { $0 }, id: \.id) { slide in
                     Button(action: {
                         let slideDetailView = SlidesView(slide: slide)
@@ -25,6 +25,13 @@ struct SlidesCardView: View {
                         if let imageUrl = URL(string: slide.image) {
                             ZStack {
                                 KFImage(imageUrl)
+                                    .placeholder {
+                                        Image("placeholderSlide")
+                                            .resizable()
+                                            .scaledToFill()
+                                            .frame(height: 170)
+                                            .clipShape(RoundedRectangle(cornerRadius: 20))
+                                    }
                                     .resizable()
                                     .scaledToFill()
                                     .frame(height: 170)
@@ -32,15 +39,17 @@ struct SlidesCardView: View {
                             }
                             .containerRelativeFrame(.horizontal)
                             .clipShape(RoundedRectangle(cornerRadius: 20))
+                        
                         }
                     }
                 }
             }
             .scrollTargetLayout()
         }
-        .contentMargins(10)
+        .contentMargins(15)
         .scrollTargetBehavior(.viewAligned)
     }
+    
 
     private func getTopMostViewController() -> UIViewController? {
         guard let rootViewController = UIApplication.shared.connectedScenes

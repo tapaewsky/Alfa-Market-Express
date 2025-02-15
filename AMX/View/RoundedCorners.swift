@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-// Пользовательский модификатор для округления углов
+
 struct RoundedCorners: ViewModifier {
     var radius: CGFloat
     var corners: UIRectCorner
@@ -18,7 +18,7 @@ struct RoundedCorners: ViewModifier {
     }
 }
 
-// Структура для округления определенных углов
+
 struct RoundedCorner: Shape {
     var radius: CGFloat
     var corners: UIRectCorner
@@ -29,7 +29,7 @@ struct RoundedCorner: Shape {
     }
 }
 
-// Расширение для использования модификатора
+
 extension View {
     func cornerRadius(_ radius: CGFloat, corners: UIRectCorner) -> some View {
         self.modifier(RoundedCorners(radius: radius, corners: corners))

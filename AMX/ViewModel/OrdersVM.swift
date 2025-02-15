@@ -76,20 +76,34 @@ class OrdersViewModel: ObservableObject {
     }
     
     func cancelOrder(orderId: Int) async {
-        guard let url = URL(string: "\(baseURL)cancel/\(orderId)/") else { return }
+        guard let url = URL(string: "\(baseURL)cancel/\(orderId)/") else {
+            print("Invalid URL")
+            return
+        }
         
         var token = await authManager.getToken()
-        guard token != nil else { return }
+        guard token != nil else {
+            print("Failed to retrieve token")
+            return
+        }
         
         var request = createRequest(url: url, method: "PATCH", token: token!)
+        print("Sending request to: \(url)")
         
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
-            let _ = try JSONDecoder().decode(CancelOrderResponse.self, from: data)
+            if let httpResponse = response as? HTTPURLResponse {
+                print("Response status code: \(httpResponse.statusCode)")
+            }
+            
+            let decodedResponse = try JSONDecoder().decode(CancelOrderResponse.self, from: data)
+            print("Successfully decoded response: \(decodedResponse)")
+            
             DispatchQueue.main.async {
                 self.errorMessage = "Order successfully canceled."
             }
         } catch {
+            print("Error during request: \(error.localizedDescription)")
             DispatchQueue.main.async {
                 self.errorMessage = "Error canceling order: \(error.localizedDescription)"
             }

@@ -47,7 +47,7 @@ struct FavoritesCardView: View {
                     .frame(maxWidth: 115, maxHeight: 150)
                     .cornerRadius(15)
             } else {
-                Image("plaseholderProduct")
+                Image("placeholderProduct")
                     .resizable()
                     .scaledToFill()
                     .frame(maxWidth: 115, maxHeight: 150)

@@ -38,9 +38,7 @@ struct CartItemCheckout: View {
                 .lineLimit(1)
                 .foregroundColor(.black)
             
-            // Проверка скидки
             if let discountedPrice = cartProduct.product.discountedPrice, discountedPrice < Double(cartProduct.product.price) ?? 0.0 {
-                // Показываем цену со скидкой
                 HStack {
                     Text("\(Int(totalPriceForProductWithDiscounted)) ₽")
                         .font(.subheadline)
@@ -51,7 +49,6 @@ struct CartItemCheckout: View {
                         .strikethrough()
                 }
             } else {
-                // Показываем только оригинальную цену
                 Text("\(Int(totalPriceForProduct)) ₽")
                     .font(.subheadline)
                     .foregroundColor(Color("colorRed"))
@@ -88,7 +85,7 @@ struct ProductImageView: View {
                     .cornerRadius(15)
                 
             } else {
-                    Image("plaseholderProduct")
+                    Image("placeholderProduct")
                         .resizable()
                         .scaledToFill()
                         .frame(maxWidth: 115, maxHeight: 150)
