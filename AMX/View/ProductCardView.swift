@@ -68,6 +68,7 @@ struct ProductCardView: View {
             }
             .padding()
         }
+        
     }
   
     private var productDetails: some View {
