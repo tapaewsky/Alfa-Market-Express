@@ -12,7 +12,10 @@ struct EditProfile: View {
     @ObservedObject var viewModel: MainViewModel
     @State private var showImagePicker: Bool = false
     @Environment(\.presentationMode) var presentationMode
-
+    @State private var showAlert = false
+    @State private var showProfile = false
+    
+    
     var body: some View {
         ScrollView(showsIndicators: false) {
             VStack {
@@ -21,6 +24,7 @@ struct EditProfile: View {
                     .padding(.bottom)
                 formFields
                 saveButton
+                deleteProfileButton
             }
             .padding()
         }
@@ -118,5 +122,31 @@ struct EditProfile: View {
                 .cornerRadius(15)
         }
         .padding()
+    }
+    
+    private var deleteProfileButton: some View {
+        VStack {
+            Button("Удалить аккаунт") {
+                showAlert = true
+            }
+            .foregroundColor(.red)
+            .padding()
+            .alert("Вы уверены, что хотите удалить аккаунт?", isPresented: $showAlert) {
+                Button("Отмена", role: .cancel) { }
+                Button("Удалить", role: .destructive) {
+                    // Выполняем удаление профиля сначала
+                    viewModel.profileViewModel.deleteProfile { success in
+                        if success {
+                            self.presentationMode.wrappedValue.dismiss()
+                            print("Аккаунт успешно удалён.")
+                        } else {
+                            print("Ошибка при удалении аккаунта")
+                        }
+                    }
+                }
+            } message: {
+                Text("Это действие нельзя отменить")
+            }
+        }
     }
 }

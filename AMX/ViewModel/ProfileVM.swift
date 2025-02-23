@@ -299,4 +299,57 @@ class ProfileViewModel: ObservableObject {
                }
            }.resume()
        }
-   }
+    
+    func deleteProfile(completion: @escaping (Bool) -> Void) {
+        guard let url = URL(string: "\(baseURL)me/delete/"),
+              let accessToken = authManager.accessToken else {
+            print("Ошибка: некорректный URL или отсутствует токен доступа.")
+            completion(false)
+            return
+        }
+        
+        print("Запрос на удаление профиля: \(url.absoluteString)")
+        print("Токен доступа: \(accessToken)")
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = "DELETE"
+        request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
+        
+        let task = URLSession.shared.dataTask(with: request) { data, response, error in
+            // Проверка на наличие ошибки
+            if let error = error {
+                print("Ошибка запроса: \(error.localizedDescription)")
+                DispatchQueue.main.async {
+                    completion(false)
+                }
+                return
+            }
+            
+            // Проверка кода ответа
+            if let httpResponse = response as? HTTPURLResponse {
+                let statusCode = httpResponse.statusCode
+                if (200...299).contains(statusCode) {
+                    print("Запрос выполнен успешно с кодом \(statusCode)")
+                    DispatchQueue.main.async {
+                        // Здесь вызываем logout после успешного удаления профиля
+                        self.authManager.logOut()
+                        completion(true)
+                    }
+                } else {
+                    print("Ошибка сервера с кодом \(statusCode).")
+                    DispatchQueue.main.async {
+                        completion(false)
+                    }
+                }
+            } else {
+                print("Ошибка: Невозможно получить HTTP-ответ.")
+                DispatchQueue.main.async {
+                    completion(false)
+                }
+            }
+        }
+        
+        // Запуск запроса
+        task.resume()
+    }
+}

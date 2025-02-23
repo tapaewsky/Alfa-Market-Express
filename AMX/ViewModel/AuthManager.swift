@@ -28,6 +28,7 @@ class AuthManager: ObservableObject {
 
     init() {
         checkAuthentication()
+        print("Токен доступа: \(accessToken)")
     }
 
     func checkAuthentication() {
@@ -231,11 +232,17 @@ class AuthManager: ObservableObject {
 
     func logOut() {
         print("Logging out...")
-        clearTokens()
-        clearAppCache()
-        
-        DispatchQueue.main.async {
-            self.isAuthenticated = false
+
+        DispatchQueue.global(qos: .userInitiated).async {
+            // Очищаем токены и кэш в фоновом потоке
+            self.clearTokens()
+            self.clearAppCache()
+
+            // Все изменения состояния должны происходить в главном потоке
+            DispatchQueue.main.async {
+                self.isAuthenticated = false
+                print("Выход успешен")
+            }
         }
     }
     
