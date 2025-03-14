@@ -31,7 +31,7 @@ class ProfileViewModel: ObservableObject {
             storeImageUrl: "https://via.placeholder.com/150",
             storeAddress: "",
             storePhoneNumber: "",
-            storeCode: "",
+            storeCode: 0,
             managerName: "",
             managerPhoneNumber: "",
             remainingDebt: "",

@@ -14,7 +14,7 @@ struct SlidesCardView: View {
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
             LazyHStack(spacing: 3) {
-                ForEach(Array(repeating: viewModel.slideViewModel.slides, count: 100).flatMap { $0 }, id: \.id) { slide in
+                ForEach(viewModel.slideViewModel.slides, id: \.id) { slide in
                     Button(action: {
                         let slideDetailView = SlidesView(slide: slide)
                         let hostingController = UIHostingController(rootView: slideDetailView)
@@ -39,7 +39,6 @@ struct SlidesCardView: View {
                             }
                             .containerRelativeFrame(.horizontal)
                             .clipShape(RoundedRectangle(cornerRadius: 20))
-                        
                         }
                     }
                 }
@@ -49,6 +48,7 @@ struct SlidesCardView: View {
         .contentMargins(15)
         .scrollTargetBehavior(.viewAligned)
     }
+
     
 
     private func getTopMostViewController() -> UIViewController? {

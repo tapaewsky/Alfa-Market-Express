@@ -38,21 +38,11 @@ struct CartItemCheckout: View {
                 .lineLimit(1)
                 .foregroundColor(.black)
             
-            if let discountedPrice = cartProduct.product.discountedPrice, discountedPrice < Double(cartProduct.product.price) ?? 0.0 {
-                HStack {
-                    Text("\(Int(totalPriceForProductWithDiscounted)) ₽")
-                        .font(.subheadline)
-                        .foregroundColor(Color("colorRed"))
-                    Text("\(Int(totalPriceForProduct)) ₽")
-                        .font(.subheadline)
-                        .foregroundColor(.gray)
-                        .strikethrough()
-                }
-            } else {
+        
                 Text("\(Int(totalPriceForProduct)) ₽")
                     .font(.subheadline)
                     .foregroundColor(Color("colorRed"))
-            }
+            
             
             ProductDescriptionView(description: cartProduct.product.description)
             QuantityView(quantity: cartProduct.quantity)
@@ -62,11 +52,6 @@ struct CartItemCheckout: View {
     
     private var totalPriceForProduct: Double {
         Double(cartProduct.quantity) * (Double(cartProduct.product.price) ?? 0.0)
-    }
-    
-    private var totalPriceForProductWithDiscounted: Double {
-        let discountedPrice = cartProduct.product.discountedPrice ?? 0.0
-        return Double(cartProduct.quantity) * discountedPrice
     }
 }
 

@@ -79,7 +79,7 @@ struct ProductCardView: View {
                 .truncationMode(.tail)
                 .foregroundColor(.primary)
 
-            Text("Цена за 1 шт")
+            Text("Цена за 1 уп")
                 .foregroundStyle(.gray)
         }
     }
@@ -97,12 +97,10 @@ struct ProductCardView: View {
             HStack {
                 Button(action: {
                     if (authManager.accessToken != nil) {
-                        // Добавить в корзину, если пользователь авторизован
                         Task {
                             await toggleCart()
                         }
                     } else {
-                        // Перенаправить на экран профиля, если пользователь не авторизован
                         NotificationCenter.default.post(name: Notification.Name("SwitchToProfile"), object: nil)
                     }
                 }) {

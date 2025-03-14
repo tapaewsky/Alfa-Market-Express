@@ -13,11 +13,6 @@ struct SlidesView: View {
     
     var body: some View {
         VStack(alignment: .center) {
-            Text(slide.title)
-                .font(.largeTitle)
-                .fontWeight(.bold)
-                .multilineTextAlignment(.center)
-            
             KFImage(URL(string: slide.image))
                 .placeholder {
                     Image("placeholderSlide")
@@ -33,7 +28,7 @@ struct SlidesView: View {
                 
             
             ScrollView {
-                Text(slide.description ?? "Нет описания")
+                Text(slide.title ?? "Нет описания")
                     .font(.body)
                     .multilineTextAlignment(.leading)
                     .padding(.horizontal)

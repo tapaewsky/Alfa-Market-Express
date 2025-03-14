@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "splash_screen_no_bg.png",
+      "filename" : "app_icon_1024x1024_big.png",
       "idiom" : "universal",
       "scale" : "1x"
     },

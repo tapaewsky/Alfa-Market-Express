@@ -84,7 +84,7 @@ struct CheckoutView: View {
                         .frame(maxWidth: .infinity, minHeight: 145)
                 } else {
                     
-                    Text("ID: \(viewModel.profileViewModel.userProfile.storeCode ?? "Не определен")")
+                    Text("ID: \(viewModel.profileViewModel.userProfile.storeCode.map(String.init) ?? "Не определен")")
                         .foregroundColor(.black)
                         .font(.system(size: 15, weight: .light))
                         .lineLimit(1)

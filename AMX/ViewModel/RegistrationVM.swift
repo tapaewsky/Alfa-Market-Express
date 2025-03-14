@@ -11,7 +11,7 @@ class RegistrationVM: ObservableObject {
     @Published var registration: Registration
     @Published var isCodeSent: Bool = false
     @Published var isVerified: Bool = false
-     var authManager: AuthManager = .shared
+    var authManager: AuthManager = .shared
     var baseURL: String = BaseURL.alfa
     
     init() {

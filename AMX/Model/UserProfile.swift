@@ -16,8 +16,8 @@ struct UserProfile: Codable {
     var storeImageUrl: String?
     var storeAddress: String
     var storePhoneNumber: String
-    var storeCode: String?
-    var managerName: String
+    var storeCode: Int?
+    var managerName: String?
     var managerPhoneNumber: String
     var remainingDebt: String
     var favoriteProducts: [Int]

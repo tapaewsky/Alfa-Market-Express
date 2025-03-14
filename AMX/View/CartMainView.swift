@@ -146,7 +146,7 @@ struct CartMainView: View {
     
     private var footer: some View {
         HStack {
-            Text("\(Int(totalPrice)) ₽")
+            Text("\(String(format: "%.2f", totalPrice)) ₽")
                 .font(.callout)
                 .bold()
             
@@ -154,10 +154,8 @@ struct CartMainView: View {
 
             Button(action: {
                 if authManager.accessToken != nil {
-                    // Если токен существует, переходим в CheckoutView
                     showCheckoutView = true
                 } else {
-                    // Если токен отсутствует, отправляем уведомление
                     NotificationCenter.default.post(name: Notification.Name("SwitchToProfile"), object: nil)
                 }
             }) {
@@ -195,7 +193,7 @@ struct CartMainView: View {
         }
         .onAppear {
             viewModel.profileViewModel.fetchUserProfile(completion: {_ in })
-                                                        }
+        }
     }
             
     private func selectedOrAllProducts() -> [Product] {
@@ -220,10 +218,12 @@ struct CartMainView: View {
             productCount = viewModel.cartViewModel.cartProduct.count
         }
     }
+    
     func calculateTotalPrice() -> Double {
-        return viewModel.cartViewModel.cartProduct.reduce(0) { $0 + $1.getTotalPrice }
-        
-    }
+            return viewModel.cartViewModel.cartProduct.reduce(0) { $0 + $1.getTotalPrice
+            }
+        }
+    
     
     func updateTotalPrice() {
         if isSelectionMode {

@@ -169,7 +169,6 @@ struct HomeView: View {
             }
             .navigationBarBackButtonHidden(true)
             .onAppear {
-                
                 loadInitialProducts()
             }
         }
@@ -188,11 +187,11 @@ struct HomeView: View {
                 )
             }
             
-            if isFetching {
-                ProgressView("Загрузка...")
-                    .padding()
-                    .frame(maxWidth: .infinity, alignment: .center)
-            }
+//            if isFetching {
+//                ProgressView("Загрузка...")
+//                    .padding()
+//                    .frame(maxWidth: .infinity, alignment: .center)
+//            }
             
             if hasMoreData {
                 GeometryReader { proxy in
