@@ -175,35 +175,24 @@ struct HomeView: View {
     }
     
     private var productList: some View {
-        LazyVStack {
+        return LazyVGrid(columns: [GridItem(.flexible(), spacing: 1), GridItem(.flexible(), spacing: 1)], spacing: 1) {
             if viewModel.productViewModel.products.isEmpty && !isFetching {
                 Text("Нет доступных продуктов.")
                     .padding()
             } else {
-                ProductGridView(
-                    viewModel: viewModel,
-                    products: viewModel.productViewModel.products,
-                    onFavoriteToggle: { _ in }
-                )
-            }
-            
-//            if isFetching {
-//                ProgressView("Загрузка...")
-//                    .padding()
-//                    .frame(maxWidth: .infinity, alignment: .center)
-//            }
-            
-            if hasMoreData {
-                GeometryReader { proxy in
-                    Color.clear
-                        .frame(height: 1)
-                        .onAppear {
-                            if proxy.frame(in: .global).maxY <= UIScreen.main.bounds.height {
-                                loadMoreProducts()
-                            }
+                ForEach(viewModel.productViewModel.products, id: \.id) { product in
+                    ProductGridView(
+                        viewModel: viewModel,
+                        products: [product], // Каждую карточку передаем в качестве отдельного элемента
+                        onFavoriteToggle: { _ in }
+                    )
+                    .onAppear {
+                        // Проверка, если это последний продукт и нужно загрузить больше
+                        if product == viewModel.productViewModel.products.last && hasMoreData {
+                            loadMoreProducts()
                         }
+                    }
                 }
-                .frame(height: 1)
             }
         }
     }

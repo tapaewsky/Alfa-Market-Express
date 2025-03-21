@@ -13,7 +13,8 @@ struct ProductGridView: View {
     var onFavoriteToggle: (Product) -> Void
     
     var body: some View {
-        LazyVGrid(columns: [GridItem(.flexible(), spacing: 1), GridItem(.flexible(), spacing: 1)], spacing: 1) {
+        // Просто отобразим карточки без использования LazyVGrid здесь
+        VStack {
             ForEach(products) { product in
                 NavigationLink(destination: ProductDetailView(
                     viewModel: viewModel,
@@ -29,6 +30,5 @@ struct ProductGridView: View {
                     }
             }
         }
-        .padding(.horizontal, 10)
     }
 }

@@ -40,21 +40,65 @@ struct CategoryProductsView: View {
         }
     }
 
+//    private func productList(for category: Category) -> some View {
+//        LazyVStack {
+//            let filteredProducts = filteredProducts(for: category)
+//            
+//            if filteredProducts.isEmpty && !isFetching {
+//                Text("Нет доступных продуктов для категории: \(category.name)")
+//                    .padding()
+//                    .id(0)
+//            } else {
+//                ProductGridView(
+//                    viewModel: viewModel,
+//                    products: filteredProducts,
+//                    onFavoriteToggle: { _ in }
+//                )
+//                .id(0)
+//            }
+//            
+//            if isFetching {
+//                ProgressView("Загрузка...")
+//                    .padding()
+//                    .frame(maxWidth: .infinity, alignment: .center)
+//            }
+//            
+//            if hasMoreData {
+//                GeometryReader { proxy in
+//                    Color.clear
+//                        .frame(height: 1)
+//                        .onAppear {
+//                            if proxy.frame(in: .global).maxY <= UIScreen.main.bounds.height {
+//                                loadMoreProducts()
+//                            }
+//                        }
+//                }
+//                .frame(height: 1)
+//            }
+//        }
+//    }
     private func productList(for category: Category) -> some View {
-        LazyVStack {
+        return LazyVGrid(columns: [GridItem(.flexible(), spacing: 1), GridItem(.flexible(), spacing: 1)], spacing: 1) {
             let filteredProducts = filteredProducts(for: category)
             
             if filteredProducts.isEmpty && !isFetching {
-                Text("Нет доступных продуктов для категории: \(category.name)")
+                Text("Нет доступных продуктов.")
                     .padding()
                     .id(0)
             } else {
-                ProductGridView(
-                    viewModel: viewModel,
-                    products: filteredProducts,
-                    onFavoriteToggle: { _ in }
-                )
-                .id(0)
+                ForEach(filteredProducts, id: \.id) { product in
+                    ProductGridView(
+                        viewModel: viewModel,
+                        products: [product],
+                        onFavoriteToggle: { _ in }
+                    )
+                    .id(product.id)
+                    .onAppear {
+                        if product == filteredProducts.last && hasMoreData {
+                            loadMoreProducts()
+                        }
+                    }
+                }
             }
             
             if isFetching {
