@@ -30,11 +30,6 @@ struct CategoryView: View {
                         } else {
                             categoryGridView
                         }
-                        if isFetching {
-                            ProgressView("Загрузка...")
-                                .padding()
-                                .frame(maxWidth: .infinity, alignment: .center)
-                        }
                     }
                 }
                 .onAppear {
