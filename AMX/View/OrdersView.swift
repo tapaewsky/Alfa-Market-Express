@@ -21,8 +21,8 @@ struct OrdersView: View {
                     .padding()
             } else if let orders = viewModel.ordersViewModel?.orders, orders.isEmpty {
                 Text("Вы еще не сделали ни одного заказа.")
-                    .font(.headline)
                     .padding()
+                    .foregroundColor(.gray)
             } else if let orders = viewModel.ordersViewModel?.orders {
                 ScrollView {
                     Spacer()

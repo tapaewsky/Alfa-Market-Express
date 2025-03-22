@@ -4,6 +4,7 @@
 //
 //  Created by Said Tapaev on 24.12.2024.
 //
+
 import SwiftUI
 
 struct CategoryProductsView: View {
@@ -14,7 +15,7 @@ struct CategoryProductsView: View {
     @State private var currentPage: Int = 1
     @Environment(\.presentationMode) var presentationMode
     @State private var scrollPosition: Int = 0
-   
+    @State private var initialLoadDone: Bool = false
 
     var body: some View {
         VStack {
@@ -30,98 +31,48 @@ struct CategoryProductsView: View {
             if let selectedCategory = selectedCategory {
                 ScrollViewReader { proxy in
                     productList(for: selectedCategory)
-                        .onAppear {
-                            DispatchQueue.main.asyncAfter(deadline: .now()) {
-                                proxy.scrollTo(0, anchor: .top)
-                            }
-                        }
                 }
             }
         }
     }
 
-//    private func productList(for category: Category) -> some View {
-//        LazyVStack {
-//            let filteredProducts = filteredProducts(for: category)
-//            
-//            if filteredProducts.isEmpty && !isFetching {
-//                Text("Нет доступных продуктов для категории: \(category.name)")
-//                    .padding()
-//                    .id(0)
-//            } else {
-//                ProductGridView(
-//                    viewModel: viewModel,
-//                    products: filteredProducts,
-//                    onFavoriteToggle: { _ in }
-//                )
-//                .id(0)
-//            }
-//            
-//            if isFetching {
-//                ProgressView("Загрузка...")
-//                    .padding()
-//                    .frame(maxWidth: .infinity, alignment: .center)
-//            }
-//            
-//            if hasMoreData {
-//                GeometryReader { proxy in
-//                    Color.clear
-//                        .frame(height: 1)
-//                        .onAppear {
-//                            if proxy.frame(in: .global).maxY <= UIScreen.main.bounds.height {
-//                                loadMoreProducts()
-//                            }
-//                        }
-//                }
-//                .frame(height: 1)
-//            }
-//        }
-//    }
     private func productList(for category: Category) -> some View {
-        return LazyVGrid(columns: [GridItem(.flexible(), spacing: 1), GridItem(.flexible(), spacing: 1)], spacing: 1) {
+        VStack {
             let filteredProducts = filteredProducts(for: category)
             
             if filteredProducts.isEmpty && !isFetching {
-                Text("Нет доступных продуктов.")
+                Text("В этой категории пока нет товаров.")
                     .padding()
-                    .id(0)
+                    .foregroundColor(.gray)
+                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .center)
             } else {
-                ForEach(filteredProducts, id: \.id) { product in
-                    ProductGridView(
-                        viewModel: viewModel,
-                        products: [product],
-                        onFavoriteToggle: { _ in }
-                    )
-                    .id(product.id)
-                    .onAppear {
-                        if product == filteredProducts.last && hasMoreData {
-                            loadMoreProducts()
+                LazyVGrid(columns: [GridItem(.flexible(), spacing: 1), GridItem(.flexible(), spacing: 1)], spacing: 1) {
+                    ForEach(filteredProducts, id: \.id) { product in
+                        ProductGridView(
+                            viewModel: viewModel,
+                            products: [product],
+                            onFavoriteToggle: { _ in }
+                        )
+                        .id(product.id)
+                        .onAppear {
+                            if product == filteredProducts.last && hasMoreData {
+                                loadMoreProducts()
+                            }
                         }
                     }
                 }
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
             }
-            
+
             if isFetching {
                 ProgressView("Загрузка...")
                     .padding()
                     .frame(maxWidth: .infinity, alignment: .center)
             }
-            
-            if hasMoreData {
-                GeometryReader { proxy in
-                    Color.clear
-                        .frame(height: 1)
-                        .onAppear {
-                            if proxy.frame(in: .global).maxY <= UIScreen.main.bounds.height {
-                                loadMoreProducts()
-                            }
-                        }
-                }
-                .frame(height: 1)
-            }
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
-
+    
     private func loadMoreProducts() {
         guard !isFetching, hasMoreData else { return }
 
