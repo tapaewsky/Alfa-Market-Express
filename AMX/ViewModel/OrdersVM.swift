@@ -5,8 +5,8 @@
 //  Created by Said Tapaev on 24.12.2024.
 //
 
-import Foundation
 import Combine
+import Foundation
 
 class OrdersViewModel: ObservableObject {
     @Published var orders: [Order] = []
@@ -17,49 +17,48 @@ class OrdersViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     var authManager = AuthManager.shared
 //    private let baseURL = "https://alfamarketexpress.ru/api/orders/"
-    
+
     var baseURL: String = BaseURL.alfa + "orders/"
-    
-  
+
     init(cartViewModel: CartViewModel) {
         self.cartViewModel = cartViewModel
     }
-    
+
     func fetchOrders(completion: @escaping (Bool) -> Void) {
         guard let accessToken = authManager.accessToken else {
             print("Access token not found.")
             completion(false)
             return
         }
-        
+
         guard let url = URL(string: baseURL) else {
             print("Неверный URL")
             completion(false)
             return
         }
-        
+
         var request = URLRequest(url: url)
         request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
-        
+
         print("Запрос на сервер: \(url.absoluteString)")
-        
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            if let error = error {
+
+        URLSession.shared.dataTask(with: request) { data, _, error in
+            if let error {
                 print("Ошибка при получении заказов: \(error.localizedDescription)")
                 DispatchQueue.main.async {
                     completion(false)
                 }
                 return
             }
-            
-            guard let data = data else {
+
+            guard let data else {
                 print("Нет данных в ответе")
                 DispatchQueue.main.async {
                     completion(false)
                 }
                 return
             }
-            
+
             do {
                 let fetchedOrders = try JSONDecoder().decode([Order].self, from: data)
                 DispatchQueue.main.async {
@@ -74,31 +73,31 @@ class OrdersViewModel: ObservableObject {
             }
         }.resume()
     }
-    
+
     func cancelOrder(orderId: Int) async {
         guard let url = URL(string: "\(baseURL)cancel/\(orderId)/") else {
             print("Invalid URL")
             return
         }
-        
+
         var token = await authManager.getToken()
         guard token != nil else {
             print("Failed to retrieve token")
             return
         }
-        
+
         var request = createRequest(url: url, method: "PATCH", token: token!)
         print("Sending request to: \(url)")
-        
+
         do {
             let (data, response) = try await URLSession.shared.data(for: request)
             if let httpResponse = response as? HTTPURLResponse {
                 print("Response status code: \(httpResponse.statusCode)")
             }
-            
+
             let decodedResponse = try JSONDecoder().decode(CancelOrderResponse.self, from: data)
             print("Successfully decoded response: \(decodedResponse)")
-            
+
             DispatchQueue.main.async {
                 self.errorMessage = "Order successfully canceled."
             }
@@ -109,8 +108,8 @@ class OrdersViewModel: ObservableObject {
             }
         }
     }
-    
-    func createOrder(items: [OrderItem], comments: String, accessToken: String) async throws -> Order {
+
+    func createOrder(items: [OrderItem], comments: String, accessToken _: String) async throws -> Order {
         if items.isEmpty {
             throw URLError(.badServerResponse)
         }
@@ -119,9 +118,9 @@ class OrdersViewModel: ObservableObject {
             throw URLError(.badURL)
         }
         var token = await authManager.getToken()
-        
+
         var request = createRequest(url: url, method: "POST", token: token!)
-        
+
         print("Запрос на сервер: \(url.absoluteString)")
 
         let orderRequest = CreateOrderRequest(items: items, comments: comments)
@@ -144,28 +143,26 @@ class OrdersViewModel: ObservableObject {
     }
 
     func orderItemFromCartProduct(_ cartProduct: CartProduct) -> OrderItem {
-        let orderItem = OrderItem(
-            product: cartProduct.product.name,
-            productId: cartProduct.product.id,
-            quantity: cartProduct.quantity,
-            price: Double(cartProduct.product.price) ?? 0.0,
-            image: cartProduct.product.imageUrl ?? "defaultImageUrl"
-        )
+        let orderItem = OrderItem(product: cartProduct.product.name,
+                                  productId: cartProduct.product.id,
+                                  quantity: cartProduct.quantity,
+                                  price: Double(cartProduct.product.price) ?? 0.0,
+                                  image: cartProduct.product.imageUrl ?? "defaultImageUrl")
         return orderItem
     }
 
     func updateOrderComment(orderId: Int, comment: String) async {
         guard let url = URL(string: "\(baseURL)comment/\(orderId)/") else { return }
-        
+
         var token = await authManager.getToken()
         guard token != nil else { return }
-        
+
         var request = createRequest(url: url, method: "PATCH", token: token!)
-        
+
         print("Запрос на сервер: \(url.absoluteString)")
-        
+
         let commentData = UpdateCommentRequest(comments: comment)
-        
+
         do {
             request.httpBody = try JSONEncoder().encode(commentData)
             let (data, response) = try await URLSession.shared.data(for: request)

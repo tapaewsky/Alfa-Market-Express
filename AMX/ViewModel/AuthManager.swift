@@ -16,12 +16,12 @@ class AuthManager: ObservableObject {
     private let accessTokenKey = "accessToken"
     private let refreshTokenKey = "refreshToken"
 //    private let baseUrl = "https://113b-194-164-235-45.ngrok-free.app/api"
-    
+
     var baseURL: String = BaseURL.alfa
     var accessToken: String? {
         UserDefaults.standard.string(forKey: accessTokenKey)
     }
-    
+
     var refreshToken: String? {
         UserDefaults.standard.string(forKey: refreshTokenKey)
     }
@@ -33,11 +33,11 @@ class AuthManager: ObservableObject {
 
     func checkAuthentication() {
         DispatchQueue.global().async { [weak self] in
-            guard let self = self else { return }
-            
+            guard let self else { return }
+
             if let accessToken = self.accessToken {
                 // Проверяем валидность токена, делая запрос на сервер
-                self.verifyToken() { isValid in
+                self.verifyToken { isValid in
                     DispatchQueue.main.async {
                         if isValid {
                             print("Access token is valid: \(accessToken)")
@@ -63,59 +63,57 @@ class AuthManager: ObservableObject {
         }
     }
 
-    private func verifyToken( completion: @escaping (Bool) -> Void) {
+    private func verifyToken(completion: @escaping (Bool) -> Void) {
         guard let url = URL(string: "\(baseURL)me") else {
             completion(false)
             return
         }
-        guard let accessToken = accessToken else {
-           
+        guard let accessToken else {
             print("Ошибка: отсутствует токен доступа.")
             completion(false)
             return
         }
-        
+
         var request = URLRequest(url: url)
         request.httpMethod = "GET"
         request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
-        
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            if let error = error {
+
+        URLSession.shared.dataTask(with: request) { _, response, error in
+            if let error {
                 print("Error verifying token: \(error.localizedDescription)")
                 DispatchQueue.main.async {
                     completion(false)
                 }
                 return
             }
-            
+
             guard let httpResponse = response as? HTTPURLResponse else {
                 DispatchQueue.main.async {
                     completion(false)
                 }
                 return
             }
-            
+
             switch httpResponse.statusCode {
-            case 200:
-                DispatchQueue.main.async {
-                    completion(true)
-                }
-            case 401:
-                DispatchQueue.main.async {
+                case 200:
+                    DispatchQueue.main.async {
+                        completion(true)
+                    }
+                case 401:
+                    DispatchQueue.main.async {
 //                    self.clearTokens()
-                    completion(false)
-                }
-            default:
-                DispatchQueue.main.async {
-                    completion(false)
-                }
+                        completion(false)
+                    }
+                default:
+                    DispatchQueue.main.async {
+                        completion(false)
+                    }
             }
         }.resume()
     }
 
-
     func refreshAccessToken(completion: @escaping (Bool) -> Void) {
-        guard let refreshToken = self.refreshToken else {
+        guard let refreshToken else {
             print("Refresh token not found")
             completion(false)
             return
@@ -128,11 +126,11 @@ class AuthManager: ObservableObject {
 
         let body: [String: String] = ["refresh": refreshToken]
         request.httpBody = try? JSONSerialization.data(withJSONObject: body)
-        
+
         print("Запрос на сервер: \(url.absoluteString)")
 
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            guard let data = data, error == nil else {
+        URLSession.shared.dataTask(with: request) { data, _, error in
+            guard let data, error == nil else {
                 print("Error refreshing token: \(error?.localizedDescription ?? "Unknown error")")
                 completion(false)
                 return
@@ -140,7 +138,8 @@ class AuthManager: ObservableObject {
 
             do {
                 if let json = try JSONSerialization.jsonObject(with: data) as? [String: Any],
-                   let newAccessToken = json["access"] as? String {
+                   let newAccessToken = json["access"] as? String
+                {
                     UserDefaults.standard.set(newAccessToken, forKey: self.accessTokenKey)
                     print("New token received: \(newAccessToken)")
                     completion(true)
@@ -176,11 +175,11 @@ class AuthManager: ObservableObject {
         request.httpMethod = "POST"
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.httpBody = jsonData
-        
+
         print("Запрос на сервер: \(url.absoluteString)")
 
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            guard let data = data, error == nil else {
+        URLSession.shared.dataTask(with: request) { data, _, error in
+            guard let data, error == nil else {
                 print("Error: \(error?.localizedDescription ?? "Unknown error")")
                 completion(false)
                 return
@@ -245,7 +244,7 @@ class AuthManager: ObservableObject {
             }
         }
     }
-    
+
     func clearAppCache() {
         // Очистка данных в UserDefaults
         let userDefaults = UserDefaults.standard
@@ -256,7 +255,6 @@ class AuthManager: ObservableObject {
 
         // Очистка кэшированных файлов (например, изображения)
         clearCachedFiles()
-
     }
 
     func clearCachedFiles() {
@@ -273,5 +271,4 @@ class AuthManager: ObservableObject {
             }
         }
     }
-
 }

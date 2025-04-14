@@ -7,7 +7,6 @@
 
 import Foundation
 
-
-struct BaseURL {
+enum BaseURL {
     static let alfa = "https://alfamarketexpress.ru/api/"
 }

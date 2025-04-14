@@ -5,8 +5,8 @@
 //  Created by Said Tapaev on 24.12.2024.
 //
 
-import Network
 import Foundation
+import Network
 import SwiftUI
 
 final class NetworkMonitor: ObservableObject {

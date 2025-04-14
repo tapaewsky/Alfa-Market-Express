@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Order: Codable  {
+struct Order: Codable {
     let id: Int
     let items: [OrderItem]
     let comments: String

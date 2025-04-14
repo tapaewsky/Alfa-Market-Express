@@ -5,8 +5,8 @@
 //  Created by Said Tapaev on 24.12.2024.
 //
 
-import Foundation
 import Combine
+import Foundation
 
 class SearchViewModel: ObservableObject {
     @Published var searchText: String = ""
@@ -14,44 +14,44 @@ class SearchViewModel: ObservableObject {
     private var cancellables = Set<AnyCancellable>()
     @Published var products: [Product] = []
     var baseURL: String = BaseURL.alfa + "products/"
-    
+
     // Основная функция поиска продуктов
     func searchProducts(query: String, completion: @escaping () -> Void) {
         guard !query.isEmpty else {
-            self.products = []
+            products = []
             completion()
             return
         }
-        
+
         let searchUrl = "\(baseURL)?search=\(query)"
         guard let encodedUrlString = searchUrl.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed),
-              let url = URL(string: encodedUrlString) else {
+              let url = URL(string: encodedUrlString)
+        else {
             print("Invalid search URL")
             completion()
             return
         }
-        
+
         var request = URLRequest(url: url)
         print("Запрос на сервер: \(url.absoluteString)")
-        
+
         // Выполняем запрос
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            if let error = error {
+        URLSession.shared.dataTask(with: request) { data, _, error in
+            if let error {
                 print("Error searching products: \(error.localizedDescription)")
                 completion()
                 return
             }
-            
-            guard let data = data else {
+
+            guard let data else {
                 print("No data in response")
                 completion()
                 return
             }
-            
+
             do {
                 let productResponse = try JSONDecoder().decode(ProductResponse.self, from: data)
                 DispatchQueue.main.async {
-
                     self.products = productResponse.results
                     completion()
                 }
@@ -61,12 +61,12 @@ class SearchViewModel: ObservableObject {
             }
         }.resume()
     }
-    
+
     var filteredProducts: [Product] {
         if searchText.isEmpty {
-            return products
+            products
         } else {
-            return products.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
+            products.filter { $0.name.localizedCaseInsensitiveContains(searchText) }
         }
     }
 }

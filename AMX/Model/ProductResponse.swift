@@ -13,4 +13,3 @@ struct ProductResponse: Decodable {
     var previous: String?
     var results: [Product]
 }
-

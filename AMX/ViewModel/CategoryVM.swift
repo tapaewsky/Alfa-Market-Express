@@ -13,8 +13,7 @@ class CategoryViewModel: ObservableObject {
     @Published var isLoading = false
     @Published var isError = false
 //    private let baseURL = "https://alfamarketexpress.ru/api/categories/"
-    
-    
+
     var baseURL: String = BaseURL.alfa + "categories/"
     func fetchCategory(completion: @escaping (Bool) -> Void) {
         guard let url = URL(string: baseURL) else {
@@ -26,8 +25,8 @@ class CategoryViewModel: ObservableObject {
         isLoading = true
         print("Запрос на сервер: \(url.absoluteString)")
 
-        URLSession.shared.dataTask(with: URLRequest(url: url)) { data, response, error in
-            if let error = error {
+        URLSession.shared.dataTask(with: URLRequest(url: url)) { data, _, error in
+            if let error {
                 print("Ошибка при загрузке категорий: \(error.localizedDescription)")
                 DispatchQueue.main.async {
                     self.isLoading = false
@@ -37,7 +36,7 @@ class CategoryViewModel: ObservableObject {
                 return
             }
 
-            guard let data = data else {
+            guard let data else {
                 print("Ответ не содержит данных")
                 DispatchQueue.main.async {
                     self.isLoading = false
@@ -51,7 +50,7 @@ class CategoryViewModel: ObservableObject {
                 let categories = try JSONDecoder().decode([Category].self, from: data)
                 DispatchQueue.main.async {
                     self.categories = categories
-                  
+
                     self.isLoading = false
                     completion(true)
                 }

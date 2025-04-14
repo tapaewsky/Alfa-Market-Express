@@ -5,8 +5,8 @@
 //  Created by Said Tapaev on 24.12.2024.
 //
 
-import Foundation
 import Combine
+import Foundation
 
 class FavoritesViewModel: ObservableObject {
     @Published var favorites: [Product] = []
@@ -16,10 +16,8 @@ class FavoritesViewModel: ObservableObject {
     private let authManager = AuthManager.shared
 //    private let baseUrl = "https://alfamarketexpress.ru/api"
     var baseURL: String = BaseURL.alfa
-    
 
     func fetchFavorites(completion: @escaping (Bool) -> Void) {
-       
         guard let accessToken = authManager.accessToken else {
             print("Access token не найден.")
             completion(false)
@@ -31,14 +29,14 @@ class FavoritesViewModel: ObservableObject {
             completion(false)
             return
         }
-        
+
         var request = URLRequest(url: url)
         request.setValue("Bearer \(accessToken)", forHTTPHeaderField: "Authorization")
-        
+
         print("Запрос на сервер: \(url.absoluteString)")
-        
-        URLSession.shared.dataTask(with: request) { data, response, error in
-            if let error = error {
+
+        URLSession.shared.dataTask(with: request) { data, _, error in
+            if let error {
                 print("Ошибка при получении избранного: \(error.localizedDescription)")
                 DispatchQueue.main.async {
                     completion(false)
@@ -46,7 +44,7 @@ class FavoritesViewModel: ObservableObject {
                 return
             }
 
-            guard let data = data else {
+            guard let data else {
                 print("Нет данных в ответе")
                 DispatchQueue.main.async {
                     completion(false)
@@ -56,10 +54,10 @@ class FavoritesViewModel: ObservableObject {
 
             do {
                 let favorites = try JSONDecoder().decode([Product].self, from: data)
-              
+
                 DispatchQueue.main.async {
                     self.favorites = favorites
-                   
+
                     completion(true)
                 }
             } catch {
@@ -93,7 +91,7 @@ class FavoritesViewModel: ObservableObject {
 
         let requestBody: [String: Any] = ["product_id": product.id]
         request.httpBody = try? JSONSerialization.data(withJSONObject: requestBody)
-        
+
         print("Запрос на сервер: \(url.absoluteString)")
 
         do {
@@ -112,7 +110,6 @@ class FavoritesViewModel: ObservableObject {
         }
     }
 
-    
     private func toggleProductFavoriteStatus(product: Product) {
         if let index = favorites.firstIndex(where: { $0.id == product.id }) {
             favorites.remove(at: index)
@@ -122,6 +119,6 @@ class FavoritesViewModel: ObservableObject {
     }
 
     func isFavorite(_ product: Product) -> Bool {
-        return favorites.contains(where: { $0.id == product.id })
+        favorites.contains(where: { $0.id == product.id })
     }
 }

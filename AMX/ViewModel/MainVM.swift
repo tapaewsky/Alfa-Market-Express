@@ -5,8 +5,8 @@
 //  Created by Said Tapaev on 24.12.2024.
 //
 
-import SwiftUI
 import Combine
+import SwiftUI
 
 class MainViewModel: ObservableObject {
     @Published var categoryViewModel: CategoryViewModel
@@ -21,15 +21,15 @@ class MainViewModel: ObservableObject {
     @Published var registrationViewModel: RegistrationVM
 
     init() {
-        self.categoryViewModel = CategoryViewModel()
-        self.productViewModel = ProductViewModel()
-        self.favoritesViewModel = FavoritesViewModel()
-        self.cartViewModel = CartViewModel()
-        self.profileViewModel = ProfileViewModel()
-        self.slideViewModel = SlideViewModel(slides: [Slide]())
-        self.searchViewModel = SearchViewModel()
-        self.registrationViewModel = RegistrationVM()
-        
-        self.ordersViewModel = OrdersViewModel(cartViewModel: self.cartViewModel)
+        categoryViewModel = CategoryViewModel()
+        productViewModel = ProductViewModel()
+        favoritesViewModel = FavoritesViewModel()
+        cartViewModel = CartViewModel()
+        profileViewModel = ProfileViewModel()
+        slideViewModel = SlideViewModel(slides: [Slide]())
+        searchViewModel = SearchViewModel()
+        registrationViewModel = RegistrationVM()
+
+        ordersViewModel = OrdersViewModel(cartViewModel: cartViewModel)
     }
 }

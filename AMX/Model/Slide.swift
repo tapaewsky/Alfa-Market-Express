@@ -13,7 +13,7 @@ struct Slide: Codable, Identifiable {
     var image: String
     var link: String?
     var description: String?
-    
+
     enum CodingKeys: String, CodingKey {
         case id
         case title
@@ -22,4 +22,3 @@ struct Slide: Codable, Identifiable {
         case description
     }
 }
-

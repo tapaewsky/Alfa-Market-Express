@@ -11,8 +11,8 @@ struct CartProduct: Decodable, Encodable, Identifiable, Equatable {
     var product: Product
     var quantity: Int
     var getTotalPrice: Double {
-            return (Double(product.price) ?? 0) * Double(quantity)
-        }
+        (Double(product.price) ?? 0) * Double(quantity)
+    }
 
     enum CodingKeys: String, CodingKey {
         case id, product, quantity

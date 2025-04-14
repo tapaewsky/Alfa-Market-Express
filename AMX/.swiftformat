@@ -1,0 +1,10 @@
+--swiftversion 6.0
+--exclude Pods,Build
+--indent 4
+--linebreaks lf
+--commas inline
+--wraparguments after-first
+--stripunusedargs closure-only
+--disable redundantSelf
+--indentcase true
+--trimwhitespace always
