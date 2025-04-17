@@ -42,20 +42,28 @@ struct ProductDetailView: View {
 
     private var productImage: some View {
         ZStack(alignment: .topTrailing) {
-            if let imageUrl = product.imageUrl, let url = URL(string: imageUrl) {
-                KFImage(url)
-                    .placeholder {
-                        ProgressView()
-                    }
-                    .resizable()
-                    .cornerRadius(20)
-                    .scaledToFit()
-            } else {
+            TabView {
+                ForEach(product.images, id: \.id) { productImage in
+                    KFImage(URL(string: productImage.image))
+                        .placeholder {
+                            ProgressView()
+                        }
+                        .resizable()
+                        .cornerRadius(15)
+                        .scaledToFit()
+                        .padding(.horizontal)
+                }
+            }
+            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
+            .frame(height:500)
+
+            if product.images.isEmpty {
                 Image("placeholderProduct")
                     .resizable()
                     .cornerRadius(20)
                     .scaledToFit()
             }
+
             Button(action: {
                 if authManager.accessToken != nil {
                     Task {
@@ -69,9 +77,9 @@ struct ProductDetailView: View {
                 Image(isFavorite ? "favorites_green_heart" : "favorites_white_heart")
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 20, height: 20)
+                    .frame(width: 18, height: 18)
             }
-            .padding()
+            .padding(30)
         }
         .padding()
     }

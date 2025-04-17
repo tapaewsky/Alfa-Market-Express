@@ -47,10 +47,11 @@ struct HomeView: View {
                     ProductGridView(viewModel: viewModel,
                                     products: [product],
                                     onFavoriteToggle: { _ in })
-                        .onAppear {
-                            if product == viewModel.productViewModel.products.last, hasMoreData {
-                                loadMoreProducts()
-                            }
+                    .onAppear {
+                        if product.id == viewModel.productViewModel.products.last?.id, hasMoreData {
+                            loadMoreProducts()
+                        }
+                    
                         }
                 }
             }
@@ -64,7 +65,7 @@ struct HomeView: View {
         viewModel.productViewModel.fetchProducts { success in
             DispatchQueue.main.async {
                 if success {
-                    if viewModel.productViewModel.baseURL == nil {
+                    if viewModel.productViewModel.defaultBaseURL == nil {
                         hasMoreData = false
                     }
                 } else {

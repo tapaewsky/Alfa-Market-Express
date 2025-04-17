@@ -12,17 +12,24 @@ class ProductViewModel: ObservableObject {
     @Published var products: [Product] = []
     @Published var isLoading = false
     @Published var isError = false
+
     private let authManager = AuthManager.shared
-    var baseURL: String = BaseURL.alfa + "products/"
+    private var currentCategoryID: Int?
+    var nextPageURL: String?
+
+    var defaultBaseURL: String {
+        BaseURL.alfa + "products/"
+    }
 
     func resetData() {
         products.removeAll()
-        baseURL = BaseURL.alfa + "products/"
+        nextPageURL = nil
+        currentCategoryID = nil
     }
 
-    func fetchProducts(completion: @escaping (Bool) -> Void) {
+    func fetchProducts(for category: Category? = nil, completion: @escaping (Bool) -> Void) {
         guard !isLoading else {
-            print("Загрузка уже выполняется")
+            print("🔄 Загрузка уже выполняется, отмена нового запроса")
             completion(false)
             return
         }
@@ -30,8 +37,29 @@ class ProductViewModel: ObservableObject {
         isLoading = true
         isError = false
 
-        guard let url = URL(string: baseURL) else {
-            print("Неверный URL")
+        // если это новый запрос, сбрасываем
+        if let category = category {
+            if currentCategoryID != category.id {
+                resetData()
+                currentCategoryID = category.id
+            }
+        }
+
+        let urlString: String
+
+        if let next = nextPageURL {
+            urlString = next
+            print("📡 Загрузка следующей страницы: \(urlString)")
+        } else if let catID = currentCategoryID, catID != 0 {
+            urlString = "\(defaultBaseURL)?category=\(catID)"
+            print("📡 Загрузка товаров категории ID \(catID): \(urlString)")
+        } else {
+            urlString = defaultBaseURL
+            print("📡 Загрузка всех товаров: \(urlString)")
+        }
+
+        guard let url = URL(string: urlString) else {
+            print("❌ Неверный URL: \(urlString)")
             isLoading = false
             completion(false)
             return
@@ -43,7 +71,7 @@ class ProductViewModel: ObservableObject {
             defer { self?.isLoading = false }
 
             if let error {
-                print("Ошибка при загрузке данных: \(error.localizedDescription)")
+                print("❌ Ошибка при загрузке данных: \(error.localizedDescription)")
                 DispatchQueue.main.async {
                     self?.isError = true
                     completion(false)
@@ -52,7 +80,7 @@ class ProductViewModel: ObservableObject {
             }
 
             guard let httpResponse = response as? HTTPURLResponse else {
-                print("Нет HTTP-ответа")
+                print("❌ Нет HTTP-ответа")
                 DispatchQueue.main.async {
                     self?.isError = true
                     completion(false)
@@ -60,11 +88,16 @@ class ProductViewModel: ObservableObject {
                 return
             }
 
+            print("✅ Ответ сервера: \(httpResponse.statusCode)")
+
             if httpResponse.statusCode == 401 {
+                print("🔐 Токен просрочен, обновляем...")
                 self?.authManager.refreshAccessToken { success in
                     if success {
-                        self?.fetchProducts(completion: completion)
+                        print("🔄 Повтор запроса после обновления токена")
+                        self?.fetchProducts(for: category, completion: completion)
                     } else {
+                        print("❌ Не удалось обновить токен")
                         DispatchQueue.main.async {
                             self?.isError = true
                             completion(false)
@@ -75,7 +108,7 @@ class ProductViewModel: ObservableObject {
             }
 
             guard let data else {
-                print("Нет данных в ответе")
+                print("❌ Нет данных в ответе")
                 DispatchQueue.main.async {
                     self?.isError = true
                     completion(false)
@@ -85,17 +118,23 @@ class ProductViewModel: ObservableObject {
 
             do {
                 let response = try JSONDecoder().decode(ProductResponse.self, from: data)
-                DispatchQueue.main.async { [weak self] in
-                    guard let self else { return }
+                DispatchQueue.main.async {
+                    print("📦 Получено товаров: \(response.results.count)")
+                    print("➡️ Следующая страница: \(response.next ?? "nil")")
 
-                    self.products.append(contentsOf: response.results)
-                    self.baseURL = response.next ?? self.baseURL
-                    print("Следующий URL: \(self.baseURL)")
-
+                    let existingIDs = Set(self?.products.map(\.id) ?? [])
+                    let newProducts = response.results.filter { !existingIDs.contains($0.id) }
+                    self?.products.append(contentsOf: newProducts)
+                    self?.nextPageURL = response.next
                     completion(true)
+                
+                
                 }
             } catch {
-                print("Ошибка декодирования: \(error.localizedDescription)")
+                print("❌ Ошибка декодирования: \(error.localizedDescription)")
+                if let rawString = String(data: data, encoding: .utf8) {
+                    print("📨 Ответ сервера: \(rawString)")
+                }
                 DispatchQueue.main.async {
                     self?.isError = true
                     completion(false)
