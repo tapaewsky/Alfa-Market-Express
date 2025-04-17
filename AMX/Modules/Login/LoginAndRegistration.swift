@@ -45,8 +45,17 @@ struct LoginAndRegistration: View {
             }
 
             Spacer()
-        }
+            
 
+            HStack(spacing: 4) {
+                Text("Created by:")
+                    .foregroundColor(.gray)
+                Link("tapaewsky", destination: URL(string: "https://t.me/sdtpv")!)
+                    .foregroundColor(.blue)
+            }
+            .font(.footnote)
+            .padding(.bottom, 12)
+        }
         .navigationBarTitleDisplayMode(.inline)
     }
 }

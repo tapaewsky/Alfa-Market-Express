@@ -25,6 +25,7 @@ struct ProfileInfo: View {
                 } else {
                     profileImage
                     displayStoreInfo
+                    createdByTapaewsky
                 }
 
                 Spacer()
@@ -150,6 +151,17 @@ struct ProfileInfo: View {
                   secondaryButton: .cancel(Text("Отмена")))
         }
     }
+    
+    private var createdByTapaewsky: some View {
+        HStack(spacing: 4) {
+            Text("Created by:")
+                .foregroundColor(.gray)
+            Link("tapaewsky", destination: URL(string: "https://t.me/sdtpv")!)
+                .foregroundColor(.blue)
+        }
+        .font(.footnote)
+    }
+    
 
     private func loadProfile() {
         isFetching = true

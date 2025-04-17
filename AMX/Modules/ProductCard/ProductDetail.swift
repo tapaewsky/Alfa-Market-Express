@@ -16,7 +16,8 @@ struct ProductDetailView: View {
     @State private var isAddedToCart: Bool = false
     @Environment(\.presentationMode) var presentationMode
     @State var authManager: AuthManager = .shared
-
+    @State private var selectedIndex = 0
+    
     var body: some View {
         ScrollView {
             VStack(alignment: .leading, spacing: 16) {
@@ -26,7 +27,7 @@ struct ProductDetailView: View {
                 productPrice
                 addToCartButton
             }
-
+            
             .padding(.vertical)
         }
         .navigationBarBackButtonHidden(true)
@@ -39,31 +40,48 @@ struct ProductDetailView: View {
             isFavorite = viewModel.favoritesViewModel.isFavorite(product)
         }
     }
-
+    
     private var productImage: some View {
         ZStack(alignment: .topTrailing) {
-            TabView {
-                ForEach(product.images, id: \.id) { productImage in
-                    KFImage(URL(string: productImage.image))
-                        .placeholder {
-                            ProgressView()
+            VStack {
+                TabView(selection: $selectedIndex) {
+                    ForEach(Array(product.images.enumerated()), id: \.element.id) { index, productImage in
+                        GeometryReader { geometry in
+                            KFImage(URL(string: productImage.image))
+                                .placeholder {
+                                    ProgressView()
+                                }
+                                .resizable()
+                                .aspectRatio(contentMode: .fill)
+                                .frame(width: geometry.size.width, height: geometry.size.width * (4.0 / 3.0))
+                                .clipped()
+
                         }
-                        .resizable()
-                        .cornerRadius(15)
-                        .scaledToFit()
-                        .padding(.horizontal)
+                        .tag(index)
+                    }
+                }
+                .tabViewStyle(PageTabViewStyle(indexDisplayMode: .never))
+                .frame(height: UIScreen.main.bounds.width * (4.0 / 3.0))
+                
+                if !product.images.isEmpty {
+                    HStack(spacing: 8) {
+                        ForEach(product.images.indices, id: \.self) { index in
+                            Circle()
+                                .strokeBorder(Color.colorGreen, lineWidth: 1.5)
+                                .background(Circle().fill(index == selectedIndex ? Color.colorGreen : Color.clear))
+                                .frame(width: 10, height: 10)
+                                .animation(.easeInOut(duration: 0.2), value: selectedIndex)
+                        }
+                    }
                 }
             }
-            .tabViewStyle(PageTabViewStyle(indexDisplayMode: .automatic))
-            .frame(height:500)
-
+            
             if product.images.isEmpty {
                 Image("placeholderProduct")
                     .resizable()
-                    .cornerRadius(20)
                     .scaledToFit()
             }
-
+            
             Button(action: {
                 if authManager.accessToken != nil {
                     Task {
@@ -79,11 +97,11 @@ struct ProductDetailView: View {
                     .scaledToFit()
                     .frame(width: 18, height: 18)
             }
-            .padding(30)
+            .padding(20)
         }
-        .padding()
     }
-
+    
+    
     private var productTitleAndFavoriteButton: some View {
         HStack {
             Text(product.name)
@@ -91,19 +109,19 @@ struct ProductDetailView: View {
                 .padding(.horizontal)
         }
     }
-
+    
     private var productDescription: some View {
         Text(product.description)
             .padding(.horizontal)
     }
-
+    
     private var productPrice: some View {
         Text("\(Int(Double(product.price) ?? 0)) ₽")
             .font(.title)
             .padding(.horizontal)
             .foregroundColor(Color("colorRed"))
     }
-
+    
     private var addToCartButton: some View {
         Button(action: {
             if authManager.accessToken != nil {
@@ -124,30 +142,8 @@ struct ProductDetailView: View {
         }
         .padding(.horizontal)
     }
-
-//    private var similarProductsSection: some View {
-//        VStack(alignment: .leading) {
-//            Text("Похожие товары")
-//                .padding(.horizontal)
-//                .bold()
-//
-//            LazyVGrid(columns: [GridItem(.flexible(), spacing: 1), GridItem(.flexible(), spacing: 10)], spacing: 5) {
-//                ForEach(viewModel.searchViewModel.filteredProducts) { product in
-//                    NavigationLink(destination: ProductDetailView(viewModel: viewModel, product: product)) {
-//                        ProductCardView(product: product, viewModel: viewModel, onFavoriteToggle: {
-//                            Task {
-//                                await viewModel.favoritesViewModel.toggleFavorite(for: product)
-//                            }
-//                        }, showLoginView: <#Binding<Bool>#>)
-//                        .padding(5)
-//                    }
-//                    .buttonStyle(PlainButtonStyle())
-//                }
-//            }
-//            .padding(.horizontal, 10)
-//        }
-//    }
-
+    
+    
     private func toggleCart() async {
         if isAddedToCart {
             await viewModel.cartViewModel.removeFromCard(product)
@@ -156,7 +152,7 @@ struct ProductDetailView: View {
         }
         isAddedToCart.toggle()
     }
-
+    
     private func someFunctionThatCallsToggleFavorite() async {
         Task {
             await viewModel.favoritesViewModel.toggleFavorite(for: product)

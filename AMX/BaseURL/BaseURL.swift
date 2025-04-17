@@ -8,5 +8,5 @@
 import Foundation
 
 enum BaseURL {
-    static let alfa = "https://74b8-85-192-63-29.ngrok-free.app/api/"
+    static let alfa = "https://alfamarketexpress.ru/api/"
 }
