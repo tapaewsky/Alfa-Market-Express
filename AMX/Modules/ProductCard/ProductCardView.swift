@@ -62,7 +62,7 @@ struct ProductCardView: View {
                 Image(isFavorite ? "favorites_green_heart" : "favorites_white_heart")
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 20, height: 20)
+                    .frame(width: 25, height: 25)
             }
             .padding()
         }

@@ -13,7 +13,7 @@ struct Product: Identifiable, Decodable, Hashable, Encodable, Equatable {
     var description: String
     var price: String
     var imageUrl: String?
-    var images: [ProductImage] // Массив объектов ProductImage
+    var images: [ProductImage] 
     var category: Int
     var isFavorite: Bool
     var quantity: Int

@@ -55,6 +55,7 @@ struct ProductDetailView: View {
                                 .aspectRatio(contentMode: .fill)
                                 .frame(width: geometry.size.width, height: geometry.size.width * (4.0 / 3.0))
                                 .clipped()
+                                .allowsHitTesting(false)
 
                         }
                         .tag(index)
@@ -95,7 +96,7 @@ struct ProductDetailView: View {
                 Image(isFavorite ? "favorites_green_heart" : "favorites_white_heart")
                     .resizable()
                     .scaledToFit()
-                    .frame(width: 18, height: 18)
+                    .frame(width: 25, height: 25)
             }
             .padding(20)
         }
