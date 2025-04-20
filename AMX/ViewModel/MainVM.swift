@@ -11,6 +11,7 @@ import SwiftUI
 class MainViewModel: ObservableObject {
     @Published var categoryViewModel: CategoryViewModel
     @Published var productViewModel: ProductViewModel
+    @Published var categoryProductViewModel = ProductViewModel()
     @Published var favoritesViewModel: FavoritesViewModel
     @Published var cartViewModel: CartViewModel
     @Published var profileViewModel: ProfileViewModel
@@ -29,7 +30,6 @@ class MainViewModel: ObservableObject {
         slideViewModel = SlideViewModel(slides: [Slide]())
         searchViewModel = SearchViewModel()
         registrationViewModel = RegistrationVM()
-
         ordersViewModel = OrdersViewModel(cartViewModel: cartViewModel)
     }
 }

@@ -119,10 +119,16 @@ import SwiftUI
 struct CategoryProductsView: View {
     @StateObject var viewModel: MainViewModel
     @Binding var selectedCategory: Category?
+
     @State private var isFetching: Bool = false
     @State private var hasMoreData: Bool = true
     @Environment(\.presentationMode) var presentationMode
     @State private var initialLoadDone: Bool = false
+
+    // ✅ Отдельный viewModel для категории
+    private var productVM: ProductViewModel {
+        viewModel.categoryProductViewModel
+    }
 
     var body: some View {
         VStack {
@@ -151,7 +157,7 @@ struct CategoryProductsView: View {
 
     private func productList() -> some View {
         VStack {
-            let products = viewModel.productViewModel.products
+            let products = productVM.products
 
             if products.isEmpty, !isFetching {
                 Text("В этой категории пока нет товаров.")
@@ -188,14 +194,14 @@ struct CategoryProductsView: View {
         isFetching = true
         hasMoreData = true
         initialLoadDone = true
-        viewModel.productViewModel.resetData()
-        viewModel.productViewModel.fetchProducts(for: category) { success in
+        productVM.resetData()
+        productVM.fetchProducts(for: category) { success in
             DispatchQueue.main.async {
                 isFetching = false
                 if !success {
                     print("Не удалось загрузить продукты")
                 }
-                hasMoreData = self.viewModel.productViewModel.nextPageURL != nil
+                hasMoreData = productVM.nextPageURL != nil
             }
         }
     }
@@ -204,14 +210,14 @@ struct CategoryProductsView: View {
         guard !isFetching, hasMoreData, let selectedCategory else { return }
 
         isFetching = true
-        viewModel.productViewModel.fetchProducts(for: selectedCategory) { success in
+        productVM.fetchProducts(for: selectedCategory) { success in
             DispatchQueue.main.async {
                 isFetching = false
                 if !success {
                     print("Не удалось загрузить следующую страницу")
                     hasMoreData = false
                 } else {
-                    hasMoreData = self.viewModel.productViewModel.nextPageURL != nil
+                    hasMoreData = productVM.nextPageURL != nil
                 }
             }
         }
