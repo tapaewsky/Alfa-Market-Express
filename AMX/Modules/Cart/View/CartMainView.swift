@@ -161,7 +161,7 @@ struct CartMainView: View {
                     .cornerRadius(15)
             }
             .background(
-                NavigationLink(destination: CheckoutView(viewModel: viewModel,
+                NavigationLink(destination: CartCheckoutView(viewModel: viewModel,
                                                          selectedTab: $selectedTab,
                                                          totalPrice: $totalPrice,
                                                          productCount: $productCount,

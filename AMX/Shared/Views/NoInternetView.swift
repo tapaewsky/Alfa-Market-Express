@@ -28,18 +28,6 @@ struct NoInternetView: View {
                 .multilineTextAlignment(.center)
                 .padding(.bottom, 20)
 
-//            Button(action: {
-//                viewModel.productViewModel.resetData()
-//                print("Обновить нажато")
-//            }) {
-//                Text("Обновить")
-//                    .font(.headline)
-//                    .bold()
-//                    .foregroundColor(.white)
-//                    .padding()
-//                    .background(.colorRed.opacity(0.8))
-//                    .cornerRadius(20)
-//            }
         }
         .padding()
         .frame(maxWidth: .infinity, maxHeight: .infinity)

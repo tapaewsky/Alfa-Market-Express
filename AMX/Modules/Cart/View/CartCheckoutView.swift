@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct CheckoutView: View {
+struct CartCheckoutView: View {
     @StateObject var viewModel: MainViewModel
     @Binding var selectedTab: Int
     @Binding var totalPrice: Double
